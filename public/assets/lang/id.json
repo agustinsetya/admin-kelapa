@@ -1,0 +1,25 @@
+{
+    "title": "Dashboard | CV Java",
+    "t-menu":"Menu",
+    "t-dashboard":"Dashboard",
+
+    "t-master":"Data Utama",
+    "t-master-komponen-gaji":"Komponen Gaji",
+
+    "t-supply-chain":"Supply Chain",
+    "t-supply-pembelian":"Data Pembelian",
+    "t-supply-pengolahan":"Data Pengolahan",
+    
+    "t-payroll":"Payroll",
+    "t-absensi":"Absensi",
+    "t-lembur":"Lembur",
+    "t-penggajian":"Penggajian",
+
+    "t-report":"Laporan",
+
+    "t-login":"Login",
+    "t-starter-page":"Starter Page",
+    "t-maintenance":"Maintenance",
+    "t-coming-soon":"Coming Soon",
+    "t-logout":"Logout"
+}

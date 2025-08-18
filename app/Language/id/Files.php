@@ -1,0 +1,45 @@
+<?php
+
+/**
+ * Files language strings.
+ * Language=> id => Indonesian
+ */
+
+return [
+    "Profile" => "Profil",
+    "Lock_Screen" => "Kunci Layar",
+    "Login" => "Masuk",
+    "Logout" => "Keluar",
+    "Menu" => "Menu",
+    "Dashboard" => "Dashboard",
+    "Data_Utama" => "Data Utama",
+    "Komponen_Gaji" => "Komponen Gaji",
+    "Detail_Komponen_Gaji" => "Detail Komponen Gaji",
+    "UMK" => "UMK",
+    "Tarif_Borongan" => "Upah Per Unit",
+    "Elements" => "Elemen",
+    "Supply_Chain" => "Supply Chain",
+    "Data_Pembelian" => "Data Pembelian",
+    "Daging_Kelapa" => "Daging Kelapa",
+    "Kulit_Kelapa" => "Kulit Kelapa",
+    "Kopra" => "Kopra",
+    "Data_Pengolahan" => "Data Pengolahan",
+    "Payroll" => "Payroll",
+    "Absensi" => "Absensi",
+    "Lembur" => "Lembur",
+    "Penggajian" => "Penggajian",
+    "Date" => "Tanggal",
+    "Report" => "Laporan",
+    "Input_Berat" => "Masukkan Berat",
+    "Data_Penggajian" => "Data Penggajian",
+    "Login_Invalid" => "Username atau Password Salah",
+    "Password_Required" => "Password Diperlukan",
+    "Password_Wrong" => "Password Salah",
+    "Do_Not_Have_Access" => "Anda Tidak Punya Akses",
+    "Username" => "Username",
+    "Password" => "Password",
+    "Input_Username" => "Masukkan Kode Pegawai",
+    "Input_Password" => "Masukkan Password",
+    "Welcome_Back" => "Selamat Datang Kembali",
+    "Login_To_Continue" => "Masuk Untuk Melanjutkan",
+];
