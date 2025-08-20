@@ -13,7 +13,7 @@
                                 <div class="d-flex flex-column h-100">
                                     <div class="mb-4 mb-md-5 text-center">
                                         <a href="index" class="d-block auth-logo">
-                                            <img src="assets/images/logo-sm.svg" alt="" height="28"> <span class="logo-txt">CV Java</span>
+                                            <img src="assets/images/logo-sm.svg" alt="" height="28"> <span class="logo-txt"><?= lang('Files.Nama_CV') ?></span>
                                         </a>
                                     </div>
                                     <div class="auth-content my-auto">
@@ -21,12 +21,30 @@
                                             <h5 class="mb-0"><?= lang('Files.Welcome_Back') ?> !</h5>
                                             <p class="text-muted mt-2"><?= lang('Files.Login_To_Continue') ?>.</p>
                                         </div>
+
+                                        <?php if (session()->getFlashdata('message')): ?>
+                                            <div class="alert alert-danger my-3">
+                                                <?= esc(session()->getFlashdata('message')) ?>
+                                            </div>
+                                        <?php endif; ?>
+
+                                        <?php if (isset($validation)): ?>
+                                            <div class="alert alert-warning my-3">
+                                                <?= $validation->listErrors() ?>
+                                            </div>
+                                        <?php endif; ?>
+
                                         <form class="mt-4 pt-2" method="post" action="<?= url_to('auth-login-post') ?>">
                                             <?= csrf_field() ?>
                                             
                                             <div class="mb-3">
                                                 <label class="form-label"><?= lang('Files.Username') ?></label>
-                                                <input type="text" class="form-control" name="username" id="username" placeholder="<?= lang('Files.Input_Username') ?>">
+                                                <input type="text" 
+                                                    class="form-control" 
+                                                    name="username" 
+                                                    id="username" 
+                                                    value="<?= esc(old('username') ?? session()->getFlashdata('old')['username'] ?? '') ?>"
+                                                    placeholder="<?= lang('Files.Input_Username') ?>">
                                             </div>
                                             <div class="mb-3">
                                                 <div class="d-flex align-items-start">
@@ -46,7 +64,7 @@
                                         </form>
                                     </div>
                                     <div class="mt-4 mt-md-5 text-center">
-                                        <p class="mb-0">© <script>document.write(new Date().getFullYear())</script> CV Java   . Crafted with <i class="mdi mdi-heart text-danger"></i> by PUSTIK ITN</p>
+                                        <p class="mb-0">© <script>document.write(new Date().getFullYear())</script> <?= lang('Files.Nama_CV') ?>   . Crafted with <i class="mdi mdi-heart text-danger"></i> by <?= lang('Files.Created_By') ?></p>
                                     </div>
                                 </div>
                             </div>

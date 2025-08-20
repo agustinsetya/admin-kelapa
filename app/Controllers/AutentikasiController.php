@@ -56,15 +56,18 @@ class AutentikasiController extends BaseController
                 'user'          => $user,
                 'last_activity' => time(),
 				'isLoggedIn'    => true,
-				'role'       	=> $user->role,
+				'role'          => $user->role_id ?? null,
             ]);
+
+			log_message('debug', 'Session data set: ' . json_encode($this->session->get()));
             
 			return redirect()->to(route_to('dashboard'));
         }
 
 		$this->session->setFlashdata('message', lang('Files.Login_Invalid'));
-		$this->session->setFlashdata('old', ['kd_pegawai' => $kd_pegawai]);
-        return redirect()->to(route_to('auth-login'));
+		$this->session->setFlashdata('old', ['username' => $kd_pegawai]);
+
+        return redirect()->to(route_to('auth-login'))->withInput();
     }
 
 	public function showAuthLogout(): string

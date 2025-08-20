@@ -1,13 +1,8 @@
 <?= $this->include('partials/main') ?>
-
     <head>
-
         <?= $title_meta ?>
-
         <?= $this->include('partials/head-css') ?>
-
     </head>
-
     <?= $this->include('partials/body') ?>
         <div class="auth-page">
             <div class="container-fluid p-0">
@@ -18,7 +13,7 @@
                                 <div class="d-flex flex-column h-100">
                                     <div class="mb-4 mb-md-5 text-center">
                                         <a href="index" class="d-block auth-logo">
-                                            <img src="assets/images/logo-sm.svg" alt="" height="28"> <span class="logo-txt">Minia</span>
+                                            <img src="assets/images/logo-sm.svg" alt="" height="28"> <span class="logo-txt"><?= lang('Files.Nama_CV') ?></span>
                                         </a>
                                     </div>
                                     <div class="auth-content my-auto">
@@ -31,20 +26,15 @@
 
                                             <div class="mt-4 pt-2">
                                                 <h5>You are Logged Out</h5>
-                                                <p class="text-muted font-size-15">Thank you for using <span class="fw-semibold text-dark">Minia</span></p>
+                                                <p class="text-muted font-size-15">Thank you</p>
                                                 <div class="mt-4">
-                                                    <a href="auth-login" class="btn btn-primary w-100 waves-effect waves-light">Sign In</a>
+                                                    <a href="<?= url_to('auth-login') ?>" class="btn btn-primary w-100 waves-effect waves-light"><?= lang('Files.Signin') ?></a>
                                                 </div>
                                             </div>
                                         </div>
-                                    
-                                        <div class="mt-5 text-center">
-                                            <p class="text-muted mb-0">Don't have an account ? <a href="auth-register"
-                                                    class="text-primary fw-semibold"> Signup</a> </p>
-                                        </div>
                                     </div>
                                     <div class="mt-4 mt-md-5 text-center">
-                                        <p class="mb-0">© <script>document.write(new Date().getFullYear())</script> Minia   . Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesbrand</p>
+                                        <p class="mb-0">© <script>document.write(new Date().getFullYear())</script> <?= lang('Files.Nama_CV') ?>   . Crafted with <i class="mdi mdi-heart text-danger"></i> by <?= lang('Files.Created_By') ?></p>
                                     </div>
                                 </div>
                             </div>
@@ -168,12 +158,8 @@
             </div>
             <!-- end container fluid -->
         </div>
-
-
         <?= $this->include('partials/vendor-scripts') ?>
         <!-- password addon init -->
-        <script src="assets/js/pages/pass-addon.init.js"></script>
-
+        <script src="<?= base_url('assets/js/pages/pass-addon.init.js') ?>"></script>
     </body>
-
 </html>

@@ -1,13 +1,8 @@
 <?= $this->include('partials/main') ?>
-
     <head>
-
         <?= $title_meta ?>
-
         <?= $this->include('partials/head-css') ?>
-
     </head>
-
     <?= $this->include('partials/body') ?>
         <div class="auth-page">
             <div class="container-fluid p-0">
@@ -18,35 +13,51 @@
                                 <div class="d-flex flex-column h-100">
                                     <div class="mb-4 mb-md-5 text-center">
                                         <a href="index" class="d-block auth-logo">
-                                            <img src="assets/images/logo-sm.svg" alt="" height="28"> <span class="logo-txt">Minia</span>
+                                            <img src="assets/images/logo-sm.svg" alt="" height="28"> <span class="logo-txt"><?= lang('Files.Nama_CV') ?></span>
                                         </a>
                                     </div>
                                     <div class="auth-content my-auto">
                                         <div class="text-center">
-                                            <h5 class="mb-0">Lock Screen</h5>
-                                            <p class="text-muted mt-2">Enter your password to unlock the screen!</p>
+                                            <h5 class="mb-0"><?= lang('Files.Lock_Screen') ?></h5>
+                                            <p class="text-muted mt-2"><?= lang('Files.Reenter_Password') ?>!</p>
                                         </div>
                                         <div class="user-thumb text-center mb-4 mt-4 pt-2">
-                                            <img src="assets/images/users/avatar-1.jpg" class="rounded-circle img-thumbnail avatar-lg" alt="thumbnail">
-                                            <h5 class="font-size-15 mt-3">Shawn</h5>
+                                            <?php 
+                                                $jenis_kelamin = session()->get('user')->jenis_kelamin;
+
+                                                $avatar_image = $jenis_kelamin == 'P' ? 'female.png' : 'male.png';
+                                            ?>
+
+                                            <img class="rounded-circle img-thumbnail avatar-lg" src="<?= base_url('assets/images/users/' . $avatar_image) ?>" alt="thumbnail">
+                                            <h5 class="font-size-15 mt-3"><?= session()->get('user')->nama ?></h5>
                                         </div>
-                                        <form class="mt-4" action="index">
+                                        <form class="mt-4" method="post" action="<?= url_to('auth-unlock-post') ?>">
+                                            <?= csrf_field() ?>
+
                                             <div class="mb-3">
-                                                <label class="form-label" for="userpassword">Password</label>
-                                                <input type="password" class="form-control" id="userpassword" placeholder="Enter password">
+                                                <div class="d-flex align-items-start">
+                                                    <div class="flex-grow-1">
+                                                        <label class="form-label"><?= lang('Files.Password') ?></label>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="input-group auth-pass-inputgroup">
+                                                    <input type="password" class="form-control" name="password" placeholder="<?= lang('Files.Input_Password') ?>" aria-label="Password" aria-describedby="password-addon">
+                                                    <button class="btn btn-light shadow-none ms-0" type="button" id="password-addon"><i class="mdi mdi-eye-outline"></i></button>
+                                                </div>
                                             </div>
                                             <div class="mb-3 mt-4">
-                                                <button class="btn btn-primary w-100 waves-effect waves-light" type="submit">Unlock</button>
+                                                <button class="btn btn-primary w-100 waves-effect waves-light" type="submit"><?= lang('Files.Unlock') ?></button>
                                             </div>
                                         </form>
 
                                         <div class="mt-5 text-center">
-                                            <p class="text-muted mb-0">Not you ? return <a href="auth-login"
-                                                    class="text-primary fw-semibold"> Sign In </a> </p>
+                                            <p class="text-muted mb-0"><?= lang('Files.Not_You') ?> <a href="<?= url_to('auth-login') ?>"
+                                                    class="text-primary fw-semibold"> <?= lang('Files.Signin') ?> </a> </p>
                                         </div>
                                     </div>
                                     <div class="mt-4 mt-md-5 text-center">
-                                        <p class="mb-0">© <script>document.write(new Date().getFullYear())</script> Minia   . Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesbrand</p>
+                                        <p class="mb-0">© <script>document.write(new Date().getFullYear())</script> <?= lang('Files.Nama_CV') ?>   . Crafted with <i class="mdi mdi-heart text-danger"></i> by <?= lang('Files.Created_By') ?></p>
                                     </div>
                                 </div>
                             </div>
@@ -171,9 +182,8 @@
             <!-- end container fluid -->
         </div>
 
-
         <?= $this->include('partials/vendor-scripts') ?>
-
+        <!-- password addon init -->
+        <script src="<?= base_url('assets/js/pages/pass-addon.init.js') ?>"></script>
     </body>
-
 </html>

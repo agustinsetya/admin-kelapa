@@ -23,7 +23,7 @@
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li>
-                            <a href="<?= route_to('master-komponen-gaji') ?>">
+                            <a href="<?= url_to('master-komponen-gaji') ?>">
                                 <span data-key="t-master-komponen-gaji"><?= lang('Files.Komponen_Gaji') ?></span>
                             </a>
                         </li>
@@ -39,12 +39,12 @@
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li>
-                            <a href="<?= route_to('supply-view-pembelian') ?>">
+                            <a href="<?= url_to('supply-view-pembelian') ?>">
                                 <span data-key="t-supply-pembelian"><?= lang('Files.Data_Pembelian') ?></span>
                             </a>
                         </li>
                         <li>
-                            <a href="<?= route_to('supply-view-pengolahan') ?>">
+                            <a href="<?= url_to('supply-view-pengolahan') ?>">
                                 <span data-key="t-supply-pengolahan"><?= lang('Files.Data_Pengolahan') ?></span>
                             </a>
                         </li>
@@ -58,17 +58,17 @@
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li>
-                            <a href="<?= route_to('payroll-view-absensi') ?>">
+                            <a href="<?= url_to('payroll-view-absensi') ?>">
                                 <span data-key="t-absensi"><?= lang('Files.Absensi') ?></span>
                             </a>
                         </li>
                         <li>
-                            <a href="<?= route_to('payroll-view-lembur') ?>">
+                            <a href="<?= url_to('payroll-view-lembur') ?>">
                                 <span data-key="t-lembur"><?= lang('Files.Lembur') ?></span>
                             </a>
                         </li>
                         <li>
-                            <a href="<?= route_to('payroll-view-penggajian') ?>">
+                            <a href="<?= url_to('payroll-view-penggajian') ?>">
                                 <span data-key="t-penggajian"><?= lang('Files.Penggajian') ?></span>
                             </a>
                         </li>

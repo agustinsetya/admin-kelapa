@@ -8,7 +8,7 @@
                         <img src="<?= base_url('assets/images/logo-sm.svg') ?>" alt="" height="24">
                     </span>
                     <span class="logo-lg">
-                        <img src="<?= base_url('assets/images/logo-sm.svg') ?>" alt="" height="24"> <span class="logo-txt">CV Java</span>
+                        <img src="<?= base_url('assets/images/logo-sm.svg') ?>" alt="" height="24"> <span class="logo-txt"><?= lang('Files.Nama_CV') ?></span>
                     </span>
                 </a>
 
@@ -17,7 +17,7 @@
                         <img src="<?= base_url('assets/images/logo-sm.svg') ?>" alt="" height="24">
                     </span>
                     <span class="logo-lg">
-                        <img src="<?= base_url('assets/images/logo-sm.svg') ?>" alt="" height="24"> <span class="logo-txt">CV Java</span>
+                        <img src="<?= base_url('assets/images/logo-sm.svg') ?>" alt="" height="24"> <span class="logo-txt"><?= lang('Files.Nama_CV') ?></span>
                     </span>
                 </a>
             </div>
@@ -68,17 +68,22 @@
             <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item bg-light-subtle border-start border-end" id="page-header-user-dropdown"
                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img class="rounded-circle header-profile-user" src="<?= base_url('assets/images/users/avatar-1.jpg') ?>"
-                        alt="Header Avatar">
-                    <span class="d-none d-xl-inline-block ms-1 fw-medium">Shawn L.</span>
+                    <?php 
+                        $jenis_kelamin = session()->get('user')->jenis_kelamin;
+
+                        $avatar_image = $jenis_kelamin == 'P' ? 'female.png' : 'male.png';
+                    ?>
+
+                    <img class="rounded-circle header-profile-user" src="<?= base_url('assets/images/users/' . $avatar_image) ?>" alt="Header Avatar">
+                    <span class="d-none d-xl-inline-block ms-1 fw-medium"><?= session()->get('user')->nama ?></span>
                     <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
                     <!-- item-->
                     <a class="dropdown-item" href="apps-contacts-profile"><i class="mdi mdi mdi-face-man font-size-16 align-middle me-1"></i> <?= lang('Files.Profile') ?></a>
-                    <a class="dropdown-item" href="auth-lock-screen"><i class="mdi mdi-lock font-size-16 align-middle me-1"></i> <?= lang('Files.Lock_screen') ?></a>
+                    <a class="dropdown-item" href="<?= url_to('auth-lock') ?>"><i class="mdi mdi-lock font-size-16 align-middle me-1"></i> <?= lang('Files.Lock_Screen') ?></a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="auth-logout"><i class="mdi mdi-logout font-size-16 align-middle me-1"></i><?= lang('Files.Logout') ?></a>
+                    <a class="dropdown-item" href="<?= url_to('auth-logout-post') ?>"><i class="mdi mdi-logout font-size-16 align-middle me-1"></i><?= lang('Files.Logout') ?></a>
                 </div>
             </div>
 

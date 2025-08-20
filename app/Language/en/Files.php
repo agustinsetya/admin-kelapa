@@ -6,8 +6,10 @@
  */
 
 return [
+    "Nama_CV" => "CV Java",
     "Profile" => "Profile",
     "Lock_Screen" => "Lock Screen",
+    "Signin" => "Sign In",
     "Login" => "Log In",
     "Logout" => "Log Out",
     "Menu" => "Menu",
@@ -41,4 +43,8 @@ return [
     "Input_Password" => "Input Password",
     "Welcome_Back" => "Welcome Back",
     "Login_To_Continue" => "Sign in to Continue",
+    "Reenter_Password" => "Enter your Password to Unlock the Screen",
+    "Unlock" => "Unlock",
+    "Not_You" => "Not You ?",
+    "Created_By" => "PUSTIK ITN",
 ];

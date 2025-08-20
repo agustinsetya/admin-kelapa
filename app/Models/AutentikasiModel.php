@@ -15,18 +15,21 @@ class AutentikasiModel extends Model
     public function check_login(string $kd_pegawai, string $password)
     {
         $user = $this->where('kd_pegawai', $kd_pegawai)->first();
+        
         if (! $user || empty($user->password)) {
             return false;
         }
-
-        if (! password_verify($password, $user->password)) {
+        
+        if (password_verify($password, $user->password)) {
+            if (password_needs_rehash($user->password, PASSWORD_DEFAULT)) {
+                $this->update($user->mt_user_id, [
+                    'password' => password_hash($password, PASSWORD_DEFAULT)
+                ]);
+            }
+    
+            return $user;
+        } else {
             return false;
         }
-
-        if (password_needs_rehash($user->password, PASSWORD_DEFAULT)) {
-            $this->update($user->id, ['password' => password_hash($password, PASSWORD_DEFAULT)]);
-        }
-
-        return $user;
     }
 }

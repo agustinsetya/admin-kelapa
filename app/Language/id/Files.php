@@ -6,8 +6,10 @@
  */
 
 return [
+    "Nama_CV" => "CV Java",
     "Profile" => "Profil",
     "Lock_Screen" => "Kunci Layar",
+    "Signin" => "Masuk",
     "Login" => "Masuk",
     "Logout" => "Keluar",
     "Menu" => "Menu",
@@ -42,4 +44,8 @@ return [
     "Input_Password" => "Masukkan Password",
     "Welcome_Back" => "Selamat Datang Kembali",
     "Login_To_Continue" => "Masuk Untuk Melanjutkan",
+    "Reenter_Password" => "Masukkan Kata Sandi Anda untuk Membuka Kunci Layar",
+    "Unlock" => "Buka Kunci",
+    "Not_You" => "Bukan Anda ?",
+    "Created_By" => "PUSTIK ITN",
 ];
