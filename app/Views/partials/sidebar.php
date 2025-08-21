@@ -23,6 +23,21 @@
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li>
+                            <a href="<?= url_to('master-user-role') ?>">
+                                <span data-key="t-master-user-role"><?= lang('Files.User_Role') ?></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?= url_to('master-karyawan') ?>">
+                                <span data-key="t-master-karyawan"><?= lang('Files.Karyawan') ?></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?= url_to('master-gudang') ?>">
+                                <span data-key="t-master-gudang"><?= lang('Files.Gudang') ?></span>
+                            </a>
+                        </li>
+                        <li>
                             <a href="<?= url_to('master-komponen-gaji') ?>">
                                 <span data-key="t-master-komponen-gaji"><?= lang('Files.Komponen_Gaji') ?></span>
                             </a>

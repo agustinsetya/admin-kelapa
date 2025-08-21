@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-class PayrollController extends BaseController
+class PayrollController extends AuthRequiredController
 {
 	public function showDataPenggajian()
 	{

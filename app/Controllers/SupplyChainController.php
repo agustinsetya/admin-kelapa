@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-class SupplyChainController extends BaseController
+class SupplyChainController extends AuthRequiredController
 {
 	public function showDataPembelian()
 	{

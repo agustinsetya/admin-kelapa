@@ -39,9 +39,6 @@ $routes->group('auth', function($routes) {
     $routes->post('login', 'AutentikasiController::login', ['as' => 'auth-login-post']);
     $routes->get('logout', 'AutentikasiController::showAuthLogout', ['as' => 'auth-logout']);
     $routes->post('logout', 'AutentikasiController::logout', ['as' => 'auth-logout-post']);
-    $routes->get('lock-screen', 'AutentikasiController::showAuthLockScreen', ['as' => 'auth-lock']);
-    $routes->post('lock-screen', 'AutentikasiController::lock', ['as' => 'auth-lock-post']);
-    $routes->post('unlock-screen', 'AutentikasiController::unlock', ['as' => 'auth-unlock-post']);
 });
 
 $routes->group('pages', function($routes) {
@@ -57,7 +54,11 @@ $routes->get('dashboard', 'HomeController::index', [
 
 // Data Utama / Master
 $routes->group('master', ['filter' => 'auth', 'role:1'], function($routes) {
-    $routes->get('komponen-gaji', 'KomponenGajiController::index', ['as' => 'master-komponen-gaji']);
+    $routes->get('user-role', 'DataUtamaController::index', ['as' => 'master-user-role']);
+    $routes->get('karyawan', 'DataUtamaController::showDataKaryawan', ['as' => 'master-karyawan']);
+    $routes->get('karyawan/data', 'DataUtamaController::getDataKaryawan', ['as' => 'master-karyawan-data']);
+    $routes->get('gudang', 'DataUtamaController::index', ['as' => 'master-gudang']);
+    $routes->get('komponen-gaji', 'DataUtamaController::index', ['as' => 'master-komponen-gaji']);
 });
 
 // Supply Chain
