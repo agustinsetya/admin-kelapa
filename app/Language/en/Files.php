@@ -16,7 +16,7 @@ return [
     "Dashboard" => "Dashboard",
     "Data_Utama" => "Master",
     "User_Role" => "User Role",
-    "Karyawan" => "Employee",
+    "Pegawai" => "Employee",
     "Gudang" => "Warehouse",
     "Komponen_Gaji" => "Salary Component",
     "Detail_Komponen_Gaji" => "Salary Component Details",

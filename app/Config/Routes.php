@@ -55,8 +55,8 @@ $routes->get('dashboard', 'HomeController::index', [
 // Data Utama / Master
 $routes->group('master', ['filter' => 'auth', 'role:1'], function($routes) {
     $routes->get('user-role', 'DataUtamaController::index', ['as' => 'master-user-role']);
-    $routes->get('karyawan', 'DataUtamaController::showDataKaryawan', ['as' => 'master-karyawan']);
-    $routes->get('karyawan/data', 'DataUtamaController::getDataKaryawan', ['as' => 'master-karyawan-data']);
+    $routes->get('pegawai', 'DataUtamaController::showDataPegawai', ['as' => 'master-pegawai']);
+    $routes->get('pegawai/data', 'DataUtamaController::getDataPegawai', ['as' => 'master-pegawai-data']);
     $routes->get('gudang', 'DataUtamaController::index', ['as' => 'master-gudang']);
     $routes->get('komponen-gaji', 'DataUtamaController::index', ['as' => 'master-komponen-gaji']);
 });

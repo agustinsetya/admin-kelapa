@@ -28,8 +28,8 @@
                             </a>
                         </li>
                         <li>
-                            <a href="<?= url_to('master-karyawan') ?>">
-                                <span data-key="t-master-karyawan"><?= lang('Files.Karyawan') ?></span>
+                            <a href="<?= url_to('master-pegawai') ?>">
+                                <span data-key="t-master-pegawai"><?= lang('Files.Pegawai') ?></span>
                             </a>
                         </li>
                         <li>

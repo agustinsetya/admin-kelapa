@@ -75,7 +75,7 @@
                     ?>
 
                     <img class="rounded-circle header-profile-user" src="<?= base_url('assets/images/users/' . $avatar_image) ?>" alt="Header Avatar">
-                    <span class="d-none d-xl-inline-block ms-1 fw-medium"><?= session()->get('user')->nama ?></span>
+                    <span class="d-none d-xl-inline-block ms-1 fw-medium"><?= session()->get('user')->nama_pegawai ?></span>
                     <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">

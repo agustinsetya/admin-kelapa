@@ -58,15 +58,15 @@
                                             </div>
 
                                             <div class="col-md-4 d-flex gap-2">
-                                                <button type="button" id="applyKaryawanFilter" class="btn btn-primary">
+                                                <button type="button" id="applyPegawaiFilter" class="btn btn-primary">
                                                     <i class="mdi mdi-filter"></i> Apply Filter
                                                 </button>
-                                                <button type="button" id="btn-reset" class="btn btn-light">Reset</button>
+                                                <!-- <button type="button" id="btn-reset" class="btn btn-light">Reset</button> -->
                                             </div>
                                         </form>
                                     </div>
                                     <div class="card-body">
-                                        <table id="datatable" class="table table-bordered dt-responsive nowrap w-100 dt-karyawanTable">
+                                        <table id="datatable" class="table table-bordered dt-responsive nowrap w-100 dt-pegawaiTable">
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
@@ -76,10 +76,10 @@
                                                     <th>Gudang</th>
                                                     <th>Email</th>
                                                     <th>Jenis Kelamin</th>
+                                                    <th>Action</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                            </tbody>
+                                            <tbody></tbody>
                                         </table>
                                     </div>
                                 </div>
@@ -125,6 +125,9 @@
         <script src="<?= base_url('assets/js/app.js') ?>"></script>
 
         <!-- custom js -->
-        <script src="<?= base_url('assets/js/content/master-karyawan.js') ?>"></script>
+        <script type="text/javascript">
+            var base_url = '<?= base_url() ?>';
+        </script>
+        <script src="<?= base_url('assets/js/content/master-pegawai.js') ?>"></script>
     </body>
 </html>

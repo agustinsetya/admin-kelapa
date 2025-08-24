@@ -19,24 +19,37 @@ class DataUtamaController extends AuthRequiredController
         $this->userRoleModel = new UserRoleModel();
     }
 
-    public function showDataKaryawan()
+    public function showDataPegawai()
     {
-		$karyawan = $this->pegawaiModel->getDataPegawai();
 		$gudang = $this->gudangModel->getDataGudang();
 		$userRole = $this->userRoleModel->getDataUserRole();
 
-        $data = [
-            'title_meta' => view('partials/title-meta', ['title' => 'Karyawan']),
+		$data = [
+            'title_meta' => view('partials/title-meta', ['title' => 'Pegawai']),
             'page_title' => view('partials/page-title', [
-                'title' => 'Karyawan',
+                'title' => 'Pegawai',
                 'li_1'  => lang('Files.Data_Utama'),
-                'li_2'  => lang('Files.Karyawan'),
+                'li_2'  => lang('Files.Pegawai'),
             ]),
-			'karyawan' => $karyawan,
 			'gudang' => $gudang,
 			'userRole' => $userRole,
         ];
-        return view('master-karyawan', $data);
+
+        return view('master-pegawai', $data);
+    }
+    
+	public function getDataPegawai()
+    {
+		$filters = [
+            'role_id'   => $this->request->getGet('role'),
+            'gudang_id' => $this->request->getGet('gudang'),
+        ];
+
+		$pegawai = $this->pegawaiModel->getDataPegawai($filters);
+
+        return $this->response->setJSON([
+            'data' => $pegawai
+        ]);
     }
 
     public function showDataKomponenGaji()
