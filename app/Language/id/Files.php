@@ -17,6 +17,7 @@ return [
     "Data_Utama" => "Data Utama",
     "User_Role" => "Peran Pengguna",
     "Pegawai" => "Pegawai",
+    "User" => "Pengguna",
     "Gudang" => "Gudang",
     "Komponen_Gaji" => "Komponen Gaji",
     "Detail_Komponen_Gaji" => "Detail Komponen Gaji",

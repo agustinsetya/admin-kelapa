@@ -4,6 +4,10 @@
     "t-dashboard":"Dashboard",
 
     "t-master":"Data Utama",
+    "t-master-user-role":"Peran Pengguna",
+    "t-master-user":"Pengguna",
+    "t-master-pegawai":"Pegawai",
+    "t-master-gudang":"Gudang",
     "t-master-komponen-gaji":"Komponen Gaji",
 
     "t-supply-chain":"Supply Chain",

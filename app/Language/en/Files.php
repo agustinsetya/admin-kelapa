@@ -17,6 +17,7 @@ return [
     "Data_Utama" => "Master",
     "User_Role" => "User Role",
     "Pegawai" => "Employee",
+    "User" => "User",
     "Gudang" => "Warehouse",
     "Komponen_Gaji" => "Salary Component",
     "Detail_Komponen_Gaji" => "Salary Component Details",

@@ -28,6 +28,11 @@
                             </a>
                         </li>
                         <li>
+                            <a href="">
+                                <span data-key="t-master-user"><?= lang('Files.User') ?></span>
+                            </a>
+                        </li>
+                        <li>
                             <a href="<?= url_to('master-pegawai') ?>">
                                 <span data-key="t-master-pegawai"><?= lang('Files.Pegawai') ?></span>
                             </a>

@@ -4,6 +4,10 @@
     "t-dashboard":"Dashboard",
 
     "t-master":"Master",
+    "t-master-user-role":"User Role",
+    "t-master-user":"User",
+    "t-master-pegawai":"Employee",
+    "t-master-gudang":"Warehouse",
     "t-master-komponen-gaji":"Salary Component",
 
     "t-supply-chain":"Supply Chain",

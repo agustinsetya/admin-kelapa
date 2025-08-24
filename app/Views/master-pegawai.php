@@ -9,7 +9,7 @@
         <link href="<?= base_url('assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css') ?>" rel="stylesheet" type="text/css" />
 
         <!-- Responsive datatable examples -->
-        <link href="<?= base_url('assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css') ?>" rel="stylesheet" type="text/css" /> 
+        <link href="<?= base_url('assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css') ?>" rel="stylesheet" type="text/css" />
 
         <?= $this->include('partials/head-css') ?>
 
@@ -36,37 +36,54 @@
                             <div class="col-12">
                                 <div class="card">
                                     <div class="card-header">
-                                        <form id="filter-form" class="row g-2 align-items-end mb-3">
-                                            <div class="col-md-4">
-                                                <label class="form-label mb-1">Gudang</label>
-                                                <select name="gudang_id" id="gudang_id" class="form-select">
-                                                    <option value="" disabled selected>Pilih Gudang</option>
-                                                    <?php foreach ($gudang as $g): ?>
-                                                        <option value="<?= esc($g->m_gudang_id) ?>"><?= esc($g->nama) ?></option>
-                                                    <?php endforeach; ?>
-                                                </select>
-                                            </div>
+                                        <div class="row align-items-end g-2">
+                                            <div class="col-md-6">
+                                                <form id="filter-pegawai-form" class="row g-2 align-items-end mb-0">
+                                                    <div class="col-md-4">
+                                                        <label class="form-label mb-1">Gudang</label>
+                                                        <select name="gudang_id" id="gudang_id" class="form-select">
+                                                            <option value="" disabled selected>Pilih Gudang</option>
+                                                            <?php foreach ($gudang as $g): ?>
+                                                                <option value="<?= esc($g->m_gudang_id) ?>"><?= esc($g->nama) ?></option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                    </div>
 
-                                            <div class="col-md-4">
-                                                <label class="form-label mb-1">Role</label>
-                                                <select name="role_id" id="role_id" class="form-select">
-                                                    <option value="" read-only>Pilih Role</option>
-                                                    <?php foreach ($userRole as $r): ?>
-                                                        <option value="<?= esc($r->m_role_id) ?>"><?= esc($r->nama) ?></option>
-                                                    <?php endforeach; ?>
-                                                </select>
-                                            </div>
+                                                    <div class="col-md-4">
+                                                        <label class="form-label mb-1">Role</label>
+                                                        <select name="role_id" id="role_id" class="form-select">
+                                                            <option value="" read-only>Pilih Role</option>
+                                                            <?php foreach ($userRole as $r): ?>
+                                                                <option value="<?= esc($r->m_role_id) ?>"><?= esc($r->nama) ?></option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                    </div>
 
-                                            <div class="col-md-4 d-flex gap-2">
-                                                <button type="button" id="applyPegawaiFilter" class="btn btn-primary">
-                                                    <i class="mdi mdi-filter"></i> Apply Filter
-                                                </button>
-                                                <!-- <button type="button" id="btn-reset" class="btn btn-light">Reset</button> -->
+                                                    <div class="col-12 col-md-4 d-flex gap-2 mt-3 mt-md-0">
+                                                        <button type="button" id="applyPegawaiFilter" class="btn btn-primary w-100 text-nowrap">
+                                                            <i class="bx bx-filter"></i> Apply Filter
+                                                        </button>
+                                                        <button type="button" id="resetPegawaiFilter" class="btn btn-light w-100 text-nowrap">Reset</button>
+                                                    </div>
+                                                </form>
                                             </div>
-                                        </form>
+                                            <div class="col-md-6 mt-2 mt-md-0">
+                                                <div class="row justify-content-md-end">
+                                                    <div class="col-12 col-md-auto">
+                                                        <button type="button"
+                                                                id="btn-tambah-pegawai"
+                                                                class="btn btn-success w-100 text-nowrap"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#addPegawaiModal">
+                                                            <i class="bx bx-plus me-1"></i>Tambah
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="card-body">
-                                        <table id="datatable" class="table table-bordered dt-responsive nowrap w-100 dt-pegawaiTable">
+                                        <table class="table table-bordered dt-responsive nowrap w-100 dt-pegawaiTable">
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
@@ -74,7 +91,6 @@
                                                     <th>Nama</th>
                                                     <th>Role</th>
                                                     <th>Gudang</th>
-                                                    <th>Email</th>
                                                     <th>Jenis Kelamin</th>
                                                     <th>Action</th>
                                                 </tr>

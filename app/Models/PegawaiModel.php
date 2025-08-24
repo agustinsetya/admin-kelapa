@@ -19,7 +19,6 @@ class PegawaiModel extends Model
                     mt_pegawai.nama AS nama_pegawai,
                     m_role.nama AS role_name,
                     m_gudang.nama as gudang_name,
-                    mt_pegawai.email,
                     mt_pegawai.jenis_kelamin,
                     m_role.role_scope,
                     mt_pegawai.mt_pegawai_id,
