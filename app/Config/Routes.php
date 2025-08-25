@@ -54,11 +54,17 @@ $routes->get('dashboard', 'HomeController::index', [
 
 // Data Utama / Master
 $routes->group('master', ['filter' => 'auth', 'role:1'], function($routes) {
-    $routes->get('user-role', 'DataUtamaController::index', ['as' => 'master-user-role']);
+    $routes->get('user-roles', 'DataUtamaController::showDataUserRoles', ['as' => 'master-user-roles']);
+    $routes->get('user-roles/data', 'DataUtamaController::getDataUserRoles', ['as' => 'master-user-roles-data']);
+    $routes->get('user', 'DataUtamaController::showDataUser', ['as' => 'master-user']);
+    $routes->get('user/data', 'DataUtamaController::getDataUser', ['as' => 'master-user-data']);
     $routes->get('pegawai', 'DataUtamaController::showDataPegawai', ['as' => 'master-pegawai']);
     $routes->get('pegawai/data', 'DataUtamaController::getDataPegawai', ['as' => 'master-pegawai-data']);
-    $routes->get('gudang', 'DataUtamaController::index', ['as' => 'master-gudang']);
-    $routes->get('komponen-gaji', 'DataUtamaController::index', ['as' => 'master-komponen-gaji']);
+    $routes->get('gudang', 'DataUtamaController::showDataGudang', ['as' => 'master-gudang']);
+    $routes->get('gudang/data', 'DataUtamaController::getDataGudang', ['as' => 'master-gudang-data']);
+    $routes->get('komponen-gaji', 'DataUtamaController::showDataKomponenGaji', ['as' => 'master-komponen-gaji']);
+    $routes->get('komponen-gaji/data', 'DataUtamaController::getDataKomponenGaji', ['as' => 'master-komponen-gaji-data']);
+    $routes->get('komponen-gaji/detail', 'DataUtamaController::getDetailKomponenGaji', ['as' => 'master-komponen-gaji-detail']);
 });
 
 // Supply Chain

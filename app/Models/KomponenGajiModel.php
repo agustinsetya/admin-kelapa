@@ -12,7 +12,7 @@ class KomponenGajiModel extends Model
     protected $allowedFields = ['gudang_id','takaran_daging','upah_takaran_daging','takaran_kopra','upah_takaran_kopra'];
     protected $useTimestamps = true;
 
-    public function getDataKomponenGaji()
+    public function getDataKomponenGaji(array $filters = []): array
     {
         $komponenGaji = $this->select('
                     m_komponen_gaji.m_komponen_gaji_id,
@@ -23,9 +23,12 @@ class KomponenGajiModel extends Model
                     m_komponen_gaji.upah_takaran_kopra,
                     m_gudang.nama AS nama_gudang
                 ')
-                ->join('m_gudang', 'm_gudang.m_gudang_id = m_komponen_gaji.gudang_id', 'left')
-                ->findAll();
+                ->join('m_gudang', 'm_gudang.m_gudang_id = m_komponen_gaji.gudang_id', 'left');
+
+        if (isset($filters['gudang_id']) && is_numeric($filters['gudang_id'])) {
+            $komponenGaji->where('m_komponen_gaji.gudang_id', (int)$filters['gudang_id']);
+        }
         
-		return $komponenGaji;
+		return $komponenGaji->findAll();
     }
 }

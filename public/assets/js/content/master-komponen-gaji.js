@@ -1,0 +1,96 @@
+"use strict";
+
+$((function () {
+    if (roleScope === 'all') {
+        applyFilter();
+    } else if (roleScope === 'gudang') {
+        getDetailKomponenGaji();
+    } else {
+        console.error('Role scope tidak valid');
+    }
+}));
+
+function applyFilter() {
+    getDataKomponenGaji().done(function(response) {
+        initializeKomponenGajiTable(response.data);
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        console.error("Request failed: " + textStatus + ", " + errorThrown);
+    });
+}
+
+function getDataKomponenGaji() {
+    return $.ajax({
+        url: base_url + '/master/komponen-gaji/data',
+        method: 'GET',
+        dataType: 'json'
+    });
+}
+
+function initializeKomponenGajiTable(data) {
+    var dkt = $(".dt-komponenGajiTable");
+
+    var isDataInvalid = !Array.isArray(data) || data.length === 0 || data.status === false;
+    var safeData = Array.isArray(data) ? data : [];
+
+    if ($.fn.dataTable.isDataTable(dkt)) {
+        dkt.DataTable().clear();
+
+        if (!isDataInvalid) dkt.DataTable().rows.add(safeData);
+
+        dkt.DataTable().draw();
+    } else {
+        dkt.DataTable({
+            data: isDataInvalid ? [] : safeData,
+            columns: [
+                { data: null, defaultContent: "" },
+                { data: 'nama_gudang', defaultContent: "-" },
+                { data: 'takaran_daging', defaultContent: "-" },          
+                { data: 'upah_takaran_daging', defaultContent: "-" },          
+                { data: 'takaran_kopra', defaultContent: "-" },          
+                { data: 'upah_takaran_kopra', defaultContent: "-" },          
+            ],
+            columnDefs: [
+                // Additional column
+                {
+                    targets: 0,
+                    render: function(data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+            ],
+            lengthChange: false,
+            buttons: ['excel'],
+            dom: 
+                '<"row align-items-center mb-2"' +
+                    '<"col-sm-12 col-md-6 d-flex justify-content-start"B>' +
+                    '<"col-sm-12 col-md-6 d-flex justify-content-md-end"f>' +
+                '>' +
+                't<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+        });
+    }
+}
+
+function getDetailKomponenGaji() {
+    $.ajax({
+      url: base_url + "/master/komponen-gaji/detail",
+      method: "GET",
+      success: function (response) {
+        if (response && response['data'] && response['data'].length > 0) {
+            var komponen = response['data'][0];
+
+            $('#takaran-daging-kelapa').val(komponen.takaran_daging);
+            $('#upah-takaran-daging-kelapa').val(komponen.upah_takaran_daging);
+            $('#takaran-kopra-kelapa').val(komponen.takaran_kopra);
+            $('#upah-takaran-kopra-kelapa').val(komponen.upah_takaran_kopra);
+            
+            $('#upah-takaran-daging-kelapa').trigger('input');
+            $('#upah-takaran-kopra-kelapa').trigger('input');
+        } else {
+          alert("Data tidak ditemukan!");
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        alert("Terjadi kesalahan: " + textStatus);
+      },
+    });
+}

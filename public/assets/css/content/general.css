@@ -1,0 +1,5 @@
+@media (min-width: 768px) {
+    #btn-tambah-user, #btn-tambah-user-roles, #btn-tambah-gudang {
+        width: auto !important;
+    }
+}

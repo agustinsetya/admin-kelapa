@@ -1,11 +1,7 @@
 "use strict";
 
 $((function () {
-    getDataPegawai().done(function(response) {
-        initializePegawaiTable(response.data);
-    }).fail(function(jqXHR, textStatus, errorThrown) {
-        console.error("Request failed: " + textStatus + ", " + errorThrown);
-    });
+    applyFilter();
 
     $('#applyPegawaiFilter').click(function() {
         var gudang = $('#gudang_id').val();

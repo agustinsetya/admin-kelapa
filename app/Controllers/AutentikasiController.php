@@ -48,6 +48,7 @@ class AutentikasiController extends BaseController
                 'last_activity' => time(),
                 'isLoggedIn'    => true,
                 'role'          => $user->role_id ?? null,
+                'role_scope'    => $user->role_scope ?? null,
             ]);
 
             log_message('debug', 'Session data set: ' . json_encode($this->session->get()));

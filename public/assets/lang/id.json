@@ -4,7 +4,7 @@
     "t-dashboard":"Dashboard",
 
     "t-master":"Data Utama",
-    "t-master-user-role":"Peran Pengguna",
+    "t-master-user-roles":"Peran Pengguna",
     "t-master-user":"Pengguna",
     "t-master-pegawai":"Pegawai",
     "t-master-gudang":"Gudang",

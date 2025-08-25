@@ -5,23 +5,23 @@ $((function () {
 }));
 
 function applyFilter() {
-    getDataUser().done(function(response) {
-        initializeUserTable(response.data);
+    getDataGudang().done(function(response) {
+        initializeGudangTable(response.data);
     }).fail(function(jqXHR, textStatus, errorThrown) {
         console.error("Request failed: " + textStatus + ", " + errorThrown);
     });
 }
 
-function getDataUser() {
+function getDataGudang() {
     return $.ajax({
-        url: base_url + '/master/user/data',
+        url: base_url + '/master/gudang/data',
         method: 'GET',
         dataType: 'json'
     });
 }
 
-function initializeUserTable(data) {
-    var dkt = $(".dt-userTable");
+function initializeGudangTable(data) {
+    var dkt = $(".dt-gudangTable");
 
     var isDataInvalid = !Array.isArray(data) || data.length === 0 || data.status === false;
     var safeData = Array.isArray(data) ? data : [];
@@ -37,10 +37,8 @@ function initializeUserTable(data) {
             data: isDataInvalid ? [] : safeData,
             columns: [
                 { data: null, defaultContent: "" },
-                { data: 'kd_pegawai', defaultContent: "-" },
-                { data: 'nama_pegawai', defaultContent: "-" },
-                { data: 'email', defaultContent: "-" },
-                { data: null, defaultContent: "" },
+                { data: 'nama', defaultContent: "-" },
+                { data: 'status', defaultContent: "-" },
                 { data: null, defaultContent: "" }             
             ],
             columnDefs: [
@@ -52,21 +50,21 @@ function initializeUserTable(data) {
                     }
                 },
                 {
-                    targets: 4,
+                    targets: 2,
                     render: function (data, type, row) {
                         return (
                             '<div class="d-flex flex-column align-items-center">' +
-                            '<input type="checkbox" class="form-check-input status-keaktifan-user" data-userId="' +
-                            row.kd_pegawai +
-                            '" ' +
-                            (row.status === "1" ? "checked" : "") +
-                            " />" +
+                                '<input type="checkbox" class="form-check-input status-keaktifan-gudang" data-gudangId="' +
+                                row.m_gudang_id +
+                                '" ' +
+                                (row.status === "1" ? "checked" : "") +
+                                " />" +
                             "</div>"
                         );
                     }
                 },
                 {
-                    targets: 5,
+                    targets: 3,
                     className: 'no-export',
                     title: 'Action',
                     orderable: false,
@@ -74,29 +72,29 @@ function initializeUserTable(data) {
                     className: 'align-middle dt-actions text-nowrap',
                     width: '72px',
                     render: function (data, type, row, meta) {
-                        var actionUserButton = '<div class="d-flex align-items-center gap-1">';
+                        var actionGudangButton = '<div class="d-flex align-items-center gap-1">';
 
-                        actionUserButton += '<button type="button" class="btn btn-icon btn-edit-user" ' +
+                        actionGudangButton += '<button type="button" class="btn btn-icon btn-edit-gudang" ' +
                             'data-bs-toggle="tooltip" ' +
                             'data-bs-placement="top" ' +
-                            'title="Detail User" ' +
-                            'data-bs-target="#detailUserModal" ' +
-                            'data-id="' + row.kd_pegawai + '"> ' +
-                            '<i class="text-primary bx bx-pencil fs-5"></i>' +
+                            'title="Detail Gudang" ' +
+                            'data-bs-target="#detailGudangModal" ' +
+                            'data-id="' + row.m_gudang_id + '"> ' +
+                                '<i class="text-primary bx bx-pencil fs-5"></i>' +
                         '</button>';
                         
-                        actionUserButton += '<button type="button" class="btn btn-icon btn-hapus-user" ' +
+                        actionGudangButton += '<button type="button" class="btn btn-icon btn-hapus-gudang" ' +
                             'data-bs-toggle="tooltip" ' +
                             'data-bs-placement="top" ' +
-                            'title="Hapus User" ' +
-                            'data-bs-target="#hapusUserModal" ' +
-                            'data-id="' + row.kd_pegawai + '"> ' +
-                            '<i class="text-danger bx bx-trash fs-5"></i>' +
+                            'title="Hapus Gudang" ' +
+                            'data-bs-target="#hapusGudangModal" ' +
+                            'data-id="' + row.m_gudang_id + '"> ' +
+                                '<i class="text-danger bx bx-trash fs-5"></i>' +
                         '</button>';
 
-                        actionUserButton += '</div>';
+                        actionGudangButton += '</div>';
                     
-                        return actionUserButton;
+                        return actionGudangButton;
                     }
                 }
             ],

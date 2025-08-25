@@ -23,12 +23,12 @@
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li>
-                            <a href="<?= url_to('master-user-role') ?>">
-                                <span data-key="t-master-user-role"><?= lang('Files.User_Role') ?></span>
+                            <a href="<?= url_to('master-user-roles') ?>">
+                                <span data-key="t-master-user-roles"><?= lang('Files.User_Roles') ?></span>
                             </a>
                         </li>
                         <li>
-                            <a href="">
+                            <a href="<?= url_to('master-user') ?>">
                                 <span data-key="t-master-user"><?= lang('Files.User') ?></span>
                             </a>
                         </li>
