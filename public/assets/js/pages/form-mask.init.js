@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
             blocks: {
                 num: {
                     mask: Number,
-                    scale: 2,
+                    scale: 0,
                     thousandsSeparator: '.',
                     radix: ',',
                     mapToRadix: [',', '.'],

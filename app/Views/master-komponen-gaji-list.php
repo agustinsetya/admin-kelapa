@@ -31,6 +31,7 @@
                                                     <th>Upah per Takaran Daging</th>
                                                     <th>Takaran Kopra (kg)</th>
                                                     <th>Upah per Takaran Kopra</th>
+                                                    <th>Last Update</th>
                                                 </tr>
                                             </thead>
                                             <tbody></tbody>

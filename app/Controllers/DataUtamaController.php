@@ -129,7 +129,8 @@ class DataUtamaController extends AuthRequiredController
 
     public function showDataKomponenGaji()
     {
-        $roleScope = session()->get('role_scope');
+        // $roleScope = session()->get('role_scope');
+        $roleScope = 'gudang';
 
         $data = [
             'title_meta' => view('partials/title-meta', ['title' => 'Komponen_Gaji']),
@@ -170,6 +171,60 @@ class DataUtamaController extends AuthRequiredController
 
         return $this->response->setJSON([
             'data' => $detailKomponenGaji
+        ]);
+    }
+
+    public function updateDetailKomponenGaji()
+    {
+        $user = session()->get('user');
+
+        if (!$user || empty($user->penempatan_id)) {
+            return $this->response->setStatusCode(401)->setJSON([
+                'success' => false,
+                'message' => 'Tidak terautentik / penempatan gudang tidak ditemukan',
+                'code'    => 401,
+            ]);
+        }
+
+        $input = $this->request->getJSON(true) ?? $this->request->getPost();
+
+        if (!$this->validate('komponenGajiUpdate')) {
+            return $this->response->setStatusCode(422)->setJSON([
+                'success' => false,
+                'message' => 'Validasi gagal',
+                'errors'  => $this->validator->getErrors(),
+                'code'    => 422,
+            ]);
+        }
+
+        $data = [
+            'gudang_id'            => $user->penempatan_id,
+            'takaran_daging'       => $input['takaran_daging_kelapa'],
+            'upah_takaran_daging'  => $input['upah_takaran_daging'],
+            'takaran_kopra'        => $input['takaran_kopra_kelapa'],
+            'upah_takaran_kopra'   => $input['upah_takaran_kopra'],
+            'updated_by'           => $user->email ?? null,
+            'updated_at'           => date('Y-m-d H:i:s'),
+        ];
+
+        $save = $this->komponenGajiModel->updateKomponenGaji($data, $data['gudang_id']);
+
+        if ($save === false) {
+            $errors = method_exists($this->komponenGajiModel, 'errors')
+                ? $this->komponenGajiModel->errors()
+                : (is_object($save) && property_exists($save, 'message') ? $save->message : 'Gagal menyimpan data');
+    
+            return $this->response->setStatusCode(500)->setJSON([
+                'success' => false,
+                'message' => $errors,
+                'code'    => 500,
+            ]);
+        }
+    
+        return $this->response->setJSON([
+            'success' => true,
+            'message' => 'Berhasil Update Data Komponen Gaji',
+            'code'    => 200,
         ]);
     }
 }

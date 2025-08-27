@@ -18,13 +18,13 @@
                                         <p class="card-title-desc">Acuan penghitungan gaji karyawan, berdasarkan hasil kerja pengolahan daging dan kopra per takaran.</p>
                                     </div>
                                     <div class="card-body p-4">
-                                        <form action="<?= base_url('update-komponen-gaji') ?>" method="POST">
+                                        <form class="needs-validation" id="detail-komponen-gaji-form">
                                             <div class="row">
                                                 <div class="col-lg-12">
                                                     <div class="mb-3">
-                                                        <label for="takaran-daging-kelapa" class="form-label"><?= lang('Files.Takaran_Daging') ?></label>
+                                                        <label for="takaran_daging_kelapa" class="form-label"><?= lang('Files.Takaran_Daging') ?></label>
                                                         <div class="input-group">
-                                                            <input class="form-control" type="number" name="takaran-daging-kelapa" id="takaran-daging-kelapa" placeholder="<?= lang('Files.Input_Berat') ?>">
+                                                            <input class="form-control" type="number" name="takaran_daging_kelapa" id="takaran-daging-kelapa" placeholder="<?= lang('Files.Input_Berat') ?>">
                                                             <span class="input-group-text">Kg</span>
                                                         </div>
                                                     </div>
@@ -33,17 +33,17 @@
                                             <div class="row">
                                                 <div class="col-lg-12">
                                                     <div class="mb-3">
-                                                        <label for="upah-takaran-daging" class="form-label"><?= lang('Files.Upah_Daging') ?></label>
-                                                        <input type="text" class="form-control currency-rupiah-mask" name="upah-takaran-daging" id="upah-takaran-daging-kelapa" placeholder="<?= lang('Files.Input_Upah') ?>">
+                                                        <label for="upah_takaran_daging" class="form-label"><?= lang('Files.Upah_Daging') ?></label>
+                                                        <input type="text" class="form-control currency-rupiah-mask" name="upah_takaran_daging" id="upah-takaran-daging-kelapa" placeholder="<?= lang('Files.Input_Upah') ?>">
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-lg-12">
                                                     <div class="mb-3">
-                                                        <label for="takaran-kopra-kelapa" class="form-label"><?= lang('Files.Takaran_Kopra') ?></label>
+                                                        <label for="takaran_kopra_kelapa" class="form-label"><?= lang('Files.Takaran_Kopra') ?></label>
                                                         <div class="input-group">
-                                                            <input class="form-control" type="number" name="takaran-kopra-kelapa" id="takaran-kopra-kelapa" placeholder="<?= lang('Files.Input_Berat') ?>">
+                                                            <input class="form-control" type="number" name="takaran_kopra_kelapa" id="takaran-kopra-kelapa" placeholder="<?= lang('Files.Input_Berat') ?>">
                                                             <span class="input-group-text">Kg</span>
                                                         </div>
                                                     </div>
@@ -52,15 +52,15 @@
                                             <div class="row">
                                                 <div class="col-lg-12">
                                                     <div class="mb-3">
-                                                        <label for="upah-takaran-kopra" class="form-label"><?= lang('Files.Upah_Kopra') ?></label>
-                                                        <input type="text" class="form-control currency-rupiah-mask" name="upah-takaran-kopra" id="upah-takaran-kopra-kelapa" placeholder="<?= lang('Files.Input_Upah') ?>">
+                                                        <label for="upah_takaran_kopra" class="form-label"><?= lang('Files.Upah_Kopra') ?></label>
+                                                        <input type="text" class="form-control currency-rupiah-mask" name="upah_takaran_kopra" id="upah-takaran-kopra-kelapa" placeholder="<?= lang('Files.Input_Upah') ?>">
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-12">
                                                     <div class="mb-3 text-end">
-                                                        <button type="submit" class="btn btn-primary"><?= lang('Files.Update') ?></button>
+                                                        <button type="button" class="btn btn-primary" id="btn-save-komponen-gaji"><?= lang('Files.Update') ?></button>
                                                     </div>
                                                 </div>
                                             </div>
