@@ -14,7 +14,8 @@ class KomponenGajiModel extends Model
         'takaran_daging',
         'upah_takaran_daging',
         'takaran_kopra',
-        'upah_takaran_kopra'
+        'upah_takaran_kopra',
+        'updated_by',
     ];
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';

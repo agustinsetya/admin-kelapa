@@ -70,8 +70,9 @@ $routes->group('master', ['filter' => 'auth', 'role:1'], function($routes) {
 
 // Supply Chain
 $routes->group('supply-chain', ['filter' => 'auth'], function($routes) {
-    $routes->get('pembelian', 'SupplyChainController::showDataPembelian', ['as' => 'supply-view-pembelian']);
-    $routes->get('pengolahan', 'SupplyChainController::showDataPengolahan', ['as' => 'supply-view-pengolahan']);
+    $routes->get('pembelian', 'SupplyChainController::showDataPembelian', ['as' => 'supply-pembelian']);
+    $routes->get('pembelian/data', 'SupplyChainController::getDataPembelian', ['as' => 'supply-data-pembelian']);
+    $routes->get('pengolahan', 'SupplyChainController::showDataPengolahan', ['as' => 'supply-pengolahan']);
 });
 
 // Payroll

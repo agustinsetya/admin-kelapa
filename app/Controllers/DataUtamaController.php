@@ -129,8 +129,8 @@ class DataUtamaController extends AuthRequiredController
 
     public function showDataKomponenGaji()
     {
-        $roleScope = session()->get('role_scope');
-        // $roleScope = 'gudang';
+        // $roleScope = session()->get('role_scope');
+        $roleScope = 'gudang';
 
         $data = [
             'title_meta' => view('partials/title-meta', ['title' => 'Komponen_Gaji']),
@@ -143,9 +143,9 @@ class DataUtamaController extends AuthRequiredController
         ];
 
         if ($roleScope == 'all') {
-            return view('master-komponen-gaji-list', $data);
-        } else if ($roleScope == 'gudang') {
             return view('master-komponen-gaji', $data);
+        } else if ($roleScope == 'gudang') {
+            return view('master-komponen-gaji-form', $data);
         } else {
             session()->setFlashdata('error', 'Anda tidak mempunyai akses ke halaman ini');
             return redirect()->to('/dashboard');
@@ -202,7 +202,6 @@ class DataUtamaController extends AuthRequiredController
             'takaran_kopra'        => $input['takaran_kopra_kelapa'],
             'upah_takaran_kopra'   => $input['upah_takaran_kopra'],
             'updated_by'           => $user->email ?? null,
-            'updated_at'           => date('Y-m-d H:i:s'),
         ];
 
         $save = $this->komponenGajiModel->updateKomponenGaji($data, $data['gudang_id']);

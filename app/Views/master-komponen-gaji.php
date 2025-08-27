@@ -1,6 +1,10 @@
 <?= $this->include('partials/main') ?>
     <head>
         <?= $title_meta ?>
+        <!-- DataTables -->
+        <link href="<?= base_url('assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css') ?>" rel="stylesheet" type="text/css" />
+        <link href="<?= base_url('assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css') ?>" rel="stylesheet" type="text/css" />
+
         <?= $this->include('partials/head-css') ?>
     </head>
     <?= $this->include('partials/body') ?>
@@ -17,57 +21,21 @@
                                         <h4 class="card-title"><?= lang('Files.Detail_Komponen_Gaji') ?></h4>
                                         <p class="card-title-desc">Acuan penghitungan gaji karyawan, berdasarkan hasil kerja pengolahan daging dan kopra per takaran.</p>
                                     </div>
-                                    <div class="card-body p-4">
-                                        <form class="needs-validation" id="detail-komponen-gaji-form" novalidate>
-                                            <?= csrf_field() ?>
-                                            <input type="hidden" name="_method" value="PATCH">
-
-                                            <div class="row">
-                                                <div class="col-lg-12">
-                                                    <div class="mb-3">
-                                                        <label for="takaran_daging_kelapa" class="form-label"><?= lang('Files.Takaran_Daging') ?></label>
-                                                        <div class="input-group">
-                                                            <input class="form-control" type="number" name="takaran_daging_kelapa" id="takaran-daging-kelapa" placeholder="<?= lang('Files.Input_Berat') ?>">
-                                                            <span class="input-group-text">Kg</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-lg-12">
-                                                    <div class="mb-3">
-                                                        <label for="upah_takaran_daging" class="form-label"><?= lang('Files.Upah_Daging') ?></label>
-                                                        <input type="text" class="form-control currency-rupiah-mask" name="upah_takaran_daging" id="upah-takaran-daging-kelapa" placeholder="<?= lang('Files.Input_Upah') ?>">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-lg-12">
-                                                    <div class="mb-3">
-                                                        <label for="takaran_kopra_kelapa" class="form-label"><?= lang('Files.Takaran_Kopra') ?></label>
-                                                        <div class="input-group">
-                                                            <input class="form-control" type="number" name="takaran_kopra_kelapa" id="takaran-kopra-kelapa" placeholder="<?= lang('Files.Input_Berat') ?>">
-                                                            <span class="input-group-text">Kg</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-lg-12">
-                                                    <div class="mb-3">
-                                                        <label for="upah_takaran_kopra" class="form-label"><?= lang('Files.Upah_Kopra') ?></label>
-                                                        <input type="text" class="form-control currency-rupiah-mask" name="upah_takaran_kopra" id="upah-takaran-kopra-kelapa" placeholder="<?= lang('Files.Input_Upah') ?>">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <div class="mb-3 text-end">
-                                                        <button type="button" class="btn btn-primary" id="btn-save-komponen-gaji"><?= lang('Files.Update') ?></button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
+                                    <div class="card-body">
+                                        <table class="table table-bordered dt-responsive nowrap w-100 dt-komponenGajiTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Nama Gudang</th>
+                                                    <th>Takaran Daging (kg)</th>
+                                                    <th>Upah per Takaran Daging</th>
+                                                    <th>Takaran Kopra (kg)</th>
+                                                    <th>Upah per Takaran Kopra</th>
+                                                    <th>Last Update</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -80,11 +48,22 @@
         <?= $this->include('partials/right-sidebar') ?>
         <?= $this->include('partials/vendor-scripts') ?>
 
-        <!-- form mask -->
-        <script src="<?= base_url('assets/libs/imask/imask.min.js') ?>"></script>
-        <!-- form mask init -->
-        <script src="<?= base_url('assets/js/pages/form-mask.init.js') ?>"></script>
+        <!-- Required datatable js -->
+        <script src="<?= base_url('assets/libs/datatables.net/js/jquery.dataTables.min.js') ?>"></script>
+        <script src="<?= base_url('assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js') ?>"></script>
+        <!-- Buttons -->
+        <script src="<?= base_url('assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js') ?>"></script>
+        <script src="<?= base_url('assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js') ?>"></script>
+        <script src="<?= base_url('assets/libs/jszip/jszip.min.js') ?>"></script>
+        <script src="<?= base_url('assets/libs/datatables.net-buttons/js/buttons.html5.min.js') ?>"></script>
+        <script src="<?= base_url('assets/libs/datatables.net-buttons/js/buttons.print.min.js') ?>"></script>
+        <script src="<?= base_url('assets/libs/datatables.net-buttons/js/buttons.colVis.min.js') ?>"></script>
+        <!-- Datatable init js -->
+        <script src="<?= base_url('assets/js/pages/datatables.init.js') ?>"></script>
         <script src="<?= base_url('assets/js/app.js') ?>"></script>
+        <!-- Responsive table -->
+        <script src="<?= base_url('assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js') ?>"></script>
+        <script src="<?= base_url('assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') ?>"></script>
 
         <!-- custom js -->
         <script type="text/javascript">

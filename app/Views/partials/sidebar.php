@@ -59,12 +59,12 @@
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li>
-                            <a href="<?= url_to('supply-view-pembelian') ?>">
+                            <a href="<?= url_to('supply-pembelian') ?>">
                                 <span data-key="t-supply-pembelian"><?= lang('Files.Data_Pembelian') ?></span>
                             </a>
                         </li>
                         <li>
-                            <a href="<?= url_to('supply-view-pengolahan') ?>">
+                            <a href="<?= url_to('supply-pengolahan') ?>">
                                 <span data-key="t-supply-pengolahan"><?= lang('Files.Data_Pengolahan') ?></span>
                             </a>
                         </li>
