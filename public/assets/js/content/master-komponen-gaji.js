@@ -43,9 +43,9 @@ $((function () {
                 );
         
                 if (response.success) {
-                    console.log("Simpan Komponen Gaji Berhasil!");
+                    alert("Simpan Komponen Gaji Berhasil!");
                 } else {
-                    console.log(response?.message || "Simpan Data Gagal!");
+                    alert(response?.message || "Simpan Data Gagal!");
                 }
             },
             error: function (jqXHR) {
@@ -54,14 +54,14 @@ $((function () {
                     payload.code === 422
                     ? "Data tidak valid"
                     : payload.message || "Terjadi kesalahan saat menyimpan";
-                console.log(message);
+                alert(message);
 
                 resetButton(
                     "btn-save-komponen-gaji",
                     "Simpan",
                     "btn btn-primary waves-effect waves-light"
                 );
-                console.log("error", payload);
+                alert("error", payload);
             },
         });
     });
