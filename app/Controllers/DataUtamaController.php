@@ -129,8 +129,8 @@ class DataUtamaController extends AuthRequiredController
 
     public function showDataKomponenGaji()
     {
-        // $roleScope = session()->get('role_scope');
-        $roleScope = 'gudang';
+        $roleScope = session()->get('role_scope');
+        // $roleScope = 'gudang';
 
         $data = [
             'title_meta' => view('partials/title-meta', ['title' => 'Komponen_Gaji']),
@@ -180,13 +180,11 @@ class DataUtamaController extends AuthRequiredController
 
         if (!$user || empty($user->penempatan_id)) {
             return $this->response->setStatusCode(401)->setJSON([
-                'success' => false,
-                'message' => 'Tidak terautentik / penempatan gudang tidak ditemukan',
-                'code'    => 401,
+                'success' => false, 'message' => 'Tidak terautentik', 'code' => 401
             ]);
         }
 
-        $input = $this->request->getJSON(true) ?? $this->request->getPost();
+        $input = $this->request->getPost();
 
         if (!$this->validate('komponenGajiUpdate')) {
             return $this->response->setStatusCode(422)->setJSON([

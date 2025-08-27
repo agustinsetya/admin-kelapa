@@ -65,6 +65,7 @@ $routes->group('master', ['filter' => 'auth', 'role:1'], function($routes) {
     $routes->get('komponen-gaji', 'DataUtamaController::showDataKomponenGaji', ['as' => 'master-komponen-gaji']);
     $routes->get('komponen-gaji/data', 'DataUtamaController::getDataKomponenGaji', ['as' => 'master-komponen-gaji-data']);
     $routes->get('komponen-gaji/detail', 'DataUtamaController::getDetailKomponenGaji', ['as' => 'master-komponen-gaji-detail']);
+    $routes->patch('komponen-gaji', 'DataUtamaController::updateDetailKomponenGaji', ['as' => 'master-komponen-gaji-update']);
 });
 
 // Supply Chain

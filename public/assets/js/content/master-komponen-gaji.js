@@ -9,82 +9,59 @@ $((function () {
         console.error('Role scope tidak valid');
     }
 
-    $("body").on("click", "#btn-save", function (e) {
+    $("body").on("click", "#btn-save-komponen-gaji", function (e) {
         e.preventDefault();
     
         var form = $("#detail-komponen-gaji-form")[0];
-        var action = $("#detail-komponen-gaji-form").data("action");
     
         if (form.checkValidity() === false) {
             e.stopPropagation();
             form.classList.add("was-validated");
             return;
         }
+
+        const $upahDaging = $("#upah-takaran-daging-kelapa");
+        const $upahKopra  = $("#upah-takaran-kopra-kelapa");
+
+        $upahDaging.val(unmaskRupiah($upahDaging.val()));
+        $upahKopra.val(unmaskRupiah($upahKopra.val()));
     
-        var formData = $(form).serialize();
-        var url, method;
-    
-        if (action === "edit") {
-            var id = $("#detail-komponen-gaji-form").data("id");
-        
-            formData += "&id=" + id;
-            url = "/manage/update-gelombang";
-            method = "PUT";
-        } else {
-            url = "/manage/add-gelombang";
-            method = "POST";
-        }
+        const formData = $("#detail-komponen-gaji-form").serialize();
     
         $.ajax({
-            url: url,
-            method: "PUT",
-            headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-            },
+            url: base_url + '/master/komponen-gaji',
+            method: "POST",
             data: formData,
             beforeSend: () => {
-                showBtnLoading("btn-save", "Menyimpan Data...", "btn-primary");
+                showBtnLoading("btn-save-komponen-gaji", { text: "Menyimpan Data..." });
             },
             success: function (response) {
                 resetButton(
-                "btn-save",
-                "Simpan",
-                "btn btn-primary waves-effect waves-light"
+                    "btn-save-komponen-gaji",
+                    "Simpan",
+                    "btn btn-primary waves-effect waves-light"
                 );
         
                 if (response.success) {
-                successAlert("Simpan Gelombang Berhasil!");
-        
-                $("#addGelombangModal").modal("hide");
-        
-                if ($.fn.dataTable.isDataTable(dg)) {
-                    const dataTableInstance = dg.DataTable();
-                    dataTableInstance.ajax.reload(null, false);
+                    console.log("Simpan Komponen Gaji Berhasil!");
                 } else {
-                    console.error("Table is not initialized.");
-                }
-                } else {
-                showToastError("Simpan Data Gagal!");
-                return false;
+                    console.log(response?.message || "Simpan Data Gagal!");
                 }
             },
-            error: function (jqXHR, textStatus, errorThrown) {
-                const errors = jqXHR.responseJSON
-                ? jqXHR.responseJSON
-                : {
-                    message: jqXHR.statusText || "Terjadi kesalahan saat menyimpan",
-                    };
+            error: function (jqXHR) {
+                const payload = jqXHR.responseJSON || {};
                 const message =
-                errors.code === 422
+                    payload.code === 422
                     ? "Data tidak valid"
-                    : errors.message ?? "Terjadi kesalahan saat menyimpan";
-                showToastError(message ?? "Terjadi kesalahan saat menyimpan");
+                    : payload.message || "Terjadi kesalahan saat menyimpan";
+                console.log(message);
+
                 resetButton(
-                "btn-save",
-                "Simpan",
-                "btn btn-primary waves-effect waves-light"
+                    "btn-save-komponen-gaji",
+                    "Simpan",
+                    "btn btn-primary waves-effect waves-light"
                 );
-                console.log("error", errors);
+                console.log("error", payload);
             },
         });
     });
@@ -100,7 +77,7 @@ function applyFilter() {
 
 function getDataKomponenGaji() {
     return $.ajax({
-        url:  ,
+        url:  base_url + '/master/komponen-gaji/data',
         method: 'GET',
         dataType: 'json'
     });
@@ -165,23 +142,23 @@ function initializeKomponenGajiTable(data) {
 
 function getDetailKomponenGaji() {
     $.ajax({
-      url: base_url + "/master/komponen-gaji/detail",
-      method: "GET",
-      success: function (response) {
-        if (response && response['data'] && response['data'].length > 0) {
-            var komponen = response['data'][0];
+        url: base_url + "/master/komponen-gaji/detail",
+        method: "GET",
+        success: function (response) {
+            if (response && response['data'] && response['data'].length > 0) {
+                var komponen = response['data'][0];
 
-            $('#takaran-daging-kelapa').val(komponen.takaran_daging);
-            $('#upah-takaran-daging-kelapa').val(formatRupiah(komponen.upah_takaran_daging));
-            $('#takaran-kopra-kelapa').val(komponen.takaran_kopra);
-            $('#upah-takaran-kopra-kelapa').val(formatRupiah(komponen.upah_takaran_kopra));
-        } else {
-          alert("Data tidak ditemukan!");
-        }
-      },
-      error: function (jqXHR, textStatus, errorThrown) {
-        alert("Terjadi kesalahan: " + textStatus);
-      },
+                $('#takaran-daging-kelapa').val(komponen.takaran_daging);
+                $('#upah-takaran-daging-kelapa').val(formatRupiah(komponen.upah_takaran_daging));
+                $('#takaran-kopra-kelapa').val(komponen.takaran_kopra);
+                $('#upah-takaran-kopra-kelapa').val(formatRupiah(komponen.upah_takaran_kopra));
+            } else {
+            alert("Data tidak ditemukan!");
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            alert("Terjadi kesalahan: " + textStatus);
+        },
     });
 }
 
@@ -197,3 +174,51 @@ function formatRupiah(angka) {
     if (angka == null || isNaN(angka)) return "";
     return "Rp. " + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 };
+
+function unmaskRupiah(str) {
+    return (str || '').toString().replace(/[^\d]/g, '');
+}
+
+function showBtnLoading(btnId, options = {}) {
+    const $btn = $("#" + btnId);
+
+    // Simpan HTML & class asli kalau belum disimpan
+    if (!$btn.data("original-html")) {
+        $btn.data("original-html", $btn.html());
+        $btn.data("original-class", $btn.attr("class"));
+    }
+
+    // Opsi default
+    const defaults = {
+        text: "Loading",
+        icon: "bx bx-hourglass bx-spin font-size-16 align-middle me-2",
+        class: "btn btn-light waves-effect",
+        disabled: true,
+    };
+
+    const settings = { ...defaults, ...options };
+
+    // Update tombol jadi loading
+    $btn
+        .removeClass()
+        .addClass(settings.class)
+        .prop("disabled", settings.disabled)
+        .html(`<i class="${settings.icon}"></i> ${settings.text}`
+    );
+}
+
+function resetButton(btnId) {
+    const $btn = $("#" + btnId);
+
+    const originalHtml = $btn.data("original-html");
+    const originalClass = $btn.data("original-class");
+
+    if (originalHtml !== undefined) {
+        $btn.html(originalHtml);
+    }
+    if (originalClass !== undefined) {
+        $btn.removeClass().addClass(originalClass);
+    }
+
+    $btn.prop("disabled", false);
+}

@@ -18,7 +18,10 @@
                                         <p class="card-title-desc">Acuan penghitungan gaji karyawan, berdasarkan hasil kerja pengolahan daging dan kopra per takaran.</p>
                                     </div>
                                     <div class="card-body p-4">
-                                        <form class="needs-validation" id="detail-komponen-gaji-form">
+                                        <form class="needs-validation" id="detail-komponen-gaji-form" novalidate>
+                                            <?= csrf_field() ?>
+                                            <input type="hidden" name="_method" value="PATCH">
+
                                             <div class="row">
                                                 <div class="col-lg-12">
                                                     <div class="mb-3">
