@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 24, 2025 at 12:03 PM
+-- Generation Time: Aug 27, 2025 at 08:43 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.3.3
 
@@ -34,8 +34,6 @@ CREATE TABLE `mt_pegawai` (
   `jenis_kelamin` enum('P','L') DEFAULT NULL,
   `role_id` int(2) NOT NULL,
   `penempatan_id` int(10) DEFAULT NULL,
-  `email` varchar(25) NOT NULL,
-  `password` varchar(255) NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -44,9 +42,9 @@ CREATE TABLE `mt_pegawai` (
 -- Dumping data for table `mt_pegawai`
 --
 
-INSERT INTO `mt_pegawai` (`mt_pegawai_id`, `kd_pegawai`, `nama`, `jenis_kelamin`, `role_id`, `penempatan_id`, `email`, `password`, `created_at`, `updated_at`) VALUES
-(1, '9000000586', 'Agustin Setya', 'P', 1, NULL, 'agustin@gmail.com', '$2y$10$P6bTD/iV6ghdA86GAUEAGe39izhoNIMdQOcQpBGMBoJ/MkRcBsl3e', '2025-08-18 19:55:58', '2025-08-19 11:00:31'),
-(2, '9000000123', 'Rian', 'L', 4, 1, 'rian@gmail.com', '$2y$10$vzD.MZ6TWnxSA6/ZuubkxOPbm92dCmDWF80G4Jnt7MTCCIhz6xUlO', '2025-08-18 19:55:58', '2025-08-21 09:32:45');
+INSERT INTO `mt_pegawai` (`mt_pegawai_id`, `kd_pegawai`, `nama`, `jenis_kelamin`, `role_id`, `penempatan_id`, `created_at`, `updated_at`) VALUES
+(1, '9000000586', 'Agustin Setya', 'P', 1, NULL, '2025-08-18 19:55:58', '2025-08-19 11:00:31'),
+(2, '9000000123', 'Rian', 'L', 4, 1, '2025-08-18 19:55:58', '2025-08-21 09:32:45');
 
 -- --------------------------------------------------------
 
@@ -93,6 +91,30 @@ CREATE TABLE `mt_pengolahan` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `mt_user`
+--
+
+CREATE TABLE `mt_user` (
+  `mt_user_id` int(6) NOT NULL,
+  `kd_pegawai` char(10) NOT NULL,
+  `email` varchar(25) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `mt_user`
+--
+
+INSERT INTO `mt_user` (`mt_user_id`, `kd_pegawai`, `email`, `password`, `status`, `created_at`, `updated_at`) VALUES
+(1, '9000000586', 'agustin@gmail.com', '$2y$10$P6bTD/iV6ghdA86GAUEAGe39izhoNIMdQOcQpBGMBoJ/MkRcBsl3e', 1, '2025-08-18 19:55:58', '2025-08-19 11:00:31'),
+(2, '9000000123', 'rian@gmail.com', '$2y$10$vzD.MZ6TWnxSA6/ZuubkxOPbm92dCmDWF80G4Jnt7MTCCIhz6xUlO', 1, '2025-08-18 19:55:58', '2025-08-21 09:32:45');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `m_gudang`
 --
 
@@ -120,10 +142,10 @@ INSERT INTO `m_gudang` (`m_gudang_id`, `nama`, `status`, `created_at`) VALUES
 CREATE TABLE `m_komponen_gaji` (
   `m_komponen_gaji_id` int(5) NOT NULL,
   `gudang_id` int(10) NOT NULL,
-  `takaran_daging` int(10) NOT NULL,
-  `upah_takaran_daging` float NOT NULL,
-  `takaran_kopra` int(10) NOT NULL,
-  `upah_takaran_kopra` float NOT NULL,
+  `takaran_daging` int(10) NOT NULL DEFAULT 0,
+  `upah_takaran_daging` float NOT NULL DEFAULT 0,
+  `takaran_kopra` int(10) NOT NULL DEFAULT 0,
+  `upah_takaran_kopra` float NOT NULL DEFAULT 0,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `created_by` varchar(100) NOT NULL,
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
@@ -189,6 +211,13 @@ ALTER TABLE `mt_pengolahan`
   ADD KEY `kd_pegawai` (`kd_pegawai`);
 
 --
+-- Indexes for table `mt_user`
+--
+ALTER TABLE `mt_user`
+  ADD PRIMARY KEY (`mt_user_id`),
+  ADD KEY `kd_pegawai` (`kd_pegawai`);
+
+--
 -- Indexes for table `m_gudang`
 --
 ALTER TABLE `m_gudang`
@@ -231,6 +260,12 @@ ALTER TABLE `mt_pengolahan`
   MODIFY `mt_pengolahan_id` int(10) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `mt_user`
+--
+ALTER TABLE `mt_user`
+  MODIFY `mt_user_id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `m_gudang`
 --
 ALTER TABLE `m_gudang`
@@ -257,7 +292,7 @@ ALTER TABLE `m_role`
 --
 ALTER TABLE `mt_pegawai`
   ADD CONSTRAINT `fk_pegawai_penempatan` FOREIGN KEY (`penempatan_id`) REFERENCES `m_gudang` (`m_gudang_id`),
-  ADD CONSTRAINT `mt_pegawai_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `m_role` (`m_role_id`);
+  ADD CONSTRAINT `fk_pegawai_role` FOREIGN KEY (`role_id`) REFERENCES `m_role` (`m_role_id`);
 
 --
 -- Constraints for table `mt_pembelian`
@@ -271,6 +306,12 @@ ALTER TABLE `mt_pembelian`
 ALTER TABLE `mt_pengolahan`
   ADD CONSTRAINT `fk_pengolahan_pegawai` FOREIGN KEY (`kd_pegawai`) REFERENCES `mt_pegawai` (`kd_pegawai`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_pengolahan_pembelian` FOREIGN KEY (`pembelian_id`) REFERENCES `mt_pembelian` (`mt_pembelian_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `mt_user`
+--
+ALTER TABLE `mt_user`
+  ADD CONSTRAINT `fk_user_pegawai` FOREIGN KEY (`kd_pegawai`) REFERENCES `mt_pegawai` (`kd_pegawai`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `m_komponen_gaji`
