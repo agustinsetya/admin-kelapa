@@ -67,4 +67,24 @@ class Validation extends BaseConfig
             'numeric'  => 'Upah takaran kopra harus angka.',
         ],
     ];
+
+    public $supplyChainPembelian = [
+        'tg_pembelian'          => 'required',
+        'gudang_id'             => 'required|numeric',
+        'berat_kelapa'          => 'required|numeric',
+    ];
+
+    public $supplyChainPembelian_errors = [
+        'tg_pembelian' => [
+            'required' => 'Tanggal Pembelian wajib diisi.',
+        ],
+        'gudang_id' => [
+            'required' => 'Gudang wajib diisi.',
+            'numeric'  => 'Gudang harus angka.',
+        ],
+        'berat_kelapa' => [
+            'required' => 'Berat Kelapa wajib diisi.',
+            'numeric'  => 'Berat Kelapa harus angka.',
+        ],
+    ];
 }

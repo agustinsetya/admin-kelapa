@@ -32,6 +32,10 @@ class PembelianModel extends Model
                 ')
                 ->join('m_gudang', 'm_gudang.m_gudang_id = mt_pembelian.gudang_id', 'left');
         
+        if (isset($filters['mt_pembelian_id']) && is_numeric($filters['mt_pembelian_id'])) {
+            $pembelian->where('mt_pembelian.mt_pembelian_id', (int)$filters['mt_pembelian_id']);
+        }
+        
         if (isset($filters['gudang_id']) && is_numeric($filters['gudang_id'])) {
             $pembelian->where('mt_pembelian.gudang_id', (int)$filters['gudang_id']);
         }

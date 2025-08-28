@@ -5,6 +5,9 @@
         <link href="<?= base_url('assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css') ?>" rel="stylesheet" type="text/css" />
         <link href="<?= base_url('assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css') ?>" rel="stylesheet" type="text/css" />
 
+        <!-- custom css -->
+        <link href="<?= base_url('assets/css/content/general.css') ?>" rel="stylesheet" type="text/css" />
+
         <?= $this->include('partials/head-css') ?>
     </head>
     <?= $this->include('partials/body') ?>
@@ -18,8 +21,19 @@
                             <div class="col-12">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h4 class="card-title"><?= lang('Files.Data_Pembelian') ?></h4>
-                                        <p class="card-title-desc">Data pembelian.</p>
+                                        <div class="row align-items-end g-2">
+                                            <div class="mt-2">
+                                                <div class="d-flex justify-content-md-end">
+                                                    <button type="button"
+                                                            id="btn-tambah-pembelian"
+                                                            class="btn btn-success text-nowrap w-100 w-md-auto"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#supplyPembelianModal">
+                                                        <i class="bx bx-plus me-1"></i>Tambah
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="card-body">
                                         <table class="table table-bordered dt-responsive nowrap w-100 dt-pembelianTable">
@@ -35,6 +49,9 @@
                                             <tbody></tbody>
                                         </table>
                                     </div>
+
+                                    <!-- Include the modal -->
+                                    <?= $this->include('modals/supply-pembelian-modal') ?>
                                 </div>
                             </div>
                         </div>

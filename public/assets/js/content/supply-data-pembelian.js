@@ -3,10 +3,26 @@
 $((function () {
     applyFilter();
 
+    $("#btn-tambah-pembelian").on("click", function () {
+        openModal("add");
+    });
+
+    $(document).on('click', '.btn-edit-pembelian', function () {
+        getDetailSupplyPembelian(this);
+    });
+
     $("body").on("click", "#btn-save-pembelian", function (e) {
         e.preventDefault();
     
-        var form = $("#detail-pembelian-form")[0];
+        var form = $("#supply-pembelian-form")[0];
+        var action = $("#supply-pembelian-form").data("action");
+    
+        const gudangValue = $("#gudang_id").val();
+        if (!gudangValue) {
+            $("#gudang_id").addClass("is-invalid");
+        } else {
+            $("#gudang_id").removeClass("is-invalid").addClass("is-valid");
+        }
     
         if (form.checkValidity() === false) {
             e.stopPropagation();
@@ -14,11 +30,24 @@ $((function () {
             return;
         }
     
-        const formData = $("#detail-pembelian-form").serialize();
+        var formData = $(form).serialize();
+        var url;
+    
+        if (action === "edit") {
+            var id = $("#supply-pembelian-form").data("id");
+        
+            formData += "&id=" + id;
+            url = '/supply-chain/pembelian/update';
+        } else {
+            url = '/supply-chain/pembelian/add';
+        }
     
         $.ajax({
-            url: base_url + '/supply-chain/pembelian/data',
-            method: "POST",
+            url: base_url + url,
+            method: 'POST',
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
             data: formData,
             beforeSend: () => {
                 showBtnLoading("btn-save-pembelian", { text: "Menyimpan Data..." });
@@ -31,7 +60,16 @@ $((function () {
                 );
         
                 if (response.success) {
-                    alert("Simpan Komponen Gaji Berhasil!");
+                    alert("Simpan Data Pembelian Berhasil!");
+            
+                    $("#supplyPembelianModal").modal("hide");
+            
+                    if ($.fn.dataTable.isDataTable(dpt)) {
+                        const dataTableInstance = dpt.DataTable();
+                        dataTableInstance.ajax.reload(null, false);
+                    } else {
+                        alert("Table is not initialized.");
+                    }
                 } else {
                     alert(response?.message || "Simpan Data Gagal!");
                 }
@@ -56,14 +94,14 @@ $((function () {
 }));
 
 function applyFilter() {
-    getDataKomponenGaji().done(function(response) {
-        initializeKomponenGajiTable(response.data);
+    getDataSupplyPembelian().done(function(response) {
+        initializeSupplyPembelianTable(response.data);
     }).fail(function(jqXHR, textStatus, errorThrown) {
         console.error("Request failed: " + textStatus + ", " + errorThrown);
     });
 }
 
-function getDataKomponenGaji() {
+function getDataSupplyPembelian() {
     return $.ajax({
         url: base_url + '/supply-chain/pembelian/data',
         method: 'GET',
@@ -71,7 +109,7 @@ function getDataKomponenGaji() {
     });
 }
 
-function initializeKomponenGajiTable(data) {
+function initializeSupplyPembelianTable(data) {
     var dpt = $(".dt-pembelianTable");
 
     var isDataInvalid = !Array.isArray(data) || data.length === 0 || data.status === false;
@@ -122,7 +160,6 @@ function initializeKomponenGajiTable(data) {
                             'data-bs-toggle="tooltip" ' +
                             'data-bs-placement="top" ' +
                             'title="Detail Pembelian" ' +
-                            'data-bs-target="#detailPembelianModal" ' +
                             'data-id="' + row.mt_pembelian_id + '"> ' +
                             '<i class="text-primary bx bx-pencil fs-5"></i>' +
                         '</button>';
@@ -145,26 +182,57 @@ function initializeKomponenGajiTable(data) {
     }
 }
 
-function getDetailKomponenGaji() {
+function getDetailSupplyPembelian(button) {
+    var id = $(button).data("id");
+  
     $.ajax({
-        url: base_url + "/master/komponen-gaji/detail",
+        url: base_url + '/supply-chain/pembelian/detail',
         method: "GET",
+        data: {
+            id: id,
+        },
         success: function (response) {
-            if (response && response['data'] && response['data'].length > 0) {
-                var komponen = response['data'][0];
-
-                $('#takaran-daging-kelapa').val(komponen.takaran_daging);
-                $('#upah-takaran-daging-kelapa').val(formatRupiah(komponen.upah_takaran_daging));
-                $('#takaran-kopra-kelapa').val(komponen.takaran_kopra);
-                $('#upah-takaran-kopra-kelapa').val(formatRupiah(komponen.upah_takaran_kopra));
+            if (response && response.data) {
+                openModal("edit", response.data[0]);
             } else {
-            alert("Data tidak ditemukan!");
+                alert("Data tidak ditemukan!");
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
             alert("Terjadi kesalahan: " + textStatus);
         },
     });
+}
+
+function openModal(mode, data = null) {
+    $("#supply-pembelian-form")[0].reset();
+    $("#supply-pembelian-form").removeClass("was-validated");
+    $("#gudang_id").val(null).trigger("change");
+    $("#gudang_id").removeClass("is-invalid is-valid");
+
+    $("#supply-pembelian-form input[name='_method']").remove();
+  
+    if (mode === "edit" && data) {
+      $("#supplyPembelianModal .modal-title").text("Edit Data Pembelian");
+  
+      $("#tg_pembelian").val(data.tg_pembelian.split("T")[0]);
+      $("#gudang_id").val(data.gudang_id).trigger("change");
+      $("#berat_kelapa").val(data.berat_kelapa);
+  
+      $("#supply-pembelian-form").data("action", "edit");
+      $("#supply-pembelian-form").data("id", data.id);
+
+      $("#supply-pembelian-form").append(
+        '<input type="hidden" name="_method" value="PATCH">'
+      );
+    } else {
+      $("#supplyPembelianModal .modal-title").text("Tambah Data Pembelian");
+  
+      $("#supply-pembelian-form").data("action", "add");
+      $("#supply-pembelian-form").removeData("id");
+    }
+  
+    $("#supplyPembelianModal").modal("show");
 }
 
 function formatTanggal(tanggal) {

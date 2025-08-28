@@ -21,6 +21,7 @@ return [
     "Gudang" => "Gudang",
     "Komponen_Gaji" => "Komponen Gaji",
     "Detail_Komponen_Gaji" => "Detail Komponen Gaji",
+    "Berat_Kelapa" => "Berat Kelapa",
     "Takaran_Daging" => "Takaran Daging",
     "Takaran_Kopra" => "Takaran Kopra",
     "Upah_Daging" => "Upah per Takaran Daging",
@@ -56,4 +57,6 @@ return [
     "Not_You" => "Bukan Anda ?",
     "Created_By" => "PUSTIK ITN",
     "Update" => "Perbarui",
+    "Save" => "Simpan",
+    "Close" => "Tutup",
 ];

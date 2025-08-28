@@ -21,6 +21,7 @@ return [
     "Gudang" => "Warehouse",
     "Komponen_Gaji" => "Salary Component",
     "Detail_Komponen_Gaji" => "Salary Component Details",
+    "Berat_Kelapa" => "Weight of Coconut",
     "Takaran_Daging" => "Measure of Coconut Meat",
     "Takaran_Kopra" => "Measure of Coconut Copra",
     "Upah_Daging" => "Wages per Measure of Coconut Meat",
@@ -55,4 +56,6 @@ return [
     "Not_You" => "Not You ?",
     "Created_By" => "PUSTIK ITN",
     "Update" => "Update",
+    "Save" => "Save",
+    "Close" => "Close",
 ];
