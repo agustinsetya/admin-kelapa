@@ -110,7 +110,7 @@ function getDataSupplyPembelian() {
 }
 
 function initializeSupplyPembelianTable(data) {
-    var dpt = $(".dt-pembelianTable");
+    dpt = $(".dt-pembelianTable");
 
     var isDataInvalid = !Array.isArray(data) || data.length === 0 || data.status === false;
     var safeData = Array.isArray(data) ? data : [];
@@ -213,23 +213,23 @@ function openModal(mode, data = null) {
     $("#supply-pembelian-form input[name='_method']").remove();
   
     if (mode === "edit" && data) {
-      $("#supplyPembelianModal .modal-title").text("Edit Data Pembelian");
-  
-      $("#tg_pembelian").val(data.tg_pembelian.split("T")[0]);
-      $("#gudang_id").val(data.gudang_id).trigger("change");
-      $("#berat_kelapa").val(data.berat_kelapa);
-  
-      $("#supply-pembelian-form").data("action", "edit");
-      $("#supply-pembelian-form").data("id", data.id);
+        $("#supplyPembelianModal .modal-title").text("Edit Data Pembelian");
+    
+        $("#tg_pembelian").val(data.tg_pembelian.split("T")[0]);
+        $("#gudang_id").val(data.gudang_id).trigger("change");
+        $("#berat_kelapa").val(data.berat_kelapa);
+    
+        $("#supply-pembelian-form").data("action", "edit");
+        $("#supply-pembelian-form").data("id", data.mt_pembelian_id);
 
-      $("#supply-pembelian-form").append(
-        '<input type="hidden" name="_method" value="PATCH">'
-      );
+        $("#supply-pembelian-form").append(
+            '<input type="hidden" name="_method" value="PATCH">'
+        );
     } else {
-      $("#supplyPembelianModal .modal-title").text("Tambah Data Pembelian");
-  
-      $("#supply-pembelian-form").data("action", "add");
-      $("#supply-pembelian-form").removeData("id");
+        $("#supplyPembelianModal .modal-title").text("Tambah Data Pembelian");
+    
+        $("#supply-pembelian-form").data("action", "add");
+        $("#supply-pembelian-form").removeData("id");
     }
   
     $("#supplyPembelianModal").modal("show");

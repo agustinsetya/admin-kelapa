@@ -43,19 +43,21 @@ class PembelianModel extends Model
 		return $pembelian->findAll();
     }
 
-    public function updatePembelian(array $data, $gudangId): bool
+    public function saveDataPembelian(array $data, $pembelianId = null): bool
     {
-        $data['gudang_id'] = $gudangId;
+        $data['mt_pembelian_id'] = $pembelianId;
 
         $this->db->transStart();
 
-        $exists = $this->where('gudang_id', $gudangId)->countAllResults() > 0;
+        $exists = $this->where('mt_pembelian_id', $pembelianId)->countAllResults() > 0;
 
         if ($exists) {
-            $ok = $this->update($gudangId, $data);
+            $ok = $this->update($pembelianId, $data);
         } else {
             $ok = $this->insert($data, false) !== false;
         }
+
+        log_message('debug', (string) $this->db->getLastQuery());
 
         if (!$ok) {
             $this->db->transRollback();

@@ -70,13 +70,15 @@ class SupplyChainController extends AuthRequiredController
         ]);
     }
 
-	public function updateDetailPembelian()
+	public function addDetailPembelian()
     {
         $user = session()->get('user');
 
         if (!$user) {
             return $this->response->setStatusCode(401)->setJSON([
-                'success' => false, 'message' => 'Tidak terautentik', 'code' => 401
+                'success' => false,
+                'message' => 'Tidak terautentik',
+                'code'    => 401
             ]);
         }
 
@@ -94,17 +96,71 @@ class SupplyChainController extends AuthRequiredController
         $data = [
             'tg_pembelian'	=> $input['tg_pembelian'],
             'gudang_id'		=> $input['gudang_id'],
-            'berat'       	=> $input['berat_kelapa'],
+            'berat_kelapa'  => $input['berat_kelapa'],
+            'created_by'	=> $user->email ?? null,
+        ];
+
+        $save = $this->pembelianModel->saveDataPembelian($data);
+
+        if ($save === false) {
+            $errors = $this->pembelianModel->errors() ?: 'Gagal menyimpan data';
+            return $this->response->setStatusCode(500)->setJSON([
+                'success' => false,
+                'message' => $errors,
+                'code'    => 500,
+            ]);
+        }
+    
+        return $this->response->setJSON([
+            'success' => true,
+            'message' => 'Berhasil Tambah Data Pembelian',
+            'code'    => 200,
+        ]);
+    }
+	
+    public function updateDetailPembelian()
+    {
+        $user = session()->get('user');
+
+        if (!$user) {
+            return $this->response->setStatusCode(401)->setJSON([
+                'success' => false,
+                'message' => 'Tidak terautentik',
+                'code'    => 401
+            ]);
+        }
+
+        $input = $this->request->getPost();
+
+        if (!$this->validate('supplyChainPembelian')) {
+            return $this->response->setStatusCode(422)->setJSON([
+                'success' => false,
+                'message' => 'Validasi gagal',
+                'errors'  => $this->validator->getErrors(),
+                'code'    => 422,
+            ]);
+        }
+
+        $id = $input['id'] ?? null;
+        if (!$id) {
+            return $this->response->setStatusCode(400)->setJSON([
+                'success' => false,
+                'message' => 'ID pembelian tidak ditemukan',
+                'code'    => 400,
+            ]);
+        }
+
+        $data = [
+            'tg_pembelian'	=> $input['tg_pembelian'],
+            'gudang_id'		=> $input['gudang_id'],
+            'berat_kelapa'  => $input['berat_kelapa'],
             'updated_by'	=> $user->email ?? null,
         ];
 
-        $save = $this->pembelianModel->updateKomponenGaji($data, $data['mt_pembelian_id']);
+        $save = $this->pembelianModel->saveDataPembelian($data, $id);
 
         if ($save === false) {
-            $errors = method_exists($this->pembelianModel, 'errors')
-                ? $this->pembelianModel->errors()
-                : (is_object($save) && property_exists($save, 'message') ? $save->message : 'Gagal menyimpan data');
-    
+            $errors = $this->pembelianModel->errors() ?: 'Gagal menyimpan data';
             return $this->response->setStatusCode(500)->setJSON([
                 'success' => false,
                 'message' => $errors,
