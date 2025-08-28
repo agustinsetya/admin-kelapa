@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 27, 2025 at 08:43 AM
+-- Generation Time: Aug 28, 2025 at 11:16 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.3.3
 
@@ -43,7 +43,7 @@ CREATE TABLE `mt_pegawai` (
 --
 
 INSERT INTO `mt_pegawai` (`mt_pegawai_id`, `kd_pegawai`, `nama`, `jenis_kelamin`, `role_id`, `penempatan_id`, `created_at`, `updated_at`) VALUES
-(1, '9000000586', 'Agustin Setya', 'P', 1, NULL, '2025-08-18 19:55:58', '2025-08-19 11:00:31'),
+(1, '9000000586', 'Agustin Setya', 'P', 1, 1, '2025-08-18 19:55:58', '2025-08-27 17:21:01'),
 (2, '9000000123', 'Rian', 'L', 4, 1, '2025-08-18 19:55:58', '2025-08-21 09:32:45');
 
 -- --------------------------------------------------------
@@ -68,7 +68,8 @@ CREATE TABLE `mt_pembelian` (
 --
 
 INSERT INTO `mt_pembelian` (`mt_pembelian_id`, `tg_pembelian`, `gudang_id`, `berat_kelapa`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
-(1, '2025-08-21', 1, 570, '2025-08-21 09:35:47', 'agustin@gmail.com', '2025-08-21 09:35:47', '');
+(1, '2025-08-21', 1, 57, '2025-08-21 09:35:47', 'agustin@gmail.com', '2025-08-28 10:44:13', 'agustin@gmail.com'),
+(2, '2025-08-28', 1, 20, '2025-08-28 10:47:47', '', '2025-08-28 10:47:47', '');
 
 -- --------------------------------------------------------
 
@@ -78,7 +79,8 @@ INSERT INTO `mt_pembelian` (`mt_pembelian_id`, `tg_pembelian`, `gudang_id`, `ber
 
 CREATE TABLE `mt_pengolahan` (
   `mt_pengolahan_id` int(10) NOT NULL,
-  `pembelian_id` int(10) NOT NULL,
+  `tg_pengolahan` date NOT NULL DEFAULT current_timestamp(),
+  `gudang_id` int(10) NOT NULL,
   `kd_pegawai` char(10) NOT NULL,
   `berat_daging` int(10) NOT NULL,
   `berat_kopra` int(10) NOT NULL,
@@ -87,6 +89,26 @@ CREATE TABLE `mt_pengolahan` (
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `updated_by` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `mt_pengolahan`
+--
+
+INSERT INTO `mt_pengolahan` (`mt_pengolahan_id`, `tg_pengolahan`, `gudang_id`, `kd_pegawai`, `berat_daging`, `berat_kopra`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
+(3, '2025-08-26', 1, '9000000123', 250, 500, '2025-08-28 18:12:38', 'agustin@gmail.com', '2025-08-28 18:16:09', ''),
+(4, '2025-08-19', 4, '9000000586', 200, 482, '2025-08-28 18:12:38', 'agustin@gmail.com', '2025-08-28 18:16:09', ''),
+(5, '2025-08-20', 1, '9000000123', 250, 500, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-08-28 18:16:09', ''),
+(6, '2025-08-20', 4, '9000000586', 200, 482, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-08-28 18:16:09', ''),
+(7, '2025-08-12', 1, '9000000123', 250, 500, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-08-28 18:16:09', ''),
+(8, '2025-08-14', 4, '9000000586', 200, 482, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-08-28 18:16:09', ''),
+(9, '2025-08-14', 1, '9000000123', 250, 500, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-08-28 18:16:09', ''),
+(10, '2025-08-06', 4, '9000000586', 200, 482, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-08-28 18:16:09', ''),
+(11, '2025-08-07', 2, '9000000123', 250, 500, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-08-28 18:16:09', ''),
+(12, '2025-08-12', 3, '9000000586', 200, 482, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-08-28 18:16:09', ''),
+(13, '2025-08-28', 4, '9000000123', 250, 500, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-08-28 18:14:06', ''),
+(14, '2025-08-28', 3, '9000000586', 200, 482, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-08-28 18:14:06', ''),
+(15, '2025-08-28', 6, '9000000123', 250, 500, '2025-08-28 18:14:55', 'agustin@gmail.com', '2025-08-28 18:14:55', ''),
+(16, '2025-08-28', 4, '9000000586', 200, 482, '2025-08-28 18:14:55', 'agustin@gmail.com', '2025-08-28 18:14:55', '');
 
 -- --------------------------------------------------------
 
@@ -131,7 +153,11 @@ CREATE TABLE `m_gudang` (
 
 INSERT INTO `m_gudang` (`m_gudang_id`, `nama`, `status`, `created_at`) VALUES
 (1, 'Gudang Luluk', 1, '2025-08-21 09:32:09'),
-(2, 'Gudang Sutik', 1, '2025-08-21 09:32:09');
+(2, 'Gudang Sutik', 1, '2025-08-21 09:32:09'),
+(3, 'Gudang Berkah', 1, '2025-08-28 18:04:57'),
+(4, 'Gudang Rejeki', 1, '2025-08-28 18:04:57'),
+(5, 'Gudang Untung', 1, '2025-08-28 18:06:21'),
+(6, 'Gudang Kabul', 1, '2025-08-28 18:06:21');
 
 -- --------------------------------------------------------
 
@@ -157,7 +183,7 @@ CREATE TABLE `m_komponen_gaji` (
 --
 
 INSERT INTO `m_komponen_gaji` (`m_komponen_gaji_id`, `gudang_id`, `takaran_daging`, `upah_takaran_daging`, `takaran_kopra`, `upah_takaran_kopra`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
-(1, 1, 750, 560000, 350, 10000, '2025-08-21 10:12:03', 'agustin@gmail.com', '2025-08-21 10:12:03', ''),
+(1, 1, 75, 50000, 35, 10000, '2025-08-21 10:12:03', 'agustin@gmail.com', '2025-08-27 14:14:35', 'agustin@gmail.com'),
 (2, 2, 750, 500000, 350, 8000, '2025-08-21 10:12:03', 'agustin@gmail.com', '2025-08-21 10:12:03', '');
 
 -- --------------------------------------------------------
@@ -207,8 +233,8 @@ ALTER TABLE `mt_pembelian`
 --
 ALTER TABLE `mt_pengolahan`
   ADD PRIMARY KEY (`mt_pengolahan_id`),
-  ADD KEY `pembelian_id` (`pembelian_id`),
-  ADD KEY `kd_pegawai` (`kd_pegawai`);
+  ADD KEY `kd_pegawai` (`kd_pegawai`),
+  ADD KEY `gudang_id` (`gudang_id`);
 
 --
 -- Indexes for table `mt_user`
@@ -251,13 +277,13 @@ ALTER TABLE `mt_pegawai`
 -- AUTO_INCREMENT for table `mt_pembelian`
 --
 ALTER TABLE `mt_pembelian`
-  MODIFY `mt_pembelian_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `mt_pembelian_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `mt_pengolahan`
 --
 ALTER TABLE `mt_pengolahan`
-  MODIFY `mt_pengolahan_id` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `mt_pengolahan_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `mt_user`
@@ -269,7 +295,7 @@ ALTER TABLE `mt_user`
 -- AUTO_INCREMENT for table `m_gudang`
 --
 ALTER TABLE `m_gudang`
-  MODIFY `m_gudang_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `m_gudang_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `m_komponen_gaji`
@@ -304,8 +330,8 @@ ALTER TABLE `mt_pembelian`
 -- Constraints for table `mt_pengolahan`
 --
 ALTER TABLE `mt_pengolahan`
-  ADD CONSTRAINT `fk_pengolahan_pegawai` FOREIGN KEY (`kd_pegawai`) REFERENCES `mt_pegawai` (`kd_pegawai`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_pengolahan_pembelian` FOREIGN KEY (`pembelian_id`) REFERENCES `mt_pembelian` (`mt_pembelian_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_pengolahan_gudang` FOREIGN KEY (`gudang_id`) REFERENCES `m_gudang` (`m_gudang_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_pengolahan_pegawai` FOREIGN KEY (`kd_pegawai`) REFERENCES `mt_pegawai` (`kd_pegawai`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `mt_user`
