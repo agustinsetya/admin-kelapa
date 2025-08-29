@@ -78,18 +78,18 @@
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li>
-                            <a href="<?= url_to('payroll-view-absensi') ?>">
-                                <span data-key="t-absensi"><?= lang('Files.Absensi') ?></span>
+                            <a href="<?= url_to('payroll-view-pengeluaran') ?>">
+                                <span data-key="t-pengeluaran"><?= lang('Files.Pengeluaran') ?></span>
                             </a>
                         </li>
                         <li>
-                            <a href="<?= url_to('payroll-view-lembur') ?>">
-                                <span data-key="t-lembur"><?= lang('Files.Lembur') ?></span>
+                            <a href="<?= url_to('payroll-view-gaji-driver') ?>">
+                                <span data-key="t-gaji-driver"><?= lang('Files.Gaji_Driver') ?></span>
                             </a>
                         </li>
                         <li>
-                            <a href="<?= url_to('payroll-view-penggajian') ?>">
-                                <span data-key="t-penggajian"><?= lang('Files.Penggajian') ?></span>
+                            <a href="<?= url_to('payroll-view-gaji-pegawai') ?>">
+                                <span data-key="t-gaji-pegawai"><?= lang('Files.Gaji_Pegawai') ?></span>
                             </a>
                         </li>
                     </ul>

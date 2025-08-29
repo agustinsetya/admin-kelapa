@@ -15,9 +15,9 @@
     "t-supply-pengolahan":"Processing Data",
 
     "t-payroll":"Payroll",
-    "t-absensi":"Attendance",
-    "t-lembur":"Overtime",
-    "t-penggajian":"Salary",
+    "t-pengeluaran":"Expenditure",
+    "t-gaji-driver":"Driver Salary",
+    "t-gaji-pegawai":"Employee Salary",
 
     "t-report":"Report",
 

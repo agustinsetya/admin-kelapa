@@ -15,9 +15,9 @@
     "t-supply-pengolahan":"Data Pengolahan",
     
     "t-payroll":"Payroll",
-    "t-absensi":"Absensi",
-    "t-lembur":"Lembur",
-    "t-penggajian":"Penggajian",
+    "t-pengeluaran":"Pengeluaran",
+    "t-gaji-driver":"Gaji Sopir",
+    "t-gaji-pegawai":"Gaji Pegawai",
 
     "t-report":"Laporan",
 

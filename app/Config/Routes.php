@@ -84,9 +84,9 @@ $routes->group('supply-chain', ['filter' => 'auth'], function($routes) {
 
 // Payroll
 $routes->group('payroll', ['filter' => 'auth'], function($routes) {
-    $routes->get('', 'PayrollController::showDataPenggajian', ['as' => 'payroll-view-penggajian']);
-    $routes->get('absensi', 'PayrollController::showDataAbsensi', ['as' => 'payroll-view-absensi']);
-    $routes->get('lembur', 'PayrollController::showDataLembur', ['as' => 'payroll-view-lembur']);
+    $routes->get('pengeluaran', 'PayrollController::showDataPengeluaran', ['as' => 'payroll-view-pengeluaran']);
+    $routes->get('driver', 'PayrollController::showDataGajiDriver', ['as' => 'payroll-view-gaji-driver']);
+    $routes->get('pegawai', 'PayrollController::showDataGajiPegawai', ['as' => 'payroll-view-gaji-pegawai']);
 });
 
 // Contoh untuk filter in filter
