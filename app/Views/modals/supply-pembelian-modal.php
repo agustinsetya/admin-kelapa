@@ -7,6 +7,7 @@
             </div>
             <form class="needs-validation" id="supply-pembelian-form" novalidate>
                 <?= csrf_field() ?>
+                <input type="hidden" name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>">
 
                 <div class="modal-body">
                     <div class="row">

@@ -16,6 +16,7 @@ $((function () {
     
         var form = $("#supply-pembelian-form")[0];
         var action = $("#supply-pembelian-form").data("action");
+        var id = $("#supply-pembelian-form").data("id") ?? '';
     
         const gudangValue = $("#gudang_id").val();
         if (!gudangValue) {
@@ -29,75 +30,62 @@ $((function () {
             form.classList.add("was-validated");
             return;
         }
-    
-        var formData = $(form).serialize();
-        var url;
-    
-        if (action === "edit") {
-            var id = $("#supply-pembelian-form").data("id");
-        
-            formData += "&id=" + id;
-            url = '/supply-chain/pembelian/update';
-        } else {
-            url = '/supply-chain/pembelian/add';
-        }
-    
+
+        let url = '/supply-chain/pembelian/add';
+        if (action === 'edit') url = '/supply-chain/pembelian/update';
+
+        let payload = $(form).serialize();
+        if (action === 'edit' && id) payload += '&id=' + encodeURIComponent(id);
+
+        showBtnLoading("btn-save-pembelian", { text: "Menyimpan Data..." });
+
         $.ajax({
             url: base_url + url,
             method: 'POST',
-            headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-            },
-            data: formData,
-            beforeSend: () => {
-                showBtnLoading("btn-save-pembelian", { text: "Menyimpan Data..." });
-            },
-            success: function (response) {
-                resetButton(
-                    "btn-save-pembelian",
-                    "Simpan",
-                    "btn btn-primary waves-effect waves-light"
-                );
-        
-                if (response.success) {
-                    alert("Simpan Data Pembelian Berhasil!");
-            
-                    $("#supplyPembelianModal").modal("hide");
-            
-                    if ($.fn.dataTable.isDataTable(dpt)) {
-                        const dataTableInstance = dpt.DataTable();
-                        dataTableInstance.ajax.reload(null, false);
-                    } else {
-                        alert("Table is not initialized.");
-                    }
-                } else {
-                    alert(response?.message || "Simpan Data Gagal!");
-                }
-            },
-            error: function (jqXHR) {
-                const payload = jqXHR.responseJSON || {};
-                const message =
-                    payload.code === 422
-                    ? "Data tidak valid"
-                    : payload.message || "Terjadi kesalahan saat menyimpan";
-                alert(message);
+            data: payload,
+            dataType: 'json',
+        })
+        .done(function (response) {
+            if (response?.csrf) {
+                const name = response.csrf.name;
+                const hash = response.csrf.hash;
+                $('input[name="'+ name +'"]').val(hash);
+            }
 
-                resetButton(
-                    "btn-save-pembelian",
-                    "Simpan",
-                    "btn btn-primary waves-effect waves-light"
-                );
-                alert("error", payload);
-            },
+            if (response?.success) {
+                alert('Simpan Data Pembelian Berhasil!');
+                $("#supplyPembelianModal").modal("hide");
+
+                applyFilter();
+            } else {
+                alert(response?.message || 'Simpan Data Gagal!');
+            }
+        })
+        .fail(function (jqXHR) {
+            try {
+                const res = jqXHR.responseJSON;
+                if (res?.csrf) {
+                    $('input[name="'+ res.csrf.name +'"]').val(res.csrf.hash);
+                }
+                const msg = res?.message || res?.error || 'Terjadi kesalahan saat menyimpan';
+                alert(msg);
+            } catch (e) {
+                alert('Terjadi kesalahan. Cek konsol.');
+                console.error('Save error:', jqXHR.status, jqXHR.responseText);
+            }
+        })
+        .always(function () {
+            resetButton("btn-save-pembelian","Simpan","btn btn-primary waves-effect waves-light");
         });
     });
 }));
 
 function applyFilter() {
     getDataSupplyPembelian().done(function(response) {
-        initializeSupplyPembelianTable(response.data);
+        const rows = Array.isArray(response?.data) ? response.data : [];
+        initializeSupplyPembelianTable(rows);
     }).fail(function(jqXHR, textStatus, errorThrown) {
-        console.error("Request failed: " + textStatus + ", " + errorThrown);
+        console.error("Request failed:", textStatus, errorThrown, jqXHR.responseText);
     });
 }
 
@@ -110,77 +98,57 @@ function getDataSupplyPembelian() {
 }
 
 function initializeSupplyPembelianTable(data) {
-    dpt = $(".dt-pembelianTable");
+    const $tbl = $(".dt-pembelianTable").first();
+    const list = Array.isArray(data) ? data : [];
 
-    var isDataInvalid = !Array.isArray(data) || data.length === 0 || data.status === false;
-    var safeData = Array.isArray(data) ? data : [];
-
-    if ($.fn.dataTable.isDataTable(dpt)) {
-        dpt.DataTable().clear();
-
-        if (!isDataInvalid) dpt.DataTable().rows.add(safeData);
-
-        dpt.DataTable().draw();
-    } else {
-        dpt.DataTable({
-            data: isDataInvalid ? [] : safeData,
-            columns: [
-                { data: null, defaultContent: "" },
-                { data: 'tg_pembelian', defaultContent: "-" },          
-                { data: 'nama_gudang', defaultContent: "-" },
-                { data: 'berat_kelapa', defaultContent: "-" },         
-                { data: null, defaultContent: "-" },          
-            ],
-            columnDefs: [
-                // Additional column
-                {
-                    targets: 0,
-                    render: function(data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
-                    }
-                },
-                {
-                    targets: 1,
-                    render: function(data, type, row, meta) {
-                        return formatTanggal(data);
-                    }
-                },
-                {
-                    targets: 4,
-                    className: 'no-export',
-                    title: 'Action',
-                    orderable: false,
-                    searchable: false,
-                    className: 'align-middle dt-actions text-nowrap',
-                    width: '72px',
-                    render: function (data, type, row, meta) {
-                        var actionPembelianButton = '<div class="d-flex align-items-center gap-1">';
-
-                        actionPembelianButton += '<button type="button" class="btn btn-icon btn-edit-pembelian" ' +
-                            'data-bs-toggle="tooltip" ' +
-                            'data-bs-placement="top" ' +
-                            'title="Detail Pembelian" ' +
-                            'data-id="' + row.mt_pembelian_id + '"> ' +
-                            '<i class="text-primary bx bx-pencil fs-5"></i>' +
-                        '</button>';
-
-                        actionPembelianButton += '</div>';
-                    
-                        return actionPembelianButton;
-                    }
-                },
-            ],
-            lengthChange: false,
-            buttons: ['excel'],
-            dom: 
-                '<"row align-items-center mb-2"' +
-                    '<"col-sm-12 col-md-6 d-flex justify-content-start"B>' +
-                    '<"col-sm-12 col-md-6 d-flex justify-content-md-end"f>' +
-                '>' +
-                't<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
-        });
+    if ($.fn.dataTable.isDataTable($tbl)) {
+        const dt = $tbl.DataTable();
+        dt.clear();
+        if (list.length) dt.rows.add(list);
+        dt.draw(false);
+        return;
     }
+
+    $tbl.DataTable({
+        data: list,
+        columns: [
+            { data: null, defaultContent: "" },
+            { data: 'tg_pembelian', defaultContent: "-" },
+            { data: 'nama_gudang', defaultContent: "-" },
+            { data: 'berat_kelapa', defaultContent: "-" },
+            { data: null, defaultContent: "-" },
+        ],
+        columnDefs: [
+            { targets: 0, render: (d,t,r,m) => m.row + m.settings._iDisplayStart + 1 },
+            { targets: 1, render: (d) => d ? formatTanggal(d) : "-" },
+            {
+                targets: 4,
+                title: 'Action',
+                orderable: false,
+                searchable: false,
+                className: 'align-middle dt-actions text-nowrap',
+                width: '72px',
+                render: (data, type, row) => `
+                <div class="d-flex align-items-center gap-1">
+                    <button type="button" class="btn btn-icon btn-edit-pembelian"
+                    data-bs-toggle="tooltip" data-bs-placement="top"
+                    title="Detail Pembelian" data-id="${row.mt_pembelian_id}">
+                    <i class="text-primary bx bx-pencil fs-5"></i>
+                    </button>
+                </div>`
+            },
+        ],
+        lengthChange: false,
+        buttons: ['excel'],
+        dom:
+            '<"row align-items-center mb-2"' +
+                '<"col-sm-12 col-md-6 d-flex justify-content-start"B>' +
+                '<"col-sm-12 col-md-6 d-flex justify-content-md-end"f>' +
+            '>' +
+            't<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+    });
 }
+
 
 function getDetailSupplyPembelian(button) {
     var id = $(button).data("id");
@@ -231,7 +199,7 @@ function openModal(mode, data = null) {
         $("#supply-pembelian-form").data("action", "add");
         $("#supply-pembelian-form").removeData("id");
     }
-  
+
     $("#supplyPembelianModal").modal("show");
 }
 

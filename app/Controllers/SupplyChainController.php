@@ -5,9 +5,12 @@ namespace App\Controllers;
 use App\Models\PembelianModel;
 use App\Models\PengolahanModel;
 use App\Models\GudangModel;
+use App\Controllers\Concerns\ApiResponse;
 
 class SupplyChainController extends AuthRequiredController
 {
+    use ApiResponse;
+
 	protected $pembelianModel;
 	protected $pengolahanModel;
 	protected $gudangModel;
@@ -19,79 +22,79 @@ class SupplyChainController extends AuthRequiredController
 		$this->gudangModel = new GudangModel();
     }
 
-	public function showDataPembelian()
-	{
-		$roleScope = session()->get('role_scope');
-		$gudang = $this->gudangModel->getDataGudang();
+    /* --------------------------------
+     * View
+     * -------------------------------- */
 
-		$data = [
-			'title_meta' => view('partials/title-meta', [
-				'title' => 'Data_Pembelian'
-			]),
-			'page_title' => view('partials/page-title', [
-				'title' => 'Data_Pembelian',
-				'li_1'  => lang('Files.Supply_Chain'),
-				'li_2'  => lang('Files.Data_Pembelian')
-			]),
-			'gudang' => $gudang,
-			'roleScope' => $roleScope,
-		];
-		
-		return view('supply-data-pembelian', $data);
-	}
+	public function showDataPembelian()
+    {
+        $roleScope = session()->get('role_scope');
+
+        $data = [
+            'title_meta' => view('partials/title-meta', ['title' => 'Data_Pembelian']),
+            'page_title' => view('partials/page-title', [
+                'title' => 'Data_Pembelian',
+                'li_1'  => lang('Files.Supply_Chain'),
+                'li_2'  => lang('Files.Data_Pembelian'),
+            ]),
+            'gudang'    => $this->gudangModel->getDataGudang(),
+            'roleScope' => $roleScope,
+        ];
+
+        return view('supply-data-pembelian', $data);
+    }
+
+    public function showDataPengolahan()
+    {
+        $data = [
+            'title_meta' => view('partials/title-meta', ['title' => 'Data_Pengolahan']),
+            'page_title' => view('partials/page-title', [
+                'title' => 'Data_Pengolahan',
+                'li_1'  => lang('Files.Supply_Chain'),
+                'li_2'  => lang('Files.Data_Pengolahan'),
+            ]),
+        ];
+
+        return view('supply-data-pengolahan', $data);
+    }
+
+    /* --------------------------------
+     * API (JSON)
+     * -------------------------------- */
 
 	public function getDataPembelian()
     {
-		$user = session()->get('user');
+        $filters   = $this->filtersFromUser();
+        $pembelian = $this->pembelianModel->getDataPembelian($filters);
 
-		if ($user->role_scope == 'gudang') {
-			$filters = [
-				'gudang_id'   => $user->penempatan_id ?? '',
-			];
-		}
-		
-		$pembelian = $this->pembelianModel->getDataPembelian($filters ?? []);
-
-        return $this->response->setJSON([
-            'data' => $pembelian
-        ]);
+        return $this->jsonSuccess(['data' => $pembelian]);
     }
 
 	public function getDetailPembelian()
     {
-        $filters = [
-            'mt_pembelian_id'   => $this->request->getGet('id'),
-        ];
+        $id = $this->request->getGet('id');
+        if (!$id) {
+            return $this->jsonError('ID pembelian tidak ditemukan', 400);
+        }
 
-		$detailKomponenGaji = $this->pembelianModel->getDataPembelian($filters);
-
-        return $this->response->setJSON([
-            'data' => $detailKomponenGaji
-        ]);
+        $detail = $this->pembelianModel->getDataPembelian(['mt_pembelian_id' => $id]);
+        return $this->jsonSuccess(['data' => $detail]);
     }
 
 	public function addDetailPembelian()
     {
         $user = session()->get('user');
-
         if (!$user) {
-            return $this->response->setStatusCode(401)->setJSON([
-                'success' => false,
-                'message' => 'Tidak terautentik',
-                'code'    => 401
+            return $this->jsonError('Tidak terautentik', 401);
+        }
+
+        if (!$this->validate('supplyChainPembelian')) {
+            return $this->jsonError('Validasi gagal', 422, [
+                'errors' => $this->validator->getErrors(),
             ]);
         }
 
         $input = $this->request->getPost();
-
-        if (!$this->validate('supplyChainPembelian')) {
-            return $this->response->setStatusCode(422)->setJSON([
-                'success' => false,
-                'message' => 'Validasi gagal',
-                'errors'  => $this->validator->getErrors(),
-                'code'    => 422,
-            ]);
-        }
 
         $data = [
             'tg_pembelian'	=> $input['tg_pembelian'],
@@ -100,54 +103,38 @@ class SupplyChainController extends AuthRequiredController
             'created_by'	=> $user->email ?? null,
         ];
 
-        $save = $this->pembelianModel->saveDataPembelian($data);
+        $saved = $this->pembelianModel->saveDataPembelian($data);
 
-        if ($save === false) {
+        if ($saved === false) {
             $errors = $this->pembelianModel->errors() ?: 'Gagal menyimpan data';
-            return $this->response->setStatusCode(500)->setJSON([
-                'success' => false,
-                'message' => $errors,
-                'code'    => 500,
-            ]);
+            return $this->jsonError($errors, 500);
         }
-    
-        return $this->response->setJSON([
-            'success' => true,
+
+        // 201 Created
+        return $this->jsonSuccess([
             'message' => 'Berhasil Tambah Data Pembelian',
-            'code'    => 200,
-        ]);
+        ], 201);
+
     }
 	
     public function updateDetailPembelian()
     {
         $user = session()->get('user');
-
         if (!$user) {
-            return $this->response->setStatusCode(401)->setJSON([
-                'success' => false,
-                'message' => 'Tidak terautentik',
-                'code'    => 401
+            return $this->jsonError('Tidak terautentik', 401);
+        }
+
+        if (!$this->validate('supplyChainPembelian')) {
+            return $this->jsonError('Validasi gagal', 422, [
+                'errors' => $this->validator->getErrors(),
             ]);
         }
 
         $input = $this->request->getPost();
-
-        if (!$this->validate('supplyChainPembelian')) {
-            return $this->response->setStatusCode(422)->setJSON([
-                'success' => false,
-                'message' => 'Validasi gagal',
-                'errors'  => $this->validator->getErrors(),
-                'code'    => 422,
-            ]);
-        }
-
         $id = $input['id'] ?? null;
+
         if (!$id) {
-            return $this->response->setStatusCode(400)->setJSON([
-                'success' => false,
-                'message' => 'ID pembelian tidak ditemukan',
-                'code'    => 400,
-            ]);
+            return $this->jsonError('ID pembelian tidak ditemukan', 400);
         }
 
         $data = [
@@ -157,37 +144,29 @@ class SupplyChainController extends AuthRequiredController
             'updated_by'	=> $user->email ?? null,
         ];
 
-        $save = $this->pembelianModel->saveDataPembelian($data, $id);
+        $saved = $this->pembelianModel->saveDataPembelian($data, $id);
 
-        if ($save === false) {
+        if ($saved === false) {
             $errors = $this->pembelianModel->errors() ?: 'Gagal menyimpan data';
-            return $this->response->setStatusCode(500)->setJSON([
-                'success' => false,
-                'message' => $errors,
-                'code'    => 500,
-            ]);
+            return $this->jsonError($errors, 500);
         }
-    
-        return $this->response->setJSON([
-            'success' => true,
+
+        return $this->jsonSuccess([
             'message' => 'Berhasil Update Data Pembelian',
-            'code'    => 200,
-        ]);
+        ], 200);
     }
-	
-	public function showDataPengolahan()
-	{
-		$data = [
-			'title_meta' => view('partials/title-meta', [
-				'title' => 'Data_Pengolahan'
-			]),
-			'page_title' => view('partials/page-title', [
-				'title' => 'Data_Pengolahan',
-				'li_1'  => lang('Files.Supply_Chain'),
-				'li_2'  => lang('Files.Data_Pengolahan')
-			])
-		];
-		
-		return view('supply-data-pengolahan', $data);
-	}
+
+    private function filtersFromUser(): array
+    {
+        $user = session()->get('user');
+        if (!$user) {
+            return [];
+        }
+
+        if (($user->role_scope ?? null) === 'gudang') {
+            return ['gudang_id' => $user->penempatan_id ?? ''];
+        }
+
+        return [];
+    }
 }
