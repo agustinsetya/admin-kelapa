@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 28, 2025 at 11:16 AM
+-- Generation Time: Aug 29, 2025 at 02:53 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.3.3
 
@@ -69,7 +69,10 @@ CREATE TABLE `mt_pembelian` (
 
 INSERT INTO `mt_pembelian` (`mt_pembelian_id`, `tg_pembelian`, `gudang_id`, `berat_kelapa`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
 (1, '2025-08-21', 1, 57, '2025-08-21 09:35:47', 'agustin@gmail.com', '2025-08-28 10:44:13', 'agustin@gmail.com'),
-(2, '2025-08-28', 1, 20, '2025-08-28 10:47:47', '', '2025-08-28 10:47:47', '');
+(2, '2025-08-28', 1, 20, '2025-08-28 10:47:47', '', '2025-08-28 10:47:47', ''),
+(3, '2025-08-29', 3, 520, '2025-08-29 02:11:48', '', '2025-08-29 02:11:48', ''),
+(4, '2025-08-29', 2, 420, '2025-08-29 02:12:03', '', '2025-08-29 02:12:03', ''),
+(5, '2025-08-26', 3, 145, '2025-08-29 02:12:15', '', '2025-08-29 02:12:28', 'agustin@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -79,7 +82,7 @@ INSERT INTO `mt_pembelian` (`mt_pembelian_id`, `tg_pembelian`, `gudang_id`, `ber
 
 CREATE TABLE `mt_pengolahan` (
   `mt_pengolahan_id` int(10) NOT NULL,
-  `tg_pengolahan` date NOT NULL DEFAULT current_timestamp(),
+  `tg_pengolahan` date NOT NULL,
   `gudang_id` int(10) NOT NULL,
   `kd_pegawai` char(10) NOT NULL,
   `berat_daging` int(10) NOT NULL,
@@ -277,7 +280,7 @@ ALTER TABLE `mt_pegawai`
 -- AUTO_INCREMENT for table `mt_pembelian`
 --
 ALTER TABLE `mt_pembelian`
-  MODIFY `mt_pembelian_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `mt_pembelian_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `mt_pengolahan`
