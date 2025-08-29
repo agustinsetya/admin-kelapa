@@ -1,7 +1,7 @@
 "use strict";
 
 $((function () {
-    applyFilter();
+    applyFilterPengolahan();
 
     $("#btn-tambah-pengolahan").on("click", function () {
         openModalPengolahan("add");
@@ -63,7 +63,7 @@ $((function () {
                 alert('Simpan Data Pengolahan Berhasil!');
                 $("#supplyPengolahanModal").modal("hide");
 
-                applyFilter();
+                applyFilterPengolahan();
             } else {
                 alert(response?.message || 'Simpan Data Gagal!');
             }
@@ -87,7 +87,7 @@ $((function () {
     });
 }));
 
-function applyFilter() {
+function applyFilterPengolahan() {
     getDataSupplyPengolahan().done(function(response) {
         const rows = Array.isArray(response?.data) ? response.data : [];
         initializeSupplyPengolahanTable(rows);

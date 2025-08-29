@@ -1,7 +1,7 @@
 "use strict";
 
 $((function () {
-    applyFilter();
+    applyFilterPembelian();
 
     $("#btn-tambah-pembelian").on("click", function () {
         openModalPembelian("add");
@@ -56,7 +56,7 @@ $((function () {
                 alert('Simpan Data Pembelian Berhasil!');
                 $("#supplyPembelianModal").modal("hide");
 
-                applyFilter();
+                applyFilterPembelian();
             } else {
                 alert(response?.message || 'Simpan Data Gagal!');
             }
@@ -80,7 +80,7 @@ $((function () {
     });
 }));
 
-function applyFilter() {
+function applyFilterPembelian() {
     getDataSupplyPembelian().done(function(response) {
         const rows = Array.isArray(response?.data) ? response.data : [];
         initializeSupplyPembelianTable(rows);
