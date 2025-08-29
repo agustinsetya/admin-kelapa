@@ -83,9 +83,8 @@
         <!-- custom js -->
         <script type="text/javascript">
             var base_url = '<?= base_url() ?>';
-            // var dpt = ".dt-pembelianTable";
-            let dpt;
         </script>
+        <script src="<?= base_url('assets/js/content/general.js') ?>"></script>
         <script src="<?= base_url('assets/js/content/supply-data-pembelian.js') ?>"></script>
     </body>
 </html>

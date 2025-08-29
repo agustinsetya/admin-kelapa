@@ -22,6 +22,8 @@ return [
     "Komponen_Gaji" => "Komponen Gaji",
     "Detail_Komponen_Gaji" => "Detail Komponen Gaji",
     "Berat_Kelapa" => "Berat Kelapa",
+    "Berat_Daging" => "Berat Daging",
+    "Berat_Kopra" => "Berat Kopra",
     "Takaran_Daging" => "Takaran Daging",
     "Takaran_Kopra" => "Takaran Kopra",
     "Upah_Daging" => "Upah per Takaran Daging",

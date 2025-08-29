@@ -57,8 +57,6 @@ class PembelianModel extends Model
             $ok = $this->insert($data, false) !== false;
         }
 
-        log_message('debug', (string) $this->db->getLastQuery());
-
         if (!$ok) {
             $this->db->transRollback();
             return false;

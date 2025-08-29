@@ -1,15 +1,18 @@
 <?= $this->include('partials/main') ?>
     <head>
         <?= $title_meta ?>
+        <!-- DataTables -->
+        <link href="<?= base_url('assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css') ?>" rel="stylesheet" type="text/css" />
+        <link href="<?= base_url('assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css') ?>" rel="stylesheet" type="text/css" />
+
+        <!-- custom css -->
+        <link href="<?= base_url('assets/css/content/general.css') ?>" rel="stylesheet" type="text/css" />
+
         <?= $this->include('partials/head-css') ?>
     </head>
     <?= $this->include('partials/body') ?>
-        <!-- Begin page -->
         <div id="layout-wrapper">
             <?= $this->include('partials/menu') ?>
-            <!-- ============================================================== -->
-            <!-- Start right Content here -->
-            <!-- ============================================================== -->
             <div class="main-content">
                 <div class="page-content">
                     <div class="container-fluid">
@@ -18,65 +21,72 @@
                             <div class="col-12">
                                 <div class="card">
                                     <div class="card-header">
-                                        <p class="card-title-desc">Pencatatan transaksi masuk kelapa dari pemasok dengan detail berupa daging, kulit, dan kopra sesuai hasil pemisahan.</p>
-                                    </div>
-                                    <div class="card-body p-4">
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <div class="mb-3">
-                                                    <label for="tanggal-pembelian" class="form-label"><?= lang('Files.Date') ?></label>
-                                                    <input class="form-control" type="date" value="<?= date('Y-m-d') ?>" id="tanggal-pembelian">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <div class="mb-3">
-                                                    <label for="berat-daging-kelapa" class="form-label"><?= lang('Files.Daging_Kelapa') ?></label>
-                                                    <div class="input-group">
-                                                        <input class="form-control" type="text" id="berat-daging-kelapa" placeholder="<?= lang('Files.Input_Berat') ?>">
-                                                        <span class="input-group-text">Kg</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <div class="mb-3">
-                                                    <label for="berat-kulit-kelapa" class="form-label"><?= lang('Files.Kulit_Kelapa') ?></label>
-                                                    <div class="input-group">
-                                                        <input class="form-control" type="text" id="berat-kulit-kelapa" placeholder="<?= lang('Files.Input_Berat') ?>">
-                                                        <span class="input-group-text">Kg</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <div class="mb-3">
-                                                    <label for="berat-kopra" class="form-label"><?= lang('Files.Kopra') ?></label>
-                                                    <div class="input-group">
-                                                        <input class="form-control" type="text" id="berat-kopra" placeholder="<?= lang('Files.Input_Berat') ?>">
-                                                        <span class="input-group-text">Kg</span>
-                                                    </div>
+                                        <div class="row align-items-end g-2">
+                                            <div class="mt-2">
+                                                <div class="d-flex justify-content-md-end">
+                                                    <button type="button"
+                                                            id="btn-tambah-pengolahan"
+                                                            class="btn btn-success text-nowrap w-100 w-md-auto"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#supplyPengolahanModal">
+                                                        <i class="bx bx-plus me-1"></i>Tambah
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="card-body">
+                                        <table class="table table-bordered dt-responsive nowrap w-100 dt-pengolahanTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Tanggal Pengolahan</th>
+                                                    <th>Nama Gudang</th>
+                                                    <th>Nama Pegawai</th>
+                                                    <th>Berat Daging (Kg)</th>
+                                                    <th>Berat Kopra (Kg)</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+
+                                    <!-- Include the modal -->
+                                    <?= $this->include('modals/supply-pengolahan-modal') ?>
                                 </div>
-                            </div> <!-- end col -->
+                            </div>
                         </div>
-                        <!-- end row -->
-                    </div> <!-- container-fluid -->
+                    </div>
                 </div>
-                <!-- End Page-content -->
                 <?= $this->include('partials/footer') ?>
             </div>
-            <!-- end main content-->
         </div>
-        <!-- END layout-wrapper -->
         <?= $this->include('partials/right-sidebar') ?>
         <?= $this->include('partials/vendor-scripts') ?>
+
+        <!-- Required datatable js -->
+        <script src="<?= base_url('assets/libs/datatables.net/js/jquery.dataTables.min.js') ?>"></script>
+        <script src="<?= base_url('assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js') ?>"></script>
+        <!-- Buttons -->
+        <script src="<?= base_url('assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js') ?>"></script>
+        <script src="<?= base_url('assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js') ?>"></script>
+        <script src="<?= base_url('assets/libs/jszip/jszip.min.js') ?>"></script>
+        <script src="<?= base_url('assets/libs/datatables.net-buttons/js/buttons.html5.min.js') ?>"></script>
+        <script src="<?= base_url('assets/libs/datatables.net-buttons/js/buttons.print.min.js') ?>"></script>
+        <script src="<?= base_url('assets/libs/datatables.net-buttons/js/buttons.colVis.min.js') ?>"></script>
+        <!-- Datatable init js -->
+        <script src="<?= base_url('assets/js/pages/datatables.init.js') ?>"></script>
         <script src="<?= base_url('assets/js/app.js') ?>"></script>
+        <!-- Responsive table -->
+        <script src="<?= base_url('assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js') ?>"></script>
+        <script src="<?= base_url('assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') ?>"></script>
+
+        <!-- custom js -->
+        <script type="text/javascript">
+            var base_url = '<?= base_url() ?>';
+        </script>
+        <script src="<?= base_url('assets/js/content/general.js') ?>"></script>
+        <script src="<?= base_url('assets/js/content/supply-data-pengolahan.js') ?>"></script>
     </body>
 </html>

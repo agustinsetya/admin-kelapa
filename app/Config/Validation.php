@@ -70,7 +70,7 @@ class Validation extends BaseConfig
 
     public $supplyChainPembelian = [
         'tg_pembelian'          => 'required',
-        'gudang_id'             => 'required|numeric',
+        'pem_gudang_id'             => 'required|numeric',
         'berat_kelapa'          => 'required|numeric',
     ];
 
@@ -78,13 +78,43 @@ class Validation extends BaseConfig
         'tg_pembelian' => [
             'required' => 'Tanggal Pembelian wajib diisi.',
         ],
-        'gudang_id' => [
+        'pem_gudang_id' => [
             'required' => 'Gudang wajib diisi.',
             'numeric'  => 'Gudang harus angka.',
         ],
         'berat_kelapa' => [
             'required' => 'Berat Kelapa wajib diisi.',
             'numeric'  => 'Berat Kelapa harus angka.',
+        ],
+    ];
+    
+    public $supplyChainPengolahan = [
+        'tg_pengolahan'   => 'required',
+        'peng_gudang_id'       => 'required|numeric',
+        'peng_pegawai_id'      => 'required|numeric',
+        'berat_daging'    => 'required|numeric',
+        'berat_kopra'     => 'required|numeric',
+    ];
+
+    public $supplyChainPengolahan_errors = [
+        'tg_pengolahan' => [
+            'required' => 'Tanggal Pengolahan wajib diisi.',
+        ],
+        'peng_gudang_id' => [
+            'required' => 'Gudang wajib diisi.',
+            'numeric'  => 'Gudang harus angka.',
+        ],
+        'peng_pegawai_id' => [
+            'required' => 'Pegawai wajib diisi.',
+            'numeric'  => 'Pegawai harus angka.',
+        ],
+        'berat_daging' => [
+            'required' => 'Berat Daging wajib diisi.',
+            'numeric'  => 'Berat Daging harus angka.',
+        ],
+        'berat_kopra' => [
+            'required' => 'Berat Kopra wajib diisi.',
+            'numeric'  => 'Berat Kopra harus angka.',
         ],
     ];
 }

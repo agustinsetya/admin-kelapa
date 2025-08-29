@@ -76,6 +76,10 @@ $routes->group('supply-chain', ['filter' => 'auth'], function($routes) {
     $routes->post('pembelian/add', 'SupplyChainController::addDetailPembelian', ['as' => 'supply-add-pembelian']);
     $routes->patch('pembelian/update', 'SupplyChainController::updateDetailPembelian', ['as' => 'supply-update-pembelian']);
     $routes->get('pengolahan', 'SupplyChainController::showDataPengolahan', ['as' => 'supply-pengolahan']);
+    $routes->get('pengolahan/data', 'SupplyChainController::getDataPengolahan', ['as' => 'supply-data-pengolahan']);
+    $routes->get('pengolahan/detail', 'SupplyChainController::getDetailPengolahan', ['as' => 'supply-detail-pengolahan']);
+    $routes->post('pengolahan/add', 'SupplyChainController::addDetailPengolahan', ['as' => 'supply-add-pengolahan']);
+    $routes->patch('pengolahan/update', 'SupplyChainController::updateDetailPengolahan', ['as' => 'supply-update-pengolahan']);
 });
 
 // Payroll

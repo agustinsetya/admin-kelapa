@@ -22,6 +22,8 @@ return [
     "Komponen_Gaji" => "Salary Component",
     "Detail_Komponen_Gaji" => "Salary Component Details",
     "Berat_Kelapa" => "Weight of Coconut",
+    "Berat_Daging" => "Weight of Coconut Meat",
+    "Berat_Kopra" => "Weight of Coconut Copra",
     "Takaran_Daging" => "Measure of Coconut Meat",
     "Takaran_Kopra" => "Measure of Coconut Copra",
     "Upah_Daging" => "Wages per Measure of Coconut Meat",
