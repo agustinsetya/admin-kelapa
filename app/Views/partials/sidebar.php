@@ -65,7 +65,7 @@
                         </li>
                     </ul>
                 </li>
-                
+
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
                         <i data-feather="gift"></i>
@@ -91,7 +91,7 @@
                 </li>
 
                 <li>
-                    <a href="">
+                    <a href="<?= url_to('report') ?>">
                         <i data-feather="pie-chart"></i>
                         <span data-key="t-report"><?= lang('Files.Report') ?></span>
                     </a>

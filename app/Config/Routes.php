@@ -1,13 +1,14 @@
-<?php namespace Config;
+<?php
+
+namespace Config;
 
 // Create a new instance of our RouteCollection class.
 $routes = Services::routes();
 
 // Load the system's routing file first, so that the app and ENVIRONMENT
 // can override as needed.
-if (file_exists(SYSTEMPATH . 'Config/Routes.php'))
-{
-	require SYSTEMPATH . 'Config/Routes.php';
+if (file_exists(SYSTEMPATH . 'Config/Routes.php')) {
+    require SYSTEMPATH . 'Config/Routes.php';
 }
 
 /**
@@ -34,14 +35,14 @@ $routes->setAutoRoute(true);
 // Authentication
 $routes->get('', 'AutentikasiController::index', ['as' => 'auth-login']);
 
-$routes->group('auth', function($routes) {
+$routes->group('auth', function ($routes) {
     $routes->get('login', 'AutentikasiController::index', ['as' => 'auth-login']);
     $routes->post('login', 'AutentikasiController::login', ['as' => 'auth-login-post']);
     $routes->get('logout', 'AutentikasiController::showAuthLogout', ['as' => 'auth-logout']);
     $routes->post('logout', 'AutentikasiController::logout', ['as' => 'auth-logout-post']);
 });
 
-$routes->group('pages', function($routes) {
+$routes->group('pages', function ($routes) {
     $routes->get('maintenance', 'AutentikasiController::show_pages_maintenance', ['as' => 'pages-maintenance']);
     $routes->get('comingsoon', 'AutentikasiController::show_pages_comingsoon', ['as' => 'pages-comingsoon']);
 });
@@ -53,7 +54,7 @@ $routes->get('dashboard', 'HomeController::index', [
 ]);
 
 // Data Utama / Master
-$routes->group('master', ['filter' => 'auth', 'role:1'], function($routes) {
+$routes->group('master', ['filter' => 'auth', 'role:1'], function ($routes) {
     $routes->get('user-roles', 'DataUtamaController::showDataUserRoles', ['as' => 'master-user-roles']);
     $routes->get('user-roles/data', 'DataUtamaController::getDataUserRoles', ['as' => 'master-user-roles-data']);
     $routes->get('user', 'DataUtamaController::showDataUser', ['as' => 'master-user']);
@@ -69,7 +70,7 @@ $routes->group('master', ['filter' => 'auth', 'role:1'], function($routes) {
 });
 
 // Supply Chain
-$routes->group('supply-chain', ['filter' => 'auth'], function($routes) {
+$routes->group('supply-chain', ['filter' => 'auth'], function ($routes) {
     $routes->get('pembelian', 'SupplyChainController::showDataPembelian', ['as' => 'supply-pembelian']);
     $routes->get('pembelian/data', 'SupplyChainController::getDataPembelian', ['as' => 'supply-data-pembelian']);
     $routes->get('pembelian/detail', 'SupplyChainController::getDetailPembelian', ['as' => 'supply-detail-pembelian']);
@@ -83,10 +84,16 @@ $routes->group('supply-chain', ['filter' => 'auth'], function($routes) {
 });
 
 // Payroll
-$routes->group('payroll', ['filter' => 'auth'], function($routes) {
+$routes->group('payroll', ['filter' => 'auth'], function ($routes) {
     $routes->get('pengeluaran', 'PayrollController::showDataPengeluaran', ['as' => 'payroll-view-pengeluaran']);
     $routes->get('driver', 'PayrollController::showDataGajiDriver', ['as' => 'payroll-view-gaji-driver']);
     $routes->get('pegawai', 'PayrollController::showDataGajiPegawai', ['as' => 'payroll-view-gaji-pegawai']);
+});
+
+// Report
+$routes->group('report', ['filter' => 'auth'], function ($routes) {
+    $routes->get('', 'ReportController::index', ['as' => 'report']);
+    $routes->get('chart-data', 'ReportController::chartData', ['as' => 'report-chart-data']);
 });
 
 // Contoh untuk filter in filter
@@ -128,7 +135,6 @@ $routes->get('/lang/{locale}', 'Language::index');
  * You will have access to the $routes object within that file without
  * needing to reload it.
  */
-if (file_exists(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php'))
-{
-	require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
+if (file_exists(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
+    require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
 }
