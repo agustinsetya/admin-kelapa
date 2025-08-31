@@ -50,6 +50,7 @@ return [
     "Do_Not_Have_Access" => "Anda Tidak Punya Akses",
     "Username" => "Username",
     "Password" => "Password",
+    "Email" => "Email",
     "Input_Username" => "Masukkan Kode Pegawai",
     "Input_Password" => "Masukkan Password",
     "Welcome_Back" => "Selamat Datang Kembali",

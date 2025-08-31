@@ -90,8 +90,8 @@ class Validation extends BaseConfig
     
     public $supplyChainPengolahan = [
         'tg_pengolahan'   => 'required',
-        'peng_gudang_id'       => 'required|numeric',
-        'peng_pegawai_id'      => 'required|numeric',
+        'peng_gudang_id'  => 'required|numeric',
+        'peng_pegawai_id' => 'required|numeric',
         'berat_daging'    => 'required|numeric',
         'berat_kopra'     => 'required|numeric',
     ];
@@ -115,6 +115,22 @@ class Validation extends BaseConfig
         'berat_kopra' => [
             'required' => 'Berat Kopra wajib diisi.',
             'numeric'  => 'Berat Kopra harus angka.',
+        ],
+    ];
+    
+    public $masterUser = [
+        'us_pegawai_id' => 'required|numeric',
+        'email'         => 'required|valid_email|is_unique[mt_user.email]',
+    ];
+
+    public $masterUser_errors = [
+        'us_pegawai_id' => [
+            'required' => 'Kode Pegawai wajib diisi.',
+            'numeric'  => 'Kode Pegawai harus angka.',
+        ],
+        'email' => [
+            'required'  => 'Email tidak boleh kosong.',
+            'email'     => 'Alamat email yang dimasukkan tidak valid.',
         ],
     ];
 }

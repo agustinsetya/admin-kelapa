@@ -39,7 +39,7 @@
                                             
                                             <div class="mb-3">
                                                 <label class="form-label"><?= lang('Files.Username') ?></label>
-                                                <input type="text" 
+                                                <input type="email" 
                                                     class="form-control" 
                                                     name="username" 
                                                     id="username" 

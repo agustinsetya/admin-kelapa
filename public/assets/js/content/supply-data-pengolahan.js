@@ -161,7 +161,7 @@ function initializeSupplyPengolahanTable(data) {
 
 function getDetailSupplyPengolahan(button) {
     var id = $(button).data("id");
-  
+
     $.ajax({
         url: base_url + '/supply-chain/pengolahan/detail',
         method: "GET",

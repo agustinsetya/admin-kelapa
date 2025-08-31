@@ -29,7 +29,7 @@
                                                             id="btn-tambah-user"
                                                             class="btn btn-success text-nowrap w-100 w-md-auto"
                                                             data-bs-toggle="modal"
-                                                            data-bs-target="#addUserModal">
+                                                            data-bs-target="#masterUserModal">
                                                         <i class="bx bx-plus me-1"></i>Tambah
                                                     </button>
                                                 </div>
@@ -44,13 +44,15 @@
                                                     <th>Kode Pegawai</th>
                                                     <th>Nama</th>
                                                     <th>Email</th>
-                                                    <th>Status Aktif</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody></tbody>
                                         </table>
                                     </div>
+
+                                    <!-- Include the modal -->
+                                    <?= $this->include('modals/master-user-modal') ?>
                                 </div>
                             </div>
                         </div>
@@ -83,6 +85,7 @@
         <script type="text/javascript">
             var base_url = '<?= base_url() ?>';
         </script>
+        <script src="<?= base_url('assets/js/content/general.js') ?>"></script>
         <script src="<?= base_url('assets/js/content/master-user.js') ?>"></script>
     </body>
 </html>

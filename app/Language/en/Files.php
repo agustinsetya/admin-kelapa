@@ -49,6 +49,7 @@ return [
     "Do_Not_Have_Access" => "You Don't Have Access",
     "Username" => "Username",
     "Password" => "Password",
+    "Email" => "Email",
     "Input_Username" => "Input Employee Code",
     "Input_Password" => "Input Password",
     "Welcome_Back" => "Welcome Back",

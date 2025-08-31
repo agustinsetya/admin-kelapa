@@ -7,9 +7,12 @@ use App\Models\UserModel;
 use App\Models\PegawaiModel;
 use App\Models\GudangModel;
 use App\Models\KomponenGajiModel;
+use App\Controllers\Concerns\ApiResponse;
 
 class DataUtamaController extends AuthRequiredController
 {
+    use ApiResponse;
+    
     protected $userRolesModel;
     protected $userModel;
     protected $pegawaiModel;
@@ -57,6 +60,7 @@ class DataUtamaController extends AuthRequiredController
                 'li_1'  => lang('Files.Data_Utama'),
                 'li_2'  => lang('Files.User'),
             ]),
+            'pegawai'   => $this->pegawaiModel->getDataPegawai(),
         ];
 
         return view('master-user', $data);
@@ -69,6 +73,93 @@ class DataUtamaController extends AuthRequiredController
         return $this->response->setJSON([
             'data' => $user
         ]);
+    }
+
+    public function getDetailUser()
+    {
+        $id = $this->request->getGet('id');
+        if (!$id) {
+            return $this->jsonError('User ID tidak ditemukan', 400);
+        }
+
+        $detail = $this->userModel->getDataUser(['mt_user_id' => $id]);
+        return $this->jsonSuccess(['data' => $detail]);
+    }
+
+    public function addDetailUser()
+    {
+        $user = session()->get('user');
+        if (!$user) {
+            return $this->jsonError('Tidak terautentik', 401);
+        }
+
+        if (!$this->validate('masterUser')) {
+            return $this->jsonError('Validasi gagal', 422, [
+                'errors' => $this->validator->getErrors(),
+            ]);
+        }
+
+        $input = $this->request->getPost();
+
+        $hashedPassword = password_hash($input['us_pegawai_id'], PASSWORD_DEFAULT);
+
+        $data = [
+            'kd_pegawai'    => $input['us_pegawai_id'],
+            'email'         => $input['email'],
+            'password'      => $hashedPassword,
+            'created_by'	=> $user->email ?? null,
+        ];
+
+        $saved = $this->userModel->saveDataUser($data);
+
+        if ($saved === false) {
+            $errors = $this->userModel->errors() ?: 'Gagal menyimpan data';
+            return $this->jsonError($errors, 500);
+        }
+
+        // 201 Created
+        return $this->jsonSuccess([
+            'message' => 'Berhasil Tambah Data User',
+        ], 201);
+    }
+	
+    public function updateDetailUser()
+    {
+        $user = session()->get('user');
+        if (!$user) {
+            return $this->jsonError('Tidak terautentik', 401);
+        }
+
+        if (!$this->validate('masterUser')) {
+            return $this->jsonError('Validasi gagal', 422, [
+                'errors' => $this->validator->getErrors(),
+            ]);
+        }
+
+        $input = $this->request->getPost();
+        $id = $input['id'] ?? null;
+
+        if (!$id) {
+            return $this->jsonError('User ID tidak ditemukan', 400);
+        }
+
+        $data = [
+            'kd_pegawai'    => $input['us_pegawai_id'],
+            'email'         => $input['email'],
+            'updated_by'	=> $user->email ?? null,
+        ];
+
+        $saved = $this->userModel->saveDataUser($data, $id);
+
+        if ($saved === false) {
+            log_message('error', 'Gagal menyimpan data user: ' . print_r($this->userModel->errors(), true));
+            $errors = $this->userModel->errors() ?: 'Gagal menyimpan data';
+            return $this->jsonError($errors, 500);
+        }
+
+        return $this->jsonSuccess([
+            'message' => 'Berhasil Update Data User',
+        ], 200);
     }
     
     public function showDataPegawai()

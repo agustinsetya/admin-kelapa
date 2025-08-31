@@ -35,10 +35,10 @@ class AutentikasiController extends BaseController
             ]);
         }
 
-        $kd_pegawai = (string) $this->request->getPost('username');
+        $email = (string) $this->request->getPost('username');
         $password   = (string) $this->request->getPost('password');
 
-        $user = $this->authModel->checkLogin($kd_pegawai, $password);
+        $user = $this->authModel->checkLogin($email, $password);
 
         if ($user) {
             $this->session->regenerate(true);
@@ -56,7 +56,7 @@ class AutentikasiController extends BaseController
         }
 
         $this->session->setFlashdata('message', lang('Files.Login_Invalid'));
-        $this->session->setFlashdata('old', ['username' => $kd_pegawai]);
+        $this->session->setFlashdata('old', ['username' => $email]);
 
         return redirect()->to(route_to('auth-login'))->withInput();
     }

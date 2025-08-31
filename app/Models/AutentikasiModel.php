@@ -10,7 +10,7 @@ class AutentikasiModel extends Model
     protected $primaryKey = 'mt_user_id';
     protected $returnType = 'object';
 
-    public function checkLogin(string $kd_pegawai, string $password)
+    public function checkLogin(string $email, string $password)
     {
         $user = $this->select('
                     mt_user.mt_user_id,
@@ -28,24 +28,18 @@ class AutentikasiModel extends Model
                 ')
                 ->join('mt_pegawai', 'mt_pegawai.kd_pegawai = mt_user.kd_pegawai', 'left')
                 ->join('m_role', 'm_role.m_role_id = mt_pegawai.role_id', 'left')
-                ->where('mt_user.kd_pegawai', $kd_pegawai)
+                ->where('mt_user.email', $email)
                 ->first();
         
         if (! $user) {
-            log_message('error', 'User not found: ' . $kd_pegawai);
+            log_message('error', 'User not found: ' . $email);
             return false;
         }
 
         if (!isset($user->password)) {
-            log_message('error', 'Password not set for user: ' . $kd_pegawai);
+            log_message('error', 'Password not set for user: ' . $email);
             return false;
         }
-
-        // $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        // log_message('debug', $hashedPassword);
-        // log_message('debug', 'Password to verify: ' . $password);
-        // log_message('debug', 'Hash in DB: ' . $user->password);
-        // log_message('debug', 'Hash baru: ' . $hashedPassword);
         
         if (password_verify($password, $user->password)) {
             if (password_needs_rehash($user->password, PASSWORD_DEFAULT)) {
