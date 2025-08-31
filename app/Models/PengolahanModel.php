@@ -35,10 +35,10 @@ class PengolahanModel extends Model
                     mt_pegawai.nama AS nama_pegawai,
                     mt_pengolahan.created_at,
                 ')
-                ->join('m_gudang', 'm_gudang.m_gudang_id = mt_pengolahan.gudang_id', 'left')
-                ->join('mt_pegawai', 'mt_pegawai.kd_pegawai = mt_pengolahan.kd_pegawai', 'left')
-                ->orderby('mt_pengolahan.tg_pengolahan DESC');
-        
+            ->join('m_gudang', 'm_gudang.m_gudang_id = mt_pengolahan.gudang_id', 'left')
+            ->join('mt_pegawai', 'mt_pegawai.kd_pegawai = mt_pengolahan.kd_pegawai', 'left')
+            ->orderby('mt_pengolahan.tg_pengolahan DESC');
+
         if (isset($filters['mt_pengolahan_id']) && is_numeric($filters['mt_pengolahan_id'])) {
             $pengolahan->where('mt_pengolahan.mt_pengolahan_id', (int)$filters['mt_pengolahan_id']);
         }
@@ -46,12 +46,19 @@ class PengolahanModel extends Model
         if (isset($filters['gudang_id']) && is_numeric($filters['gudang_id'])) {
             $pengolahan->where('mt_pengolahan.gudang_id', (int)$filters['gudang_id']);
         }
-        
+
         if (isset($filters['kd_pegawai']) && is_numeric($filters['kd_pegawai'])) {
             $pengolahan->where('mt_pengolahan.kd_pegawai', (int)$filters['kd_pegawai']);
         }
-        
-		return $pengolahan->findAll();
+
+        if (!empty($filters['start_date'])) {
+            $pengolahan->where('mt_pengolahan.tg_pengolahan >=', $filters['start_date']);
+        }
+        if (!empty($filters['end_date'])) {
+            $pengolahan->where('mt_pengolahan.tg_pengolahan <=', $filters['end_date']);
+        }
+
+        return $pengolahan->findAll();
     }
 
     public function saveDataPengolahan(array $data, $pengolahanId = null): bool
