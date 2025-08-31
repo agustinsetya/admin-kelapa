@@ -12,8 +12,10 @@ class PegawaiModel extends Model
     protected $allowedFields = ['kd_pegawai','nama','jenis_kelamin','email','role_id','penempatan_id'];
     protected $useTimestamps = true;
 
-    public function getDataPegawai(array $filters = []): array
+    public function getDataPegawai(?array $filters = null): array
     {
+        $filters = $filters ?? [];
+        
         $user = $this->select('
                     mt_pegawai.kd_pegawai,
                     mt_pegawai.nama AS nama_pegawai,

@@ -220,8 +220,7 @@ class DataUtamaController extends AuthRequiredController
 
     public function showDataKomponenGaji()
     {
-        // $roleScope = session()->get('role_scope');
-        $roleScope = 'gudang';
+        $roleScope = session()->get('role_scope');
 
         $data = [
             'title_meta' => view('partials/title-meta', ['title' => 'Komponen_Gaji']),
@@ -314,5 +313,19 @@ class DataUtamaController extends AuthRequiredController
             'message' => 'Berhasil Update Data Komponen Gaji',
             'code'    => 200,
         ]);
+    }
+
+    public function showDataKategoriPengeluaran()
+    {
+        $data = [
+            'title_meta' => view('partials/title-meta', ['title' => 'Kategori_Pengeluaran']),
+            'page_title' => view('partials/page-title', [
+                'title' => 'Kategori_Pengeluaran',
+                'li_1'  => lang('Files.Data_Utama'),
+                'li_2'  => lang('Files.Kategori_Pengeluaran'),
+            ]),
+        ];
+
+        return view('master-kategori-pengeluaran', $data);
     }
 }

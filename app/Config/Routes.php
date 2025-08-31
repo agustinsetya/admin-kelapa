@@ -70,6 +70,7 @@ $routes->group('master', ['filter' => 'auth', 'role:1'], function ($routes) {
     $routes->get('komponen-gaji/data', 'DataUtamaController::getDataKomponenGaji', ['as' => 'master-komponen-gaji-data']);
     $routes->get('komponen-gaji/detail', 'DataUtamaController::getDetailKomponenGaji', ['as' => 'master-komponen-gaji-detail']);
     $routes->patch('komponen-gaji', 'DataUtamaController::updateDetailKomponenGaji', ['as' => 'master-komponen-gaji-update']);
+    $routes->get('kategori-pengeluaran', 'DataUtamaController::showDataKategoriPengeluaran', ['as' => 'master-kategori-pengeluaran']);
 });
 
 // Supply Chain
@@ -87,10 +88,14 @@ $routes->group('supply-chain', ['filter' => 'auth'], function ($routes) {
 });
 
 // Payroll
-$routes->group('payroll', ['filter' => 'auth'], function ($routes) {
-    $routes->get('pengeluaran', 'PayrollController::showDataPengeluaran', ['as' => 'payroll-view-pengeluaran']);
-    $routes->get('driver', 'PayrollController::showDataGajiDriver', ['as' => 'payroll-view-gaji-driver']);
-    $routes->get('pegawai', 'PayrollController::showDataGajiPegawai', ['as' => 'payroll-view-gaji-pegawai']);
+$routes->group('finance', ['filter' => 'auth'], function ($routes) {
+    $routes->get('pengeluaran', 'FinanceController::showDataPengeluaran', ['as' => 'finance-pengeluaran']);
+    $routes->get('pengeluaran/data', 'FinanceController::getDataPengeluaran', ['as' => 'finance-data-pengeluaran']);
+    $routes->get('pengeluaran/detail', 'FinanceController::getDetailPengeluaran', ['as' => 'finance-detail-pengeluaran']);
+    $routes->post('pengeluaran/add', 'FinanceController::addDetailPengeluaran', ['as' => 'finance-add-pengeluaran']);
+    $routes->patch('pengeluaran/update', 'FinanceController::updateDetailPengeluaran', ['as' => 'finance-update-pengeluaran']);
+    $routes->get('driver', 'FinanceController::showDataGajiDriver', ['as' => 'finance-gaji-driver']);
+    $routes->get('pegawai', 'FinanceController::showDataGajiPegawai', ['as' => 'finance-gaji-pegawai']);
 });
 
 // Report

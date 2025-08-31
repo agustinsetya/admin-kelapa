@@ -178,7 +178,7 @@ function openModalPembelian(mode, data = null) {
     $("#pem_gudang_id").val(null).trigger("change").removeClass("is-invalid is-valid");
 
     $("#supply-pembelian-form input[name='_method']").remove();
-  
+
     if (mode === "edit" && data) {
         $("#supplyPembelianModal .modal-title").text("Edit Data Pembelian");
     

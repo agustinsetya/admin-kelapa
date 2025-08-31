@@ -133,4 +133,43 @@ class Validation extends BaseConfig
             'email'     => 'Alamat email yang dimasukkan tidak valid.',
         ],
     ];
+
+    public $financePengeluaran = [
+        'tg_pengeluaran'            => 'required',
+        'peng_ktg_pengeluaran_id'   => 'required|numeric',
+        'peng_gudang_id'            => 'required|numeric',
+        'peng_pegawai_id'           => 'required|numeric',
+        'peng_status'               => 'required',
+        'jumlah'                    => 'required|numeric',
+        'biaya'                     => 'required|numeric',
+    ];
+
+    public $financePengeluaran_errors = [
+        'tg_pengeluaran' => [
+            'required' => 'Tanggal Pengeluaran wajib diisi.',
+        ],
+        'peng_ktg_pengeluaran_id' => [
+            'required' => 'Kategori Pengeluaran wajib diisi.',
+            'numeric'  => 'Kategori Pengeluaran harus angka.',
+        ],
+        'peng_gudang_id' => [
+            'required' => 'Gudang wajib diisi.',
+            'numeric'  => 'Gudang harus angka.',
+        ],
+        'peng_pegawai_id' => [
+            'required' => 'Pegawai wajib diisi.',
+            'numeric'  => 'Pegawai harus angka.',
+        ],
+        'peng_status' => [
+            'required' => 'Status wajib diisi.',
+        ],
+        'jumlah' => [
+            'required' => 'Jumlah wajib diisi.',
+            'numeric'  => 'Jumlah harus angka.',
+        ],
+        'biaya' => [
+            'required' => 'Biaya wajib diisi.',
+            'numeric'  => 'Biaya harus angka.',
+        ],
+    ];
 }

@@ -42,6 +42,11 @@
                                 <span data-key="t-master-komponen-gaji"><?= lang('Files.Komponen_Gaji') ?></span>
                             </a>
                         </li>
+                        <li>
+                            <a href="<?= url_to('master-kategori-pengeluaran') ?>">
+                                <span data-key="t-master-kategori-pengeluaran"><?= lang('Files.Kategori_Pengeluaran') ?></span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 
@@ -69,21 +74,21 @@
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
                         <i data-feather="gift"></i>
-                        <span data-key="t-payroll"><?= lang('Files.Payroll') ?></span>
+                        <span data-key="t-finance"><?= lang('Files.Finance') ?></span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li>
-                            <a href="<?= url_to('payroll-view-pengeluaran') ?>">
+                            <a href="<?= url_to('finance-pengeluaran') ?>">
                                 <span data-key="t-pengeluaran"><?= lang('Files.Pengeluaran') ?></span>
                             </a>
                         </li>
                         <li>
-                            <a href="<?= url_to('payroll-view-gaji-driver') ?>">
+                            <a href="<?= url_to('finance-gaji-driver') ?>">
                                 <span data-key="t-gaji-driver"><?= lang('Files.Gaji_Driver') ?></span>
                             </a>
                         </li>
                         <li>
-                            <a href="<?= url_to('payroll-view-gaji-pegawai') ?>">
+                            <a href="<?= url_to('finance-gaji-pegawai') ?>">
                                 <span data-key="t-gaji-pegawai"><?= lang('Files.Gaji_Pegawai') ?></span>
                             </a>
                         </li>
