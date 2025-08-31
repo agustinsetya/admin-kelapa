@@ -1,5 +1,12 @@
 @media (min-width: 768px) {
-    #btn-tambah-user, #btn-tambah-user-roles, #btn-tambah-gudang, #btn-tambah-pembelian, #btn-tambah-pengolahan {
+    #btn-tambah-user, #btn-tambah-user-roles, #btn-tambah-gudang, #btn-tambah-pembelian, #btn-tambah-pengolahan,
+    #btn-tambah-kategori-pengeluaran {
         width: auto !important;
     }
+}
+
+.dt-kategoriPengeluaranTable td:nth-child(3) {
+    white-space: normal !important;
+    word-wrap: break-word;
+    max-width: 300px;
 }

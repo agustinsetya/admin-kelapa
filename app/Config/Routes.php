@@ -71,6 +71,7 @@ $routes->group('master', ['filter' => 'auth', 'role:1'], function ($routes) {
     $routes->get('komponen-gaji/detail', 'DataUtamaController::getDetailKomponenGaji', ['as' => 'master-komponen-gaji-detail']);
     $routes->patch('komponen-gaji', 'DataUtamaController::updateDetailKomponenGaji', ['as' => 'master-komponen-gaji-update']);
     $routes->get('kategori-pengeluaran', 'DataUtamaController::showDataKategoriPengeluaran', ['as' => 'master-kategori-pengeluaran']);
+    $routes->get('kategori-pengeluaran/data', 'DataUtamaController::getDataKategoriPengeluaran', ['as' => 'master-kategori-pengeluaran-data']);
 });
 
 // Supply Chain
@@ -94,8 +95,10 @@ $routes->group('finance', ['filter' => 'auth'], function ($routes) {
     $routes->get('pengeluaran/detail', 'FinanceController::getDetailPengeluaran', ['as' => 'finance-detail-pengeluaran']);
     $routes->post('pengeluaran/add', 'FinanceController::addDetailPengeluaran', ['as' => 'finance-add-pengeluaran']);
     $routes->patch('pengeluaran/update', 'FinanceController::updateDetailPengeluaran', ['as' => 'finance-update-pengeluaran']);
-    $routes->get('driver', 'FinanceController::showDataGajiDriver', ['as' => 'finance-gaji-driver']);
-    $routes->get('pegawai', 'FinanceController::showDataGajiPegawai', ['as' => 'finance-gaji-pegawai']);
+    $routes->get('gaji-driver', 'FinanceController::showDataGajiDriver', ['as' => 'finance-gaji-driver']);
+    $routes->get('gaji-driver/data', 'FinanceController::getDataGajiDriver', ['as' => 'finance-data-gaji-driver']);
+    $routes->get('gaji-pegawai', 'FinanceController::showDataGajiPegawai', ['as' => 'finance-gaji-pegawai']);
+    $routes->get('gaji-pegawai/data', 'FinanceController::getDataGajiPegawai', ['as' => 'finance-data-gaji-pegawai']);
 });
 
 // Report

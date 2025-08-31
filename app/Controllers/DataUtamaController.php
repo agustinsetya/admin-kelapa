@@ -7,6 +7,7 @@ use App\Models\UserModel;
 use App\Models\PegawaiModel;
 use App\Models\GudangModel;
 use App\Models\KomponenGajiModel;
+use App\Models\KategoriPengeluaranModel;
 use App\Controllers\Concerns\ApiResponse;
 
 class DataUtamaController extends AuthRequiredController
@@ -18,6 +19,7 @@ class DataUtamaController extends AuthRequiredController
     protected $pegawaiModel;
     protected $gudangModel;
     protected $komponenGajiModel;
+    protected $kategoriPengeluaranModel;
 
     public function __construct()
     {
@@ -26,6 +28,7 @@ class DataUtamaController extends AuthRequiredController
         $this->pegawaiModel = new PegawaiModel();
         $this->gudangModel = new GudangModel();
         $this->komponenGajiModel = new KomponenGajiModel();
+        $this->kategoriPengeluaranModel = new KategoriPengeluaranModel();
     }
 
     public function showDataUserRoles()
@@ -327,5 +330,14 @@ class DataUtamaController extends AuthRequiredController
         ];
 
         return view('master-kategori-pengeluaran', $data);
+    }
+
+    public function getDataKategoriPengeluaran()
+    {
+		$kategoriPengeluaran = $this->kategoriPengeluaranModel->getDataKategoriPengeluaran();
+
+        return $this->response->setJSON([
+            'data' => $kategoriPengeluaran
+        ]);
     }
 }
