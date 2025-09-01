@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 01, 2025 at 12:56 AM
+-- Generation Time: Sep 01, 2025 at 03:05 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.3.3
 
@@ -46,6 +46,9 @@ CREATE TABLE `mt_gaji` (
   `mt_gaji_id` int(10) NOT NULL,
   `periode` date NOT NULL,
   `kd_pegawai` char(10) NOT NULL,
+  `gudang_id` int(10) NOT NULL,
+  `upah_total_daging` float NOT NULL,
+  `upah_total_kopra` float NOT NULL,
   `upah_produksi` float NOT NULL,
   `bonus` float NOT NULL,
   `total_gaji_bersih` float NOT NULL,
@@ -56,13 +59,6 @@ CREATE TABLE `mt_gaji` (
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `updated_by` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `mt_gaji`
---
-
-INSERT INTO `mt_gaji` (`mt_gaji_id`, `periode`, `kd_pegawai`, `upah_produksi`, `bonus`, `total_gaji_bersih`, `status_pembayaran`, `tg_pembayaran`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
-(1, '2025-08-01', '9000000586', 1500000, 100000, 2100000, 'BELUM_BAYAR', '0000-00-00', '2025-08-31 22:01:01', 'agustin@gmail.com', '2025-08-31 22:01:01', '');
 
 -- --------------------------------------------------------
 
@@ -402,7 +398,7 @@ ALTER TABLE `mt_bonus`
 -- AUTO_INCREMENT for table `mt_gaji`
 --
 ALTER TABLE `mt_gaji`
-  MODIFY `mt_gaji_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `mt_gaji_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `mt_pegawai`
