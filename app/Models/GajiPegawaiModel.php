@@ -66,26 +66,28 @@ class GajiPegawaiModel extends Model
         return $pengolahan->findAll();
     }
 
-    public function saveDataGajiPegawai(array $data, $pengolahanId = null): bool
+    public function prosesBatchGaji(array $upahPegawai = [], string $createdBy): bool
     {
-        $data['mt_gaji_id'] = $pengolahanId;
+        $this->db->transBegin();
 
-        $this->db->transStart();
+        foreach ($upahPegawai as $row) {
+            $data = [
+                'periode'      => date('Y-m-d'),
+                'kd_pegawai'   => $row->kd_pegawai,
+                'biaya'        => $row->total_gaji_bersih,
+                'jumlah'       => 1,
+                'status'              => 'lunas',
+                'created_by'          => $createdBy,
+            ];
 
-        $exists = $this->where('mt_gaji_id', $pengolahanId)->countAllResults() > 0;
-
-        if ($exists) {
-            $ok = $this->update($pengolahanId, $data);
-        } else {
-            $ok = $this->insert($data, false) !== false;
+            $saved = $this->insert($data); // atau `save($data)` jika kamu pakai `save()` CI4
+            if ($saved === false) {
+                $this->db->transRollback();
+                return false;
+            }
         }
 
-        if (!$ok) {
-            $this->db->transRollback();
-            return false;
-        }
-
-        $this->db->transComplete();
-        return $this->db->transStatus();
+        $this->db->transCommit();
+        return true;
     }
 }

@@ -91,8 +91,9 @@ class PengolahanModel extends Model
                 ->join('mt_pegawai pg', 'pg.kd_pegawai = p.kd_pegawai', 'left')
                 ->where('p.is_stat_gaji', 0);
 
-        if (isset($filters['kd_pegawai']) && is_numeric($filters['kd_pegawai'])) {
-            $upah->where('p.kd_pegawai', (int)$filters['kd_pegawai']);
+        if (!empty($filters['kd_pegawai'])) {
+            $kdPegawai = is_array($filters['kd_pegawai']) ? $filters['kd_pegawai'] : [$filters['kd_pegawai']];
+            $upah->whereIn('p.kd_pegawai', $kdPegawai);
         }
 
         if (isset($filters['gudang_id']) && is_numeric($filters['gudang_id'])) {

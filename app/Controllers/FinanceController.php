@@ -243,6 +243,62 @@ class FinanceController extends AuthRequiredController
         return $this->jsonSuccess(['data' => $upahProduksiPegawai]);
     }
 
+    public function addDetailGajiPegawai()
+    {
+        $user = session()->get('user');
+        if (!$user) {
+            return $this->jsonError('Tidak terautentik', 401);
+        }
+
+        if (!$this->validate('financeGajiPegawai')) {
+            return $this->jsonError('Validasi gagal', 422, [
+                'errors' => $this->validator->getErrors(),
+            ]);
+        }
+
+        $input = $this->request->getPost();
+
+        if (empty($input['data']) || !is_array($input['data'])) {
+            return $this->jsonError('Data pegawai tidak valid.', 422);
+        }
+
+        $dataPegawai = $input['data'];
+        $resultUpah = [];
+
+        foreach ($dataPegawai as $pegawai) {
+            if (empty($pegawai['kdPegawai']) || empty($pegawai['gudangId'])) {
+                return $this->jsonError('Data pegawai atau gudang tidak lengkap.', 422);
+            }
+
+            $filters = [
+                'kd_pegawai' => $pegawai['kdPegawai'],
+                'gudang_id'  => $pegawai['gudangId']
+            ];
+
+            $upah = $this->pengolahanModel->getDataUpahProduksi($filters);
+
+            if (empty($upah)) {
+                return $this->jsonError('Upah tidak ditemukan untuk pegawai: ' . $pegawai['kdPegawai'], 404);
+            }
+
+            $resultUpah[] = $upah;
+        }
+
+        $upahProduksiPegawai = array_merge(...$resultUpah);
+
+        $saved = $this->gajiPegawaiModel->prosesGajiPegawai($upahProduksiPegawai, $user->email ?? null);
+
+        if ($saved === false) {
+            $errors = $this->gajiPegawaiModel->errors() ?: 'Gagal menyimpan data';
+            return $this->jsonError($errors, 500);
+        }
+
+        // 201 Created
+        return $this->jsonSuccess([
+            'message' => 'Gaji Pegawai Berhasil diproses.',
+        ], 201);
+    }
+
 	private function filtersFromUser(): array
     {
         $user = session()->get('user');

@@ -52,12 +52,11 @@
                                             <div class="col-md-6 mt-2 mt-md-0">
                                                 <div class="row justify-content-md-end">
                                                     <div class="col-12 col-md-auto">
+                                                        <input type="hidden" id="csrf-token" name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>">
                                                         <button type="button"
-                                                                id="btn-tambah-pengeluaran"
-                                                                class="btn btn-success w-100 text-nowrap"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#financePengeluaranModal">
-                                                            <i class="bx bx-plus me-1"></i>Generate
+                                                                id="btn-proses-gaji-pegawai"
+                                                                class="btn btn-warning w-100 text-nowrap">
+                                                            Proses Gaji
                                                         </button>
                                                     </div>
                                                 </div>
@@ -71,7 +70,8 @@
                                                     <th>#</th>
                                                     <th>Periode</th>
                                                     <th>Nama</th>
-                                                    <th>Upah Produksi</th>
+                                                    <th>Total Upah Daging</th>
+                                                    <th>Total Upah Kopra</th>
                                                     <th>Bonus</th>
                                                     <th>Gaji Bersih</th>
                                                     <th>Action</th>

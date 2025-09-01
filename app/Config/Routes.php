@@ -99,6 +99,7 @@ $routes->group('finance', ['filter' => 'auth'], function ($routes) {
     $routes->get('gaji-driver/data', 'FinanceController::getDataGajiDriver', ['as' => 'finance-data-gaji-driver']);
     $routes->get('gaji-pegawai', 'FinanceController::showDataGajiPegawai', ['as' => 'finance-gaji-pegawai']);
     $routes->get('gaji-pegawai/data', 'FinanceController::getDataUpahPegawai', ['as' => 'finance-data-gaji-pegawai']);
+    $routes->post('gaji-pegawai/add', 'FinanceController::addDetailGajiPegawai', ['as' => 'finance-add-gaji-pegawai']);
 });
 
 // Report

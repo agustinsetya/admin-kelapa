@@ -172,4 +172,18 @@ class Validation extends BaseConfig
             'numeric'  => 'Biaya harus angka.',
         ],
     ];
+
+    public $financeGajiPegawai = [
+        'kd_pegawai'     => 'required',
+        'kd_pegawai.*'   => 'numeric',
+    ];
+    
+    public $financeGajiPegawai_errors = [
+        'kd_pegawai' => [
+            'required' => 'Data pegawai harus dipilih.',
+        ],
+        'kd_pegawai.*' => [
+            'numeric' => 'ID Pegawai tidak valid.',
+        ],
+    ];
 }

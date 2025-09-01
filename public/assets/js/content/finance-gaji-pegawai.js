@@ -39,71 +39,51 @@ $((function () {
         applyFilterGajiPegawai();
     });
 
-    $("body").on("click", "#btn-save-gaji-pegawai", function (e) {
-        e.preventDefault();
+    $("body").on("click", "#btn-proses-gaji-pegawai", function () {
+        let selectedData = [];
+        const buttonId = $(this).attr("id");
     
-        var form = $("#finance-gaji-pegawai-form")[0];
-        var action = $("#finance-gaji-pegawai-form").data("action");
-        var id = $("#finance-gaji-pegawai-form").data("id") ?? '';
+        $(".proses-gaji-pegawai:checked").each(function () {
+            const dataPeg = $(this).data("id");
+            const [kdPegawai, gudangId] = dataPeg.split("#");
+            
+            if (kdPegawai && gudangId) {
+                selectedData.push({ kdPegawai, gudangId });
+            }
+        });
     
-        const gudangValue = $("#gp_gudang_id").val();
-        if (!gudangValue) {
-            $("#gp_gudang_id").addClass("is-invalid");
-        } else {
-            $("#gp_gudang_id").removeClass("is-invalid").addClass("is-valid");
-        }
-        
-        const pegawaiValue = $("#gp_pegawai_id").val();
-        if (!pegawaiValue) {
-            $("#gp_pegawai_id").addClass("is-invalid");
-        } else {
-            $("#gp_pegawai_id").removeClass("is-invalid").addClass("is-valid");
-        }
-        
-        const statusValue = $("#gp_status").val();
-        if (!statusValue) {
-            $("#gp_status").addClass("is-invalid");
-        } else {
-            $("#gp_status").removeClass("is-invalid").addClass("is-valid");
-        }
-    
-        if (form.checkValidity() === false) {
-            e.stopPropagation();
-            form.classList.add("was-validated");
-            return;
+        if (selectedData.length === 0) {
+          alert(
+            "Tidak ada data karyawan yang dipilih!"
+          );
+          return;
         }
 
-        const $biaya = $("#biaya");
-        $biaya.val(unmaskRupiah($biaya.val()));
+        const csrfInput = $('input[name="<?= csrf_token() ?>"]');
+        const csrfName = csrfInput.attr("name");
+        const csrfHash = csrfInput.val();
 
-        let url = '/finance/gaji-pegawai/add';
-        if (action === 'edit') url = '/finance/gaji-pegawai/update';
-
-        let payload = $(form).serialize();
-        if (action === 'edit' && id) payload += '&id=' + encodeURIComponent(id);
-
-        showBtnLoading("btn-save-gaji-pegawai", { text: "Menyimpan Data..." });
+        showBtnLoading(buttonId, { text: "Proses Gaji Pegawai..." });
 
         $.ajax({
-            url: base_url + url,
+            url: base_url + '/finance/gaji-pegawai/add',
             method: 'POST',
-            data: payload,
+            data: {
+                data: selectedData,
+                [csrfName]: csrfHash
+            },
             dataType: 'json',
         })
         .done(function (response) {
             if (response?.csrf) {
-                const name = response.csrf.name;
-                const hash = response.csrf.hash;
-                $('input[name="'+ name +'"]').val(hash);
+                $('input[name="' + response.csrf.name + '"]').val(response.csrf.hash);
             }
 
             if (response?.success) {
-                alert('Simpan Data Gaji Pegawai Berhasil!');
-                $("#financeGajiPegawaiModal").modal("hide");
-
+                alert('Proses Gaji Pegawai Berhasil!');
                 applyFilterGajiPegawai();
             } else {
-                alert(response?.message || 'Simpan Data Gagal!');
+                alert(response?.message || 'Proses Gaji Pegawai Gagal!');
             }
         })
         .fail(function (jqXHR) {
@@ -120,7 +100,7 @@ $((function () {
             }
         })
         .always(function () {
-            resetButton("btn-save-gaji-pegawai","Simpan","btn btn-primary waves-effect waves-light");
+            resetButton(buttonId,"Proses Gaji","btn btn-warning waves-effect waves-light");
         });
     });
 }));
@@ -165,7 +145,8 @@ function initializeFinanceGajiPegawaiTable(data) {
             { data: null, defaultContent: "" },
             { data: 'gudang_id', defaultContent: "-" },
             { data: 'nama_pegawai', defaultContent: "-" },
-            { data: 'upah_produksi', defaultContent: "-" },
+            { data: 'upah_total_daging', defaultContent: "-" },
+            { data: 'upah_total_kopra', defaultContent: "-" },
             { data: 'bonus_total', defaultContent: "-" },
             { data: 'total_gaji_bersih', defaultContent: "-" },
             { data: null, defaultContent: "" }             
@@ -193,13 +174,13 @@ function initializeFinanceGajiPegawaiTable(data) {
                 }
             },
             {
-                targets: [3,4,5],
+                targets: [3,4,5,6],
                 render: function(data, type, row, meta) {
                     return formatRupiah(data);
                 }
             },
             {
-                targets: 6,
+                targets: 7,
                 className: 'no-export',
                 title: 'Action',
                 orderable: false,
@@ -207,20 +188,10 @@ function initializeFinanceGajiPegawaiTable(data) {
                 className: 'align-middle dt-actions text-nowrap',
                 width: '72px',
                 render: function (data, type, row, meta) {
-                    var actionGajiPegawaiButton = '<div class="d-flex align-items-center gap-1">';
-
-                    actionGajiPegawaiButton += '<button type="button" class="btn btn-icon btn-edit-pengeluaran" ' +
-                        'data-bs-toggle="tooltip" ' +
-                        'data-bs-placement="top" ' +
-                        'title="Detail Pengeluaran" ' +
-                        'data-bs-target="#detailPengeluaranModal" ' +
-                        'data-id="' + row.mt_gaji_id + '"> ' +
-                        '<i class="text-primary bx bx-pencil fs-5"></i>' +
-                    '</button>';
-
-                    actionGajiPegawaiButton += '</div>';
-                
-                    return actionGajiPegawaiButton;
+                    return (
+                        '<div class="d-flex flex-column align-items-center"><input type="checkbox" class="form-check-input proses-gaji-pegawai" data-id="' +
+                        row.kd_pegawai + '#' + row.gudang_id + '"/></div>'
+                    );
                 }
             }
         ],
