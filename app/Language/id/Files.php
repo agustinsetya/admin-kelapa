@@ -68,4 +68,5 @@ return [
     "Input_Biaya" => "Masukkan Biaya",
     "Jumlah" => "Jumlah",
     "Input_Jumlah" => "Masukkan Jumlah",
+    "Bonus_Produksi" => "Bonus Produksi",
 ];

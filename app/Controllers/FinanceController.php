@@ -6,6 +6,8 @@ use App\Models\PengeluaranModel;
 use App\Models\KategoriPengeluaranModel;
 use App\Models\GudangModel;
 use App\Models\PegawaiModel;
+use App\Models\PengolahanModel;
+use App\Models\GajiPegawaiModel;
 use App\Controllers\Concerns\ApiResponse;
 
 class FinanceController extends AuthRequiredController
@@ -16,6 +18,8 @@ class FinanceController extends AuthRequiredController
 	protected $kategoriPengeluaranModel;
 	protected $gudangModel;
     protected $pegawaiModel;
+    protected $pengolahanModel;
+    protected $gajiPegawaiModel;
 
 	public function __construct()
     {
@@ -23,6 +27,8 @@ class FinanceController extends AuthRequiredController
         $this->kategoriPengeluaranModel = new KategoriPengeluaranModel();
 		$this->gudangModel = new GudangModel();
         $this->pegawaiModel = new PegawaiModel();
+        $this->pengolahanModel = new PengolahanModel();
+        $this->gajiPegawaiModel = new GajiPegawaiModel();
     }
 
 	/* --------------------------------
@@ -86,7 +92,8 @@ class FinanceController extends AuthRequiredController
 				'title' => 'Gaji_Pegawai',
 				'li_1'  => lang('Files.Finance'),
 				'li_2'  => lang('Files.Gaji_Pegawai')
-			])
+            ]),
+            'gudang'    => $this->gudangModel->getDataGudang(),
 		];
 		
 		return view('finance-gaji-pegawai', $data);
@@ -211,6 +218,29 @@ class FinanceController extends AuthRequiredController
         return $this->jsonSuccess([
             'message' => 'Berhasil Update Data Pengeluaran',
         ], 200);
+    }
+
+    public function getDataUpahPegawai()
+    {
+        $roleFilters	= $this->filtersFromUser();
+
+		$gudangId 		= $this->request->getGet('gudang_id') ?? null;
+		$start			= $this->request->getGet('start_date') ?? null;
+		$end			= $this->request->getGet('end_date') ?? null;
+
+		$queryFilters = [];
+		
+		if (($user->role_scope ?? null) !== 'gudang' && !empty($gudangId)) {
+			$queryFilters['gudang_id'] = $gudangId;
+		}
+		if (!empty($start)) $queryFilters['tg_periode_start'] = $start;
+		if (!empty($end))   $queryFilters['tg_periode_end']   = $end;
+
+		$filters = array_merge($queryFilters, $roleFilters);
+
+        $upahProduksiPegawai = $this->pengolahanModel->getDataUpahProduksi($filters);
+
+        return $this->jsonSuccess(['data' => $upahProduksiPegawai]);
     }
 
 	private function filtersFromUser(): array

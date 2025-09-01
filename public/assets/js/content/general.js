@@ -10,7 +10,10 @@ function formatTanggal(tanggal) {
 
 function formatRupiah(angka) {
     if (angka == null || isNaN(angka)) return "";
-    return "Rp. " + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    let n = Number(angka) || 0;
+    // dibulatkan ke integer
+    n = Math.round(n);
+    return "Rp. " + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 };
 
 function unmaskRupiah(str) {

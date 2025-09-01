@@ -1,29 +1,29 @@
 "use strict";
 
 $((function () {
-    initRangePicker('tg_pengeluaran_filter');
-    applyFilterPengeluaran();
+    initRangePicker('tg_periode_filter');
+    applyFilterGajiPegawai();
 
     $("#btn-tambah-pengeluaran").on("click", function () {
-        document.getElementById('financePengeluaranModal')
-        openModalPengeluaran("add");
+        document.getElementById('financeGajiPegawaiModal')
+        openModalGajiPegawai("add");
     });
 
     $(document).on('click', '.btn-edit-pengeluaran', function () {
-        getDetailFinancePengeluaran(this);
+        getDetailFinanceGajiPegawai(this);
     });
 
-    $('#applyPengeluaranFilter').click(function() {
-        const { start, end } = getIsoRange('tg_pengeluaran_filter');
-        const gudang = $('#fn_gudang_id').val() || null;
+    $('#applyGajiPegawaiFilter').click(function() {
+        const { start, end } = getIsoRange('tg_periode_filter');
+        const gudang = $('#gp_gudang_id').val() || null;
 
-        applyFilterPengeluaran(gudang, start, end);
+        applyFilterGajiPegawai(gudang, start, end);
     });
     
-    $('#resetPengeluaranFilter').click(function() {
-        $('#fn_gudang_id').val('').trigger('change');
+    $('#resetGajiPegawaiFilter').click(function() {
+        $('#gp_gudang_id').val('').trigger('change');
 
-        const $el = $('#tg_pengeluaran_filter');
+        const $el = $('#tg_periode_filter');
         $el.val('');
         if (hasDRP()) {
             const drp = $el.data('daterangepicker');
@@ -36,42 +36,35 @@ $((function () {
             }
         }
 
-        applyFilterPengeluaran();
+        applyFilterGajiPegawai();
     });
 
-    $("body").on("click", "#btn-save-pengeluaran", function (e) {
+    $("body").on("click", "#btn-save-gaji-pegawai", function (e) {
         e.preventDefault();
     
-        var form = $("#finance-pengeluaran-form")[0];
-        var action = $("#finance-pengeluaran-form").data("action");
-        var id = $("#finance-pengeluaran-form").data("id") ?? '';
+        var form = $("#finance-gaji-pegawai-form")[0];
+        var action = $("#finance-gaji-pegawai-form").data("action");
+        var id = $("#finance-gaji-pegawai-form").data("id") ?? '';
     
-        const gudangValue = $("#peng_gudang_id").val();
+        const gudangValue = $("#gp_gudang_id").val();
         if (!gudangValue) {
-            $("#peng_gudang_id").addClass("is-invalid");
+            $("#gp_gudang_id").addClass("is-invalid");
         } else {
-            $("#peng_gudang_id").removeClass("is-invalid").addClass("is-valid");
+            $("#gp_gudang_id").removeClass("is-invalid").addClass("is-valid");
         }
         
-        const pegawaiValue = $("#peng_pegawai_id").val();
+        const pegawaiValue = $("#gp_pegawai_id").val();
         if (!pegawaiValue) {
-            $("#peng_pegawai_id").addClass("is-invalid");
+            $("#gp_pegawai_id").addClass("is-invalid");
         } else {
-            $("#peng_pegawai_id").removeClass("is-invalid").addClass("is-valid");
+            $("#gp_pegawai_id").removeClass("is-invalid").addClass("is-valid");
         }
         
-        const ktgPengeluaranValue = $("#peng_ktg_pengeluaran_id").val();
-        if (!ktgPengeluaranValue) {
-            $("#peng_ktg_pengeluaran_id").addClass("is-invalid");
-        } else {
-            $("#peng_ktg_pengeluaran_id").removeClass("is-invalid").addClass("is-valid");
-        }
-        
-        const statusValue = $("#peng_status").val();
+        const statusValue = $("#gp_status").val();
         if (!statusValue) {
-            $("#peng_status").addClass("is-invalid");
+            $("#gp_status").addClass("is-invalid");
         } else {
-            $("#peng_status").removeClass("is-invalid").addClass("is-valid");
+            $("#gp_status").removeClass("is-invalid").addClass("is-valid");
         }
     
         if (form.checkValidity() === false) {
@@ -83,13 +76,13 @@ $((function () {
         const $biaya = $("#biaya");
         $biaya.val(unmaskRupiah($biaya.val()));
 
-        let url = '/finance/pengeluaran/add';
-        if (action === 'edit') url = '/finance/pengeluaran/update';
+        let url = '/finance/gaji-pegawai/add';
+        if (action === 'edit') url = '/finance/gaji-pegawai/update';
 
         let payload = $(form).serialize();
         if (action === 'edit' && id) payload += '&id=' + encodeURIComponent(id);
 
-        showBtnLoading("btn-save-pengeluaran", { text: "Menyimpan Data..." });
+        showBtnLoading("btn-save-gaji-pegawai", { text: "Menyimpan Data..." });
 
         $.ajax({
             url: base_url + url,
@@ -105,10 +98,10 @@ $((function () {
             }
 
             if (response?.success) {
-                alert('Simpan Data Pengeluaran Berhasil!');
-                $("#financePengeluaranModal").modal("hide");
+                alert('Simpan Data Gaji Pegawai Berhasil!');
+                $("#financeGajiPegawaiModal").modal("hide");
 
-                applyFilterPengeluaran();
+                applyFilterGajiPegawai();
             } else {
                 alert(response?.message || 'Simpan Data Gagal!');
             }
@@ -127,23 +120,23 @@ $((function () {
             }
         })
         .always(function () {
-            resetButton("btn-save-pengeluaran","Simpan","btn btn-primary waves-effect waves-light");
+            resetButton("btn-save-gaji-pegawai","Simpan","btn btn-primary waves-effect waves-light");
         });
     });
 }));
 
-function applyFilterPengeluaran(gudang = null, start = '', end = '') {
-    getDataPengeluaran(gudang, start, end).done(function(response) {
+function applyFilterGajiPegawai(gudang = null, start = '', end = '') {
+    getDataGajiPegawai(gudang, start, end).done(function(response) {
         const rows = Array.isArray(response?.data) ? response.data : [];
-        initializeFinancePengeluaranTable(rows);
+        initializeFinanceGajiPegawaiTable(rows);
     }).fail(function(jqXHR, textStatus, errorThrown) {
         console.error("Request failed: " + textStatus + ", " + errorThrown);
     });
 }
 
-function getDataPengeluaran(gudang = null, start = '', end = '') {
+function getDataGajiPegawai(gudang = null, start = '', end = '') {
     return $.ajax({
-        url: base_url + '/finance/pengeluaran/data',
+        url: base_url + '/finance/gaji-pegawai/data',
         method: 'GET',
         data: {
             gudang_id: gudang,
@@ -154,28 +147,27 @@ function getDataPengeluaran(gudang = null, start = '', end = '') {
     });
 }
 
-function initializeFinancePengeluaranTable(data) {
-    const $dpl = $(".dt-pengeluaranTable").first();
+function initializeFinanceGajiPegawaiTable(data) {
+    const $dgp = $(".dt-gajiPegawaiTable").first();
     const list = Array.isArray(data) ? data : [];
 
-    if ($.fn.dataTable.isDataTable($dpl)) {
-        const dt = $dpl.DataTable();
+    if ($.fn.dataTable.isDataTable($dgp)) {
+        const dt = $dgp.DataTable();
         dt.clear();
         if (list.length) dt.rows.add(list);
         dt.draw(false);
         return;
     }
 
-    $dpl.DataTable({
+    $dgp.DataTable({
         data: list,
         columns: [
             { data: null, defaultContent: "" },
-            { data: null, defaultContent: "" },
-            { data: 'nama_ktg_pengeluaran', defaultContent: "-" },
-            { data: 'nama_gudang', defaultContent: "-" },
-            { data: 'jumlah', defaultContent: "-" },
-            { data: 'biaya', defaultContent: "-" },
+            { data: 'gudang_id', defaultContent: "-" },
             { data: 'nama_pegawai', defaultContent: "-" },
+            { data: 'upah_produksi', defaultContent: "-" },
+            { data: 'bonus_total', defaultContent: "-" },
+            { data: 'total_gaji_bersih', defaultContent: "-" },
             { data: null, defaultContent: "" }             
         ],
         columnDefs: [
@@ -187,33 +179,27 @@ function initializeFinancePengeluaranTable(data) {
                 }
             },
             {
-                targets: 1,
-                render: function (data, type, row) {
-                    var tgPengeluaran = row.tg_pengeluaran ? formatTanggal(row.tg_pengeluaran) : "-";
-
-                    var statusMap = {
-                        BELUM_BAYAR: { title: "Belum Bayar", class: "badge-soft-warning" },
-                        SUDAH_BAYAR: { title: "Sudah Bayar", class: "badge-soft-success" },
-                    };
-
-                    var meta = statusMap[row.status] || { title: "Unknown", class: "badge-soft-secondary" };
+                targets: 2,
+                render: function(data, type, row, meta) {
+                    var namaPegawai = data ? data : "-";
+                    var gudang = row.nama_gudang ? row.nama_gudang : "-";
 
                     return `
                         <div class="d-flex flex-column align-items-start">
-                            <span>${tgPengeluaran}</span>
-                            <span class="badge ${meta.class} font-size-12">${meta.title}</span>
+                            <span>${namaPegawai}</span>
+                            <span>${gudang}</span>
                         </div>
                     `;
                 }
             },
             {
-                targets: 5,
+                targets: [3,4,5],
                 render: function(data, type, row, meta) {
                     return formatRupiah(data);
                 }
             },
             {
-                targets: 7,
+                targets: 6,
                 className: 'no-export',
                 title: 'Action',
                 orderable: false,
@@ -221,20 +207,20 @@ function initializeFinancePengeluaranTable(data) {
                 className: 'align-middle dt-actions text-nowrap',
                 width: '72px',
                 render: function (data, type, row, meta) {
-                    var actionPengeluaranButton = '<div class="d-flex align-items-center gap-1">';
+                    var actionGajiPegawaiButton = '<div class="d-flex align-items-center gap-1">';
 
-                    actionPengeluaranButton += '<button type="button" class="btn btn-icon btn-edit-pengeluaran" ' +
+                    actionGajiPegawaiButton += '<button type="button" class="btn btn-icon btn-edit-pengeluaran" ' +
                         'data-bs-toggle="tooltip" ' +
                         'data-bs-placement="top" ' +
                         'title="Detail Pengeluaran" ' +
                         'data-bs-target="#detailPengeluaranModal" ' +
-                        'data-id="' + row.mt_pengeluaran_id + '"> ' +
+                        'data-id="' + row.mt_gaji_id + '"> ' +
                         '<i class="text-primary bx bx-pencil fs-5"></i>' +
                     '</button>';
 
-                    actionPengeluaranButton += '</div>';
+                    actionGajiPegawaiButton += '</div>';
                 
-                    return actionPengeluaranButton;
+                    return actionGajiPegawaiButton;
                 }
             }
         ],
@@ -249,18 +235,18 @@ function initializeFinancePengeluaranTable(data) {
     });
 }
 
-function getDetailFinancePengeluaran(button) {
+function getDetailFinanceGajiPegawai(button) {
     var id = $(button).data("id");
 
     $.ajax({
-        url: base_url + '/finance/pengeluaran/detail',
+        url: base_url + '/finance/gaji-pegawai/detail',
         method: "GET",
         data: {
             id: id,
         },
         success: function (response) {
             if (response && response.data) {
-                openModalPengeluaran("edit", response.data[0]);
+                openModalGajiPegawai("edit", response.data[0]);
             } else {
                 alert("Data tidak ditemukan!");
             }
@@ -271,17 +257,17 @@ function getDetailFinancePengeluaran(button) {
     });
 }
 
-function openModalPengeluaran(mode, data = null) {
-    $("#finance-pengeluaran-form")[0].reset();
-    $("#finance-pengeluaran-form").removeClass("was-validated");
-    $("#peng_ktg_pengeluaran_id, #peng_gudang_id, #peng_pegawai_id, #peng_status").val(null).trigger("change").removeClass("is-invalid is-valid");
+function openModalGajiPegawai(mode, data = null) {
+    $("#finance-gaji-pegawai-form")[0].reset();
+    $("#finance-gaji-pegawai-form").removeClass("was-validated");
+    $("#gp_gudang_id, #gp_pegawai_id, #gp_status").val(null).trigger("change").removeClass("is-invalid is-valid");
 
-    $("#finance-pengeluaran-form input[name='_method']").remove();
+    $("#finance-gaji-pegawai-form input[name='_method']").remove();
 
     if (mode === "edit" && data) {
-        $("#financePengeluaranModal .modal-title").text("Edit Data Pengeluaran");
+        $("#financeGajiPegawaiModal .modal-title").text("Edit Data Pengeluaran");
     
-        $("#tg_pengeluaran").val(data.tg_pengeluaran.split("T")[0]);
+        $("#tg_pembayaran").val(data.tg_pembayaran.split("T")[0]);
         $("#peng_ktg_pengeluaran_id").val(data.ktg_pengeluaran_id).trigger("change");
         $("#peng_gudang_id").val(data.gudang_id).trigger("change");
         $("#peng_pegawai_id").val(data.kd_pegawai).trigger("change");
@@ -289,18 +275,18 @@ function openModalPengeluaran(mode, data = null) {
         $("#biaya").val(formatRupiah(data.biaya));
         $("#peng_status").val(data.status).trigger("change");
     
-        $("#finance-pengeluaran-form").data("action", "edit");
-        $("#finance-pengeluaran-form").data("id", data.mt_pengeluaran_id);
+        $("#finance-gaji-pegawai-form").data("action", "edit");
+        $("#finance-gaji-pegawai-form").data("id", data.mt_gaji_id);
 
-        $("#finance-pengeluaran-form").append(
+        $("#finance-gaji-pegawai-form").append(
             '<input type="hidden" name="_method" value="PATCH">'
         );
     } else {
-        $("#financePengeluaranModal .modal-title").text("Tambah Data Pengeluaran");
+        $("#financeGajiPegawaiModal .modal-title").text("Tambah Data Pengeluaran");
     
-        $("#finance-pengeluaran-form").data("action", "add");
-        $("#finance-pengeluaran-form").removeData("id");
+        $("#finance-gaji-pegawai-form").data("action", "add");
+        $("#finance-gaji-pegawai-form").removeData("id");
     }
 
-    $("#financePengeluaranModal").modal("show");
+    $("#financeGajiPegawaiModal").modal("show");
 }

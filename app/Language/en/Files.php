@@ -67,4 +67,5 @@ return [
     "Input_Biaya" => "Input Cost",
     "Jumlah" => "Ammount",
     "Input_Jumlah" => "Input Ammount",
+    "Bonus_Produksi" => "Production Bonus",
 ];

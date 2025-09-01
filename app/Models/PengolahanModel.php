@@ -60,6 +60,56 @@ class PengolahanModel extends Model
 
         return $pengolahan->findAll();
     }
+    
+    public function getDataUpahProduksi(array $filters = []): array
+    {
+        $start = $filters['start_date'] ?? null;
+        $end   = $filters['end_date'] ?? null;
+
+        $upah = $this->select(
+                    "p.kd_pegawai, pg.nama AS nama_pegawai, p.gudang_id, g.nama AS nama_gudang,
+                        COALESCE(SUM( (COALESCE(p.berat_daging,0) / NULLIF(k.takaran_daging,0)) * COALESCE(k.upah_takaran_daging,0) ), 0)
+                            AS upah_total_daging,
+                        COALESCE(SUM( (COALESCE(p.berat_kopra,0) / NULLIF(k.takaran_kopra,0)) * COALESCE(k.upah_takaran_kopra,0) ), 0)
+                            AS upah_total_kopra,
+                        (
+                            COALESCE(SUM( (COALESCE(p.berat_daging,0) / NULLIF(k.takaran_daging,0)) * COALESCE(k.upah_takaran_daging,0) ), 0) +
+                            COALESCE(SUM( (COALESCE(p.berat_kopra,0) / NULLIF(k.takaran_kopra,0)) * COALESCE(k.upah_takaran_kopra,0) ), 0)
+                        ) AS upah_produksi,
+                        COALESCE(SUM(COALESCE(p.bonus,0)), 0) AS bonus_total,
+                        (
+                            (
+                                COALESCE(SUM( (COALESCE(p.berat_daging,0) / NULLIF(k.takaran_daging,0)) * COALESCE(k.upah_takaran_daging,0) ), 0) +
+                                COALESCE(SUM( (COALESCE(p.berat_kopra,0) / NULLIF(k.takaran_kopra,0)) * COALESCE(k.upah_takaran_kopra,0) ), 0)
+                            )
+                            + COALESCE(SUM(COALESCE(p.bonus,0)), 0)
+                        ) AS total_gaji_bersih
+                    ", false)
+                ->from('mt_pengolahan p')
+                ->join('m_komponen_gaji k', 'k.gudang_id = p.gudang_id', 'left')
+                ->join('m_gudang g', 'g.m_gudang_id = p.gudang_id', 'left')
+                ->join('mt_pegawai pg', 'pg.kd_pegawai = p.kd_pegawai', 'left')
+                ->where('p.is_stat_gaji', 0);
+
+        if (isset($filters['kd_pegawai']) && is_numeric($filters['kd_pegawai'])) {
+            $upah->where('p.kd_pegawai', (int)$filters['kd_pegawai']);
+        }
+
+        if (isset($filters['gudang_id']) && is_numeric($filters['gudang_id'])) {
+            $upah->where('p.gudang_id', (int)$filters['gudang_id']);
+        }
+
+        if (!empty($start)) {
+            $upah->where('p.tg_pengolahan >=', $start);
+        }
+        if (!empty($end)) {
+            $upah->where('p.tg_pengolahan <=', $end);
+        }
+
+        return $upah
+                ->groupBy('p.kd_pegawai, pg.nama, p.gudang_id, g.nama')
+                ->findAll();
+    }
 
     public function saveDataPengolahan(array $data, $pengolahanId = null): bool
     {

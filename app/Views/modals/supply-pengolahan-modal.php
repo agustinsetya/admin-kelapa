@@ -66,6 +66,14 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="mb-3">
+                                <label for="bonus_produksi" class="form-label"><?= lang('Files.Bonus_Produksi') ?></label>
+                                <input type="text" class="form-control currency-rupiah-mask" name="bonus_produksi" id="bonus_produksi" placeholder="<?= lang('Files.Input_Upah') ?>">
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary waves-effect waves-light" id="btn-save-pengolahan"><?= lang('Files.Save') ?></button>
