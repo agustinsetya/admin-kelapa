@@ -52,7 +52,6 @@
                                             <div class="col-md-6 mt-2 mt-md-0">
                                                 <div class="row justify-content-md-end">
                                                     <div class="col-12 col-md-auto">
-                                                        <input type="hidden" id="csrf-token" name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>">
                                                         <button type="button"
                                                                 id="btn-proses-gaji-pegawai"
                                                                 class="btn btn-warning w-100 text-nowrap">

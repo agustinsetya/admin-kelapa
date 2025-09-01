@@ -286,6 +286,7 @@ class FinanceController extends AuthRequiredController
 
         $upahProduksiPegawai = array_merge(...$resultUpah);
 
+        
         $saved = $this->gajiPegawaiModel->prosesGajiPegawai($upahProduksiPegawai, $user->email ?? null);
 
         if ($saved === false) {

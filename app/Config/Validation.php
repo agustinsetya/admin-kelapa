@@ -174,16 +174,22 @@ class Validation extends BaseConfig
     ];
 
     public $financeGajiPegawai = [
-        'kd_pegawai'     => 'required',
-        'kd_pegawai.*'   => 'numeric',
+        'data'             => 'required',
+        'data.*.kdPegawai' => 'required|is_natural_no_zero',
+        'data.*.gudangId'  => 'required|is_natural_no_zero',
     ];
-    
+
     public $financeGajiPegawai_errors = [
-        'kd_pegawai' => [
+        'data' => [
             'required' => 'Data pegawai harus dipilih.',
         ],
-        'kd_pegawai.*' => [
-            'numeric' => 'ID Pegawai tidak valid.',
+        'data.*.kdPegawai' => [
+            'required'           => 'Kode Pegawai wajib diisi.',
+            'is_natural_no_zero' => 'Kode Pegawai tidak valid.',
+        ],
+        'data.*.gudangId' => [
+            'required'           => 'Gudang wajib diisi.',
+            'is_natural_no_zero' => 'Gudang tidak valid.',
         ],
     ];
 }

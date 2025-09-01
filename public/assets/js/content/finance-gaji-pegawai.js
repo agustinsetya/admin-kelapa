@@ -53,15 +53,14 @@ $((function () {
         });
     
         if (selectedData.length === 0) {
-          alert(
-            "Tidak ada data karyawan yang dipilih!"
-          );
-          return;
+            alert(
+                "Tidak ada data karyawan yang dipilih!"
+            );
+            return;
         }
 
-        const csrfInput = $('input[name="<?= csrf_token() ?>"]');
-        const csrfName = csrfInput.attr("name");
-        const csrfHash = csrfInput.val();
+        const csrfName = $('meta[name="csrf-token-name"]').attr('content');
+        const csrfHash = $('meta[name="csrf-token"]').attr('content');
 
         showBtnLoading(buttonId, { text: "Proses Gaji Pegawai..." });
 
@@ -75,8 +74,9 @@ $((function () {
             dataType: 'json',
         })
         .done(function (response) {
-            if (response?.csrf) {
-                $('input[name="' + response.csrf.name + '"]').val(response.csrf.hash);
+            if (response?.csrf?.name && response?.csrf?.hash) {
+                $('meta[name="csrf-token-name"]').attr('content', response.csrf.name);
+                $('meta[name="csrf-token"]').attr('content', response.csrf.hash);
             }
 
             if (response?.success) {
@@ -89,8 +89,9 @@ $((function () {
         .fail(function (jqXHR) {
             try {
                 const res = jqXHR.responseJSON;
-                if (res?.csrf) {
-                    $('input[name="'+ res.csrf.name +'"]').val(res.csrf.hash);
+                if (res?.csrf?.name && res?.csrf?.hash) {
+                    $('meta[name="csrf-token-name"]').attr('content', res.csrf.name);
+                    $('meta[name="csrf-token"]').attr('content', res.csrf.hash);
                 }
                 const msg = res?.message || res?.error || 'Terjadi kesalahan saat menyimpan';
                 alert(msg);
