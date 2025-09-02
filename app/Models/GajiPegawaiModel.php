@@ -69,14 +69,14 @@ class GajiPegawaiModel extends Model
     public function prosesGajiPegawai(
         array $upahPegawai = [],
         string $createdBy,
-        string $periodeStart,
-        string $periodeEnd
+        ?string $periodeStart,
+        ?string $periodeEnd
     ): bool
     {
         $this->db->transBegin();
 
-        $periodeStart = date('Y-m-d', strtotime($periodeStart));
-        $periodeEnd   = date('Y-m-d', strtotime($periodeEnd));
+        if ($periodeStart) $periodeStart = date('Y-m-d', strtotime($periodeStart));
+        if ($periodeEnd)   $periodeEnd   = date('Y-m-d', strtotime($periodeEnd));
 
         foreach ($upahPegawai as $row) {
             if (empty($row->kd_pegawai) || empty($row->gudang_id)) {
@@ -105,16 +105,19 @@ class GajiPegawaiModel extends Model
         }
 
         foreach ($upahPegawai as $row) {
-            $update = $this->db->table('mt_pengolahan')
+            $tb = $this->db->table('mt_pengolahan')
                 ->where('kd_pegawai', (int)$row->kd_pegawai)
                 ->where('gudang_id',  (int)$row->gudang_id)
-                ->where('is_stat_gaji', 0)
-                ->where('tg_pengolahan >=', $periodeStart)
-                ->where('tg_pengolahan <=', $periodeEnd)
-                ->set('is_stat_gaji', 1)
-                ->update();
+                ->where('is_stat_gaji', 0);
 
-            if ($update === false) {
+            if ($periodeStart && $periodeEnd) {
+                $tb->where('tg_pengolahan >=', $periodeStart)
+                ->where('tg_pengolahan <=', $periodeEnd);
+            }
+
+            $ok = $tb->set('is_stat_gaji', 1)->update();
+
+            if ($ok === false) {
                 log_message('error', '[UPDATE pengolahan FAIL] ' . $this->db->getLastQuery()->getQuery());
                 $this->db->transRollback();
                 return false;
