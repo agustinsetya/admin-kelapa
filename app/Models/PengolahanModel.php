@@ -15,6 +15,9 @@ class PengolahanModel extends Model
         'kd_pegawai',
         'berat_daging',
         'berat_kopra',
+        'bonus',
+        'tg_proses_gaji',
+        'is_stat_gaji',
         'created_at',
         'updated_by',
     ];
@@ -31,6 +34,8 @@ class PengolahanModel extends Model
                     mt_pengolahan.kd_pegawai,
                     mt_pengolahan.berat_daging,
                     mt_pengolahan.berat_kopra,
+                    mt_pengolahan.tg_proses_gaji,
+                    mt_pengolahan.is_stat_gaji,
                     m_gudang.nama AS nama_gudang,
                     mt_pegawai.nama AS nama_pegawai,
                     mt_pengolahan.created_at,

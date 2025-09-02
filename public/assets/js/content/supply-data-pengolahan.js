@@ -129,7 +129,24 @@ function initializeSupplyPengolahanTable(data) {
         ],
         columnDefs: [
             { targets: 0, render: (d,t,r,m) => m.row + m.settings._iDisplayStart + 1 },
-            { targets: 1, render: (d) => d ? formatTanggal(d) : "-" },
+            { 
+                targets: 1, 
+                render: function (data, type, row) {
+                    let html = data ? `<div>${formatTanggal(data)}</div>` : '<div>-</div>';
+            
+                    if (row.is_stat_gaji == 1) {
+                        const tglProses = row.tg_proses_gaji ? formatTanggal(row.tg_proses_gaji) : "-";
+                        html += `
+                            <div>
+                                <span class="badge bg-success mt-1">Gaji Sudah Diproses</span><br/>
+                                <small class="fst-italic text-muted">Tgl Proses Gaji: ${tglProses}</small>
+                            </div>
+                        `;
+                    }
+            
+                    return html;
+                }
+            },
             {
                 targets: 6,
                 title: 'Action',
@@ -137,14 +154,20 @@ function initializeSupplyPengolahanTable(data) {
                 searchable: false,
                 className: 'align-middle dt-actions text-nowrap',
                 width: '72px',
-                render: (data, type, row) => `
-                <div class="d-flex align-items-center gap-1">
-                    <button type="button" class="btn btn-icon btn-edit-pengolahan"
-                    data-bs-toggle="tooltip" data-bs-placement="top"
-                    title="Detail Pengolahan" data-id="${row.mt_pengolahan_id}">
-                    <i class="text-primary bx bx-pencil fs-5"></i>
-                    </button>
-                </div>`
+                render: (data, type, row) => {
+                    const isDisabled = row.is_stat_gaji == 1 ? 'disabled' : '';
+                    const tooltip = row.is_stat_gaji == 1 ? 'Sudah diproses' : 'Detail Pengolahan';
+            
+                    return `
+                        <div class="d-flex align-items-center">
+                            <button type="button" class="btn btn-icon btn-edit-pengolahan"
+                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="${tooltip}" data-id="${row.mt_pengolahan_id}" ${isDisabled}>
+                                <i class="text-primary bx bx-pencil fs-5"></i>
+                            </button>
+                        </div>
+                    `;
+                }
             },
         ],
         lengthChange: false,

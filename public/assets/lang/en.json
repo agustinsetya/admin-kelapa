@@ -20,6 +20,9 @@
     "t-gaji-pegawai":"Employee Salary",
 
     "t-report":"Report",
+    "t-report-pengolahan":"Processing",
+    "t-report-gaji-driver":"Driver Salary",
+    "t-report-gaji-pegawai":"Employee Salary",
 
     "t-login":"Login",
     "t-starter-page":"Starter Page",

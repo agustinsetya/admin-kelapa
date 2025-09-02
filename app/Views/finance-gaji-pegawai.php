@@ -25,7 +25,7 @@
                                     <div class="card-header">
                                         <div class="row align-items-end g-2">
                                             <div class="col-md-6">
-                                                <form id="filter-gaji-pegawai-form" class="row g-2 align-items-end mb-0">
+                                                <form id="filter-finance-gaji-pegawai-form" class="row g-2 align-items-end mb-0">
                                                     <div class="col-md-4">
                                                         <label class="form-label mb-1">Periode</label>
                                                         <input type="text" class="form-control" id="tg_periode_filter" name="tg_periode_filter" placeholder="Pilih Tanggal">

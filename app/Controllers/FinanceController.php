@@ -233,8 +233,8 @@ class FinanceController extends AuthRequiredController
 		if (($user->role_scope ?? null) !== 'gudang' && !empty($gudangId)) {
 			$queryFilters['gudang_id'] = $gudangId;
 		}
-		if (!empty($start)) $queryFilters['tg_periode_start'] = $start;
-		if (!empty($end))   $queryFilters['tg_periode_end']   = $end;
+		if (!empty($start)) $queryFilters['start_date'] = $start;
+		if (!empty($end))   $queryFilters['end_date']   = $end;
 
 		$filters = array_merge($queryFilters, $roleFilters);
 
@@ -250,13 +250,11 @@ class FinanceController extends AuthRequiredController
             return $this->jsonError('Tidak terautentik', 401);
         }
 
-        $input = $this->request->getPost();
+        $input = $this->request->getJSON(true);
+        if (!$input) $input = $this->request->getPost();
 
         $periodeStart = $input['start_date'] ?? null;
         $periodeEnd   = $input['end_date']   ?? null;
-        if (!$periodeStart || !$periodeEnd) {
-            return $this->jsonError('Periode tidak valid.', 422);
-        }
 
         if (!$this->validate('financeGajiPegawai')) {
             return $this->jsonError('Validasi gagal', 422, [
@@ -293,6 +291,21 @@ class FinanceController extends AuthRequiredController
         }
 
         $upahProduksiPegawai = array_merge(...$resultUpah);
+
+        $roundMoney = function ($n) {
+            return (int) round((float)$n, 0, PHP_ROUND_HALF_UP);
+        };
+
+        foreach ($upahProduksiPegawai as &$row) {
+            $row->gudang_id          = (int)($row->gudang_id ?? 0);
+            $row->upah_total_daging  = $roundMoney($row->upah_total_daging ?? 0);
+            $row->upah_total_kopra   = $roundMoney($row->upah_total_kopra ?? 0);
+            $row->upah_produksi      = $roundMoney($row->upah_produksi ?? 0);
+            $row->bonus_total        = $roundMoney($row->bonus_total ?? 0);
+            $row->total_gaji_bersih  = $roundMoney($row->total_gaji_bersih ?? 0);
+        }
+        unset($row);
+
         $saved = $this->gajiPegawaiModel->prosesGajiPegawai(
                     $upahProduksiPegawai,
                     $user->email ?? null,

@@ -20,6 +20,9 @@
     "t-gaji-pegawai":"Gaji Pegawai",
 
     "t-report":"Laporan",
+    "t-report-pengolahan":"Pengolahan",
+    "t-report-gaji-driver":"Gaji Sopir",
+    "t-report-gaji-pegawai":"Gaji Pegawai",
 
     "t-login":"Login",
     "t-starter-page":"Starter Page",

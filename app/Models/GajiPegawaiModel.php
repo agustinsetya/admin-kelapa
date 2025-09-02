@@ -10,16 +10,14 @@ class GajiPegawaiModel extends Model
     protected $primaryKey    = 'mt_gaji_id';
     protected $returnType    = 'object';
     protected $allowedFields = [
-        'periode',
+        'tg_proses_gaji',
         'kd_pegawai',
+        'gudang_id',
+        'upah_total_daging',
+        'upah_total_kopra',
         'upah_produksi',
-        'lembur',
         'bonus',
-        'potongan',
-        'total_bruto',
-        'total_netto',
-        'tg_pembayaran',
-        'status_pembayaran',
+        'total_gaji_bersih',
         'created_at',
         'updated_by',
     ];
@@ -29,41 +27,40 @@ class GajiPegawaiModel extends Model
 
     public function getDataGajiPegawai(array $filters = []): array
     {
-        $pengolahan = $this->select('
+        $gajiPegawai = $this->select('
                     mt_gaji.mt_gaji_id,
-                    mt_gaji.tg_pengolahan,
+                    mt_gaji.tg_proses_gaji,
                     mt_gaji.gudang_id,
                     mt_gaji.kd_pegawai,
-                    mt_gaji.berat_daging,
-                    mt_gaji.berat_kopra,
+                    mt_gaji.upah_total_daging,
+                    mt_gaji.upah_total_kopra,
+                    mt_gaji.bonus,
+                    mt_gaji.total_gaji_bersih,
                     m_gudang.nama AS nama_gudang,
                     mt_pegawai.nama AS nama_pegawai,
                     mt_gaji.created_at,
                 ')
             ->join('m_gudang', 'm_gudang.m_gudang_id = mt_gaji.gudang_id', 'left')
             ->join('mt_pegawai', 'mt_pegawai.kd_pegawai = mt_gaji.kd_pegawai', 'left')
-            ->orderby('mt_gaji.tg_pengolahan DESC');
-
-        if (isset($filters['mt_gaji_id']) && is_numeric($filters['mt_gaji_id'])) {
-            $pengolahan->where('mt_gaji.mt_gaji_id', (int)$filters['mt_gaji_id']);
-        }
+            ->orderby('mt_gaji.tg_proses_gaji DESC');
 
         if (isset($filters['gudang_id']) && is_numeric($filters['gudang_id'])) {
-            $pengolahan->where('mt_gaji.gudang_id', (int)$filters['gudang_id']);
+            $gajiPegawai->where('mt_gaji.gudang_id', (int)$filters['gudang_id']);
         }
 
         if (isset($filters['kd_pegawai']) && is_numeric($filters['kd_pegawai'])) {
-            $pengolahan->where('mt_gaji.kd_pegawai', (int)$filters['kd_pegawai']);
+            $gajiPegawai->where('mt_gaji.kd_pegawai', (int)$filters['kd_pegawai']);
         }
 
         if (!empty($filters['start_date'])) {
-            $pengolahan->where('mt_gaji.tg_pengolahan >=', $filters['start_date']);
-        }
-        if (!empty($filters['end_date'])) {
-            $pengolahan->where('mt_gaji.tg_pengolahan <=', $filters['end_date']);
+            $gajiPegawai->where('mt_gaji.tg_proses_gaji >=', $filters['start_date']);
         }
 
-        return $pengolahan->findAll();
+        if (!empty($filters['end_date'])) {
+            $gajiPegawai->where('mt_gaji.tg_proses_gaji <=', $filters['end_date']);
+        }
+
+        return $gajiPegawai->findAll();
     }
 
     public function prosesGajiPegawai(
@@ -86,7 +83,7 @@ class GajiPegawaiModel extends Model
             }
 
             $data = [
-                'periode'           => $periodeStart,
+                'tg_proses_gaji'    => date('Y-m-d'),
                 'kd_pegawai'        => (int)$row->kd_pegawai,
                 'gudang_id'         => (int)$row->gudang_id,
                 'upah_total_daging' => (float)$row->upah_total_daging,
@@ -99,6 +96,12 @@ class GajiPegawaiModel extends Model
 
             $saved = $this->insert($data);
             if ($saved === false) {
+                log_message('error', 'GAJI FAIL INSERT data: '. json_encode($data));
+                $lastQuery = $this->db->getLastQuery();
+                if ($lastQuery) {
+                    log_message('error', 'GAJI FAIL INSERT SQL: ' . $lastQuery->getQuery());
+                }
+                log_message('error', 'GAJI DB-SCHEMA: ' . $this->db->getDatabase()); // pastikan schema = cvkelapa
                 $this->db->transRollback();
                 return false;
             }
@@ -115,7 +118,11 @@ class GajiPegawaiModel extends Model
                 ->where('tg_pengolahan <=', $periodeEnd);
             }
 
-            $ok = $tb->set('is_stat_gaji', 1)->update();
+            $ok = $tb->set([
+                'is_stat_gaji'      => 1,
+                'tg_proses_gaji'    => $createdBy,
+                'updated_by'        => $createdBy,
+            ])->update();
 
             if ($ok === false) {
                 log_message('error', '[UPDATE pengolahan FAIL] ' . $this->db->getLastQuery()->getQuery());

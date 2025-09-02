@@ -11,8 +11,8 @@ $((function () {
     applyFilterGajiPegawai();
 
     $('#applyGajiPegawaiFilter').click(function() {
-        const { start, end } = getRangeISO('#tg_periode_filter');
-        const gudang = $('#gp_gudang_id').val() || null;
+        const { start, end } = getIsoRange('tg_periode_filter');
+        const gudang = $('#fn_gudang_id').val() || null;
 
         _activeFilter = { gudang, start_date: start, end_date: end };
 
@@ -20,7 +20,7 @@ $((function () {
     });
     
     $('#resetGajiPegawaiFilter').click(function() {
-        $('#gp_gudang_id').val('').trigger('change');
+        $('#fn_gudang_id').val('').trigger('change');
 
         const $el = $('#tg_periode_filter');
         $el.val('');
@@ -55,20 +55,12 @@ $((function () {
             return;
         }
 
-        // Ambil range dari state aktif; fallback ke input DRP kalau belum pernah apply
         let { start_date, end_date } = _activeFilter;
         if (!start_date || !end_date) {
-            const r = getRangeISO('#tg_periode_filter');
+            const r = getIsoRange('tg_periode_filter');
             start_date = r.start;
             end_date   = r.end;
         }
-        if (!start_date || !end_date) {
-            alert('Pilih periode terlebih dahulu.');
-            return;
-        }
-
-        const csrfName = $('meta[name="csrf-token-name"]').attr('content');
-        const csrfHash = $('meta[name="csrf-token"]').attr('content');
 
         showBtnLoading(buttonId, { text: "Proses Gaji Pegawai..." });
 
@@ -77,13 +69,10 @@ $((function () {
             method: 'POST',
             dataType: 'json',
             contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify({ data: selectedData, start_date, end_date, [csrfName]: csrfHash }),
-            // data: {
-            //     data: selectedData,
-            //     start_date,
-            //     end_date,
-            //     [csrfName]: csrfHash
-            // }
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: JSON.stringify({ data: selectedData, start_date, end_date })
         })
         .done(function (response) {
             if (response?.csrf?.name && response?.csrf?.hash) {
@@ -232,60 +221,4 @@ function initializeFinanceGajiPegawaiTable(data) {
             '>' +
             't<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>'
     });
-}
-
-function getDetailFinanceGajiPegawai(button) {
-    var id = $(button).data("id");
-
-    $.ajax({
-        url: base_url + '/finance/gaji-pegawai/detail',
-        method: "GET",
-        data: {
-            id: id,
-        },
-        success: function (response) {
-            if (response && response.data) {
-                openModalGajiPegawai("edit", response.data[0]);
-            } else {
-                alert("Data tidak ditemukan!");
-            }
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            alert("Terjadi kesalahan: " + textStatus);
-        },
-    });
-}
-
-function openModalGajiPegawai(mode, data = null) {
-    $("#finance-gaji-pegawai-form")[0].reset();
-    $("#finance-gaji-pegawai-form").removeClass("was-validated");
-    $("#gp_gudang_id, #gp_pegawai_id, #gp_status").val(null).trigger("change").removeClass("is-invalid is-valid");
-
-    $("#finance-gaji-pegawai-form input[name='_method']").remove();
-
-    if (mode === "edit" && data) {
-        $("#financeGajiPegawaiModal .modal-title").text("Edit Data Pengeluaran");
-    
-        $("#tg_pembayaran").val(data.tg_pembayaran.split("T")[0]);
-        $("#peng_ktg_pengeluaran_id").val(data.ktg_pengeluaran_id).trigger("change");
-        $("#peng_gudang_id").val(data.gudang_id).trigger("change");
-        $("#peng_pegawai_id").val(data.kd_pegawai).trigger("change");
-        $("#jumlah").val(data.jumlah);
-        $("#biaya").val(formatRupiah(data.biaya));
-        $("#peng_status").val(data.status).trigger("change");
-    
-        $("#finance-gaji-pegawai-form").data("action", "edit");
-        $("#finance-gaji-pegawai-form").data("id", data.mt_gaji_id);
-
-        $("#finance-gaji-pegawai-form").append(
-            '<input type="hidden" name="_method" value="PATCH">'
-        );
-    } else {
-        $("#financeGajiPegawaiModal .modal-title").text("Tambah Data Pengeluaran");
-    
-        $("#finance-gaji-pegawai-form").data("action", "add");
-        $("#finance-gaji-pegawai-form").removeData("id");
-    }
-
-    $("#financeGajiPegawaiModal").modal("show");
 }
