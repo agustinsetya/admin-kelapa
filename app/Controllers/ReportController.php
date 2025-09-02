@@ -34,7 +34,7 @@ class ReportController extends AuthRequiredController
             'gudang' => $gudang,
 		];
 
-        return view('report', $data);
+        return view('report-pengolahan', $data);
     }
 
     public function getReportPengolahan(): ResponseInterface

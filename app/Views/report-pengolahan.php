@@ -99,20 +99,19 @@
 
 <script src="<?= base_url('assets/libs/daterangepicker/daterangepicker.min.js') ?>"></script>
 
-
 <!-- apexcharts js -->
-<script src="assets/libs/apexcharts/apexcharts.min.js"></script>
+<script src="<?= base_url('assets/libs/apexcharts/apexcharts.min.js') ?>"></script>
 
 <!-- apexcharts init -->
-<script src="assets/js/pages/apexcharts.init.js"></script>
+<script src="<?= base_url('assets/js/pages/apexcharts.init.js') ?>"></script>
 
-<script src="assets/js/app.js"></script>
+<script src="<?= base_url('assets/js/app.js') ?>"></script>
 
 <!-- custom js -->
 <script type="text/javascript">
     var base_url = '<?= base_url() ?>';
 </script>
-<script src="<?= base_url('assets/js/content/report.js') ?>"></script>
+<script src="<?= base_url('assets/js/content/report-pengolahan.js') ?>"></script>
 
 </body>
 
