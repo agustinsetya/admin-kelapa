@@ -1,21 +1,20 @@
 "use strict";
 
+let _activeFilter = {
+    gudang: null,
+    start_date: '',
+    end_date: ''
+};
+
 $((function () {
     initRangePicker('tg_periode_filter');
     applyFilterGajiPegawai();
 
-    $("#btn-tambah-pengeluaran").on("click", function () {
-        document.getElementById('financeGajiPegawaiModal')
-        openModalGajiPegawai("add");
-    });
-
-    $(document).on('click', '.btn-edit-pengeluaran', function () {
-        getDetailFinanceGajiPegawai(this);
-    });
-
     $('#applyGajiPegawaiFilter').click(function() {
-        const { start, end } = getIsoRange('tg_periode_filter');
+        const { start, end } = getRangeISO('#tg_periode_filter');
         const gudang = $('#gp_gudang_id').val() || null;
+
+        _activeFilter = { gudang, start_date: start, end_date: end };
 
         applyFilterGajiPegawai(gudang, start, end);
     });
@@ -27,35 +26,44 @@ $((function () {
         $el.val('');
         if (hasDRP()) {
             const drp = $el.data('daterangepicker');
-
             if (drp) {
                 drp.setStartDate(moment());
                 drp.setEndDate(moment());
-
                 $el.trigger('cancel.daterangepicker', drp);
             }
         }
+
+        _activeFilter = { gudang: null, start_date: '', end_date: '' };
 
         applyFilterGajiPegawai();
     });
 
     $("body").on("click", "#btn-proses-gaji-pegawai", function () {
         let selectedData = [];
-        const buttonId = $(this).attr("id");
+        const buttonId = this.id;
     
         $(".proses-gaji-pegawai:checked").each(function () {
-            const dataPeg = $(this).data("id");
+            const dataPeg = String($(this).data("id") || '');
             const [kdPegawai, gudangId] = dataPeg.split("#");
-            
             if (kdPegawai && gudangId) {
                 selectedData.push({ kdPegawai, gudangId });
             }
         });
     
-        if (selectedData.length === 0) {
-            alert(
-                "Tidak ada data karyawan yang dipilih!"
-            );
+        if (!selectedData.length) {
+            alert("Tidak ada data karyawan yang dipilih!");
+            return;
+        }
+
+        // Ambil range dari state aktif; fallback ke input DRP kalau belum pernah apply
+        let { start_date, end_date } = _activeFilter;
+        if (!start_date || !end_date) {
+            const r = getRangeISO('#tg_periode_filter');
+            start_date = r.start;
+            end_date   = r.end;
+        }
+        if (!start_date || !end_date) {
+            alert('Pilih periode terlebih dahulu.');
             return;
         }
 
@@ -67,11 +75,15 @@ $((function () {
         $.ajax({
             url: base_url + '/finance/gaji-pegawai/add',
             method: 'POST',
-            data: {
-                data: selectedData,
-                [csrfName]: csrfHash
-            },
             dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify({ data: selectedData, start_date, end_date, [csrfName]: csrfHash }),
+            // data: {
+            //     data: selectedData,
+            //     start_date,
+            //     end_date,
+            //     [csrfName]: csrfHash
+            // }
         })
         .done(function (response) {
             if (response?.csrf?.name && response?.csrf?.hash) {
@@ -81,7 +93,7 @@ $((function () {
 
             if (response?.success) {
                 alert('Proses Gaji Pegawai Berhasil!');
-                applyFilterGajiPegawai();
+                applyFilterGajiPegawai(_activeFilter.gudang, _activeFilter.start_date, _activeFilter.end_date);
             } else {
                 alert(response?.message || 'Proses Gaji Pegawai Gagal!');
             }
@@ -107,12 +119,17 @@ $((function () {
 }));
 
 function applyFilterGajiPegawai(gudang = null, start = '', end = '') {
-    getDataGajiPegawai(gudang, start, end).done(function(response) {
-        const rows = Array.isArray(response?.data) ? response.data : [];
-        initializeFinanceGajiPegawaiTable(rows);
-    }).fail(function(jqXHR, textStatus, errorThrown) {
-        console.error("Request failed: " + textStatus + ", " + errorThrown);
-    });
+    if (start || end || gudang !== null) {
+        _activeFilter = { gudang, start_date: start, end_date: end };
+    }
+    getDataGajiPegawai(_activeFilter.gudang, _activeFilter.start_date, _activeFilter.end_date)
+        .done(function(response) {
+            const rows = Array.isArray(response?.data) ? response.data : [];
+            initializeFinanceGajiPegawaiTable(rows);
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            console.error("Request failed: " + textStatus + ", " + errorThrown);
+        });
 }
 
 function getDataGajiPegawai(gudang = null, start = '', end = '') {
@@ -144,7 +161,7 @@ function initializeFinanceGajiPegawaiTable(data) {
         data: list,
         columns: [
             { data: null, defaultContent: "" },
-            { data: 'gudang_id', defaultContent: "-" },
+            { data: null, defaultContent: "-" },
             { data: 'nama_pegawai', defaultContent: "-" },
             { data: 'upah_total_daging', defaultContent: "-" },
             { data: 'upah_total_kopra', defaultContent: "-" },
@@ -158,6 +175,16 @@ function initializeFinanceGajiPegawaiTable(data) {
                 targets: 0,
                 render: function(data, type, row, meta) {
                     return meta.row + meta.settings._iDisplayStart + 1;
+                }
+            },
+            {
+                targets: 1,
+                render: function () {
+                    const s = _activeFilter.start_date;
+                    if (!s) return '-';
+                    const m = moment(s, 'YYYY-MM-DD', true);
+                    
+                    return m.isValid() ? m.format('MMMM YYYY') : s;
                 }
             },
             {

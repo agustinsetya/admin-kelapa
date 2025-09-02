@@ -250,13 +250,19 @@ class FinanceController extends AuthRequiredController
             return $this->jsonError('Tidak terautentik', 401);
         }
 
+        $input = $this->request->getPost();
+
+        $periodeStart = $input['start_date'] ?? null;
+        $periodeEnd   = $input['end_date']   ?? null;
+        if (!$periodeStart || !$periodeEnd) {
+            return $this->jsonError('Periode tidak valid.', 422);
+        }
+
         if (!$this->validate('financeGajiPegawai')) {
             return $this->jsonError('Validasi gagal', 422, [
                 'errors' => $this->validator->getErrors(),
             ]);
         }
-
-        $input = $this->request->getPost();
 
         if (empty($input['data']) || !is_array($input['data'])) {
             return $this->jsonError('Data pegawai tidak valid.', 422);
@@ -272,7 +278,9 @@ class FinanceController extends AuthRequiredController
 
             $filters = [
                 'kd_pegawai' => $pegawai['kdPegawai'],
-                'gudang_id'  => $pegawai['gudangId']
+                'gudang_id'  => $pegawai['gudangId'],
+                'start_date' => $periodeStart,
+                'end_date'   => $periodeEnd,
             ];
 
             $upah = $this->pengolahanModel->getDataUpahProduksi($filters);
@@ -285,9 +293,12 @@ class FinanceController extends AuthRequiredController
         }
 
         $upahProduksiPegawai = array_merge(...$resultUpah);
-
-        
-        $saved = $this->gajiPegawaiModel->prosesGajiPegawai($upahProduksiPegawai, $user->email ?? null);
+        $saved = $this->gajiPegawaiModel->prosesGajiPegawai(
+                    $upahProduksiPegawai,
+                    $user->email ?? null,
+                    $periodeStart,
+                    $periodeEnd
+                );
 
         if ($saved === false) {
             $errors = $this->gajiPegawaiModel->errors() ?: 'Gagal menyimpan data';

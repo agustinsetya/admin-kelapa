@@ -66,20 +66,34 @@ class GajiPegawaiModel extends Model
         return $pengolahan->findAll();
     }
 
-    public function prosesGajiPegawai(array $upahPegawai = [], string $createdBy): bool
+    public function prosesGajiPegawai(
+        array $upahPegawai = [],
+        string $createdBy,
+        string $periodeStart,
+        string $periodeEnd
+    ): bool
     {
         $this->db->transBegin();
 
+        $periodeStart = date('Y-m-d', strtotime($periodeStart));
+        $periodeEnd   = date('Y-m-d', strtotime($periodeEnd));
+
         foreach ($upahPegawai as $row) {
+            if (empty($row->kd_pegawai) || empty($row->gudang_id)) {
+                log_message('error', 'GAJI FAIL: kd_pegawai/gudang_id kosong');
+                $this->db->transRollback();
+                return false;
+            }
+
             $data = [
-                'periode'           => date('Y-m-d'),
-                'kd_pegawai'        => $row->kd_pegawai,
-                'gudang_id'         => $row->gudang_id,
-                'upah_total_daging' => $row->upah_total_daging,
-                'upah_total_kopra'  => $row->upah_total_kopra,
-                'upah_produksi'     => $row->upah_produksi,
-                'bonus'             => $row->bonus_total,
-                'total_gaji_bersih' => $row->total_gaji_bersih,
+                'periode'           => $periodeStart,
+                'kd_pegawai'        => (int)$row->kd_pegawai,
+                'gudang_id'         => (int)$row->gudang_id,
+                'upah_total_daging' => (float)$row->upah_total_daging,
+                'upah_total_kopra'  => (float)$row->upah_total_kopra,
+                'upah_produksi'     => (float)$row->upah_produksi,
+                'bonus'             => (float)$row->bonus_total,
+                'total_gaji_bersih' => (float)$row->total_gaji_bersih,
                 'created_by'        => $createdBy,
             ];
 
@@ -91,13 +105,17 @@ class GajiPegawaiModel extends Model
         }
 
         foreach ($upahPegawai as $row) {
-            $upd = $this->db->table('mt_pengolahan')
-                ->where('kd_pegawai', $row->kd_pegawai)
-                ->where('gudang_id', $row->gudang_id)
+            $update = $this->db->table('mt_pengolahan')
+                ->where('kd_pegawai', (int)$row->kd_pegawai)
+                ->where('gudang_id',  (int)$row->gudang_id)
+                ->where('is_stat_gaji', 0)
+                ->where('tg_pengolahan >=', $periodeStart)
+                ->where('tg_pengolahan <=', $periodeEnd)
                 ->set('is_stat_gaji', 1)
                 ->update();
 
-            if ($upd === false) {
+            if ($update === false) {
+                log_message('error', '[UPDATE pengolahan FAIL] ' . $this->db->getLastQuery()->getQuery());
                 $this->db->transRollback();
                 return false;
             }
