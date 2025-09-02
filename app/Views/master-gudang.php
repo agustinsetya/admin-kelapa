@@ -44,13 +44,20 @@
                                                 <tr>
                                                     <th>#</th>
                                                     <th>Nama Gudang</th>
-                                                    <th>Status Aktif</th>
+                                                    <th>Takaran Daging (kg)</th>
+                                                    <th>Upah per Takaran Daging</th>
+                                                    <th>Takaran Kopra (kg)</th>
+                                                    <th>Upah per Takaran Kopra</th>
+                                                    <th>Gaji Driver</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody></tbody>
                                         </table>
                                     </div>
+
+                                    <!-- Include the modal -->
+                                    <?= $this->include('modals/master-gudang-modal') ?>
                                 </div>
                             </div>
                         </div>
@@ -79,12 +86,18 @@
         <script src="<?= base_url('assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js') ?>"></script>
         <script src="<?= base_url('assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') ?>"></script>
 
+        <!-- form mask -->
+        <script src="<?= base_url('assets/libs/imask/imask.min.js') ?>"></script>
+        <!-- form mask init -->
+        <script src="<?= base_url('assets/js/pages/form-mask.init.js') ?>"></script>
+
         <script src="<?= base_url('assets/libs/sweetalert2/sweetalert2.min.js') ?>"></script>
 
         <!-- custom js -->
         <script type="text/javascript">
             var base_url = '<?= base_url() ?>';
         </script>
+        <script src="<?= base_url('assets/js/content/general.js') ?>"></script>
         <script src="<?= base_url('assets/js/content/master-gudang.js') ?>"></script>
     </body>
 </html>

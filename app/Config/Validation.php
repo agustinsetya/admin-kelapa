@@ -132,8 +132,12 @@ class Validation extends BaseConfig
         ],
     ];
     
-    public $masterUser = [
+    public $masterUserAdd = [
         'us_pegawai_id' => 'required|numeric',
+        'email'         => 'required|valid_email|is_unique[mt_user.email]',
+    ];
+    
+    public $masterUserUpdate = [
         'email'         => 'required|valid_email|is_unique[mt_user.email]',
     ];
 
@@ -145,6 +149,80 @@ class Validation extends BaseConfig
         'email' => [
             'required'  => 'Email tidak boleh kosong.',
             'email'     => 'Alamat email yang dimasukkan tidak valid.',
+        ],
+    ];
+
+    public $masterPegawai = [
+        'kd_pegawai'      => 'required|numeric',
+        'nama_pegawai'      => 'required',
+        'jenis_kelamin' => 'required|in_list[P,L]',
+        'peg_role_id'   => 'required|numeric',
+        'pg_gudang_id'   => 'required|numeric',
+    ];
+
+    public $masterPegawai_errors = [
+        'kd_pegawai' => [
+            'required' => 'Kode Pegawai wajib diisi.',
+            'numeric'  => 'Kode Pegawai harus angka.',
+        ],
+        'nama_pegawai' => [
+            'required' => 'Nama Pegawai wajib diisi.',
+        ],
+        'jenis_kelamin' => [
+            'required' => 'Jenis Kelamin wajib dipilih.',
+            'in_list'  => 'Jenis Kelamin hanya boleh diisi dengan P atau L.',
+        ],
+        'peg_role_id' => [
+            'required'  => 'Peran tidak boleh kosong.',
+            'numeric'  => 'Peran harus angka.',
+        ],
+        'pg_gudang_id' => [
+            'required'  => 'Penempatan tidak boleh kosong.',
+            'numeric'  => 'Penempatan harus angka.',
+        ],
+    ];
+
+    public $masterGudang = [
+        'nama_gudang'           => 'required',
+        'takaran_daging_kelapa' => 'required|numeric',
+        'upah_takaran_daging'   => 'required|numeric',
+        'takaran_kopra_kelapa'  => 'required|numeric',
+        'upah_takaran_kopra'    => 'required|numeric',
+    ];
+
+    public $masterGudang_errors = [
+        'nama_gudang' => [
+            'required' => 'Nama Gudang wajib diisi.',
+        ],
+        'takaran_daging_kelapa' => [
+            'required' => 'Takaran daging kelapa wajib diisi.',
+            'numeric'  => 'Takaran daging kelapa harus angka.',
+        ],
+        'upah_takaran_daging' => [
+            'required' => 'Upah takaran daging wajib diisi.',
+            'numeric'  => 'Upah takaran daging harus angka.',
+        ],
+        'takaran_kopra_kelapa' => [
+            'required' => 'Takaran kopra kelapa wajib diisi.',
+            'numeric'  => 'Takaran kopra kelapa harus angka.',
+        ],
+        'upah_takaran_kopra' => [
+            'required' => 'Upah takaran kopra wajib diisi.',
+            'numeric'  => 'Upah takaran kopra harus angka.',
+        ],
+    ];
+
+    public $masterKategoriPengeluaran = [
+        'nama_kategori'  => 'required',
+        'ket_kategori'   => 'required',
+    ];
+
+    public $masterKategoriPengeluaran_errors = [
+        'nama_kategori' => [
+            'required' => 'Nama Kategori Pengeluaran wajib diisi.',
+        ],
+        'ket_kategori' => [
+            'required'  => 'Keterangan Kategori Pengeluaran tidak boleh kosong.',
         ],
     ];
 

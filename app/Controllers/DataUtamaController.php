@@ -180,7 +180,7 @@ class DataUtamaController extends AuthRequiredController
             return $this->jsonError('Tidak terautentik', 401);
         }
 
-        if (!$this->validate('masterUser')) {
+        if (!$this->validate('masterUserAdd')) {
             return $this->response->setJSON([
                 'status' => 'error',
                 'message' => 'Validasi gagal',
@@ -219,7 +219,7 @@ class DataUtamaController extends AuthRequiredController
             return $this->jsonError('Tidak terautentik', 401);
         }
 
-        if (!$this->validate('masterUser')) {
+        if (!$this->validate('masterPegawai')) {
             return $this->jsonError('Validasi gagal', 422, [
                 'errors' => $this->validator->getErrors(),
             ]);
@@ -263,7 +263,7 @@ class DataUtamaController extends AuthRequiredController
                 'li_2'  => lang('Files.Pegawai'),
             ]),
 			'gudang' => $gudang,
-			'userRole' => $userRole,
+			'role' => $userRole,
         ];
 
         return view('master-pegawai', $data);
@@ -288,6 +288,98 @@ class DataUtamaController extends AuthRequiredController
         ]);
     }
 
+    public function getDetailPegawai()
+    {
+        $id = $this->request->getGet('id');
+        if (!$id) {
+            return $this->jsonError('Pegawai ID tidak ditemukan', 400);
+        }
+
+        $detail = $this->pegawaiModel->getDataPegawai(['mt_pegawai_id' => $id]);
+        return $this->jsonSuccess(['data' => $detail]);
+    }
+
+    public function addDetailPegawai()
+    {
+        $user = session()->get('user');
+        if (!$user) {
+            return $this->jsonError('Tidak terautentik', 401);
+        }
+
+        if (!$this->validate('masterPegawai')) {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Validasi gagal',
+                'errors' => $this->validator->getErrors()
+            ])->setStatusCode(422);
+        }
+
+        $input = $this->request->getPost();
+
+        $data = [
+            'kd_pegawai'    => $input['kd_pegawai'],
+            'nama'          => $input['nama_pegawai'],
+            'jenis_kelamin' => $input['jenis_kelamin'],
+            'role_id'       => $input['peg_role_id'],
+            'penempatan_id' => $input['pg_gudang_id'],
+            'created_by'	=> $user->email ?? null,
+        ];
+
+        $saved = $this->pegawaiModel->saveDataPegawai($data);
+
+        if ($saved === false) {
+            $errors = $this->pegawaiModel->errors() ?: 'Gagal menyimpan data';
+            return $this->jsonError($errors, 500);
+        }
+
+        // 201 Created
+        return $this->jsonSuccess([
+            'message' => 'Berhasil Tambah Data Pegawai',
+        ], 201);
+    }
+	
+    public function updateDetailPegawai()
+    {
+        $user = session()->get('user');
+        if (!$user) {
+            return $this->jsonError('Tidak terautentik', 401);
+        }
+
+        if (!$this->validate('masterPegawai')) {
+            return $this->jsonError('Validasi gagal', 422, [
+                'errors' => $this->validator->getErrors(),
+            ]);
+        }
+
+        $input = $this->request->getPost();
+        $id = $input['id'] ?? null;
+
+        if (!$id) {
+            return $this->jsonError('User ID tidak ditemukan', 400);
+        }
+
+        $data = [
+            'kd_pegawai'    => $input['kd_pegawai'],
+            'nama'          => $input['nama_pegawai'],
+            'jenis_kelamin' => $input['jenis_kelamin'],
+            'role_id'       => $input['peg_role_id'],
+            'penempatan_id' => $input['pg_gudang_id'],
+            'updated_by'	=> $user->email ?? null,
+        ];
+
+        $saved = $this->pegawaiModel->saveDataPegawai($data, $id);
+
+        if ($saved === false) {
+            log_message('error', 'Gagal menyimpan data pegawai: ' . print_r($this->pegawaiModel->errors(), true));
+            $errors = $this->pegawaiModel->errors() ?: 'Gagal menyimpan data';
+            return $this->jsonError($errors, 500);
+        }
+
+        return $this->jsonSuccess([
+            'message' => 'Berhasil Update Data Pegawai',
+        ], 200);
+    }
+
     public function showDataGudang()
     {
 		$data = [
@@ -299,10 +391,19 @@ class DataUtamaController extends AuthRequiredController
             ]),
         ];
 
+        // if ($roleScope == 'all') {
+        //     return view('report-komponen-gaji', $data);
+        // } else if ($roleScope == 'gudang') {
+        //     return view('report-komponen-gaji-form', $data);
+        // } else {
+        //     session()->setFlashdata('error', 'Anda tidak mempunyai akses ke halaman ini');
+        //     return redirect()->to('/dashboard');
+        // }
+
         return view('master-gudang', $data);
     }
-    
-	public function getDataGudang()
+
+    public function getDataGudang()
     {
 		$gudang = $this->gudangModel->getDataGudang();
 
@@ -311,103 +412,100 @@ class DataUtamaController extends AuthRequiredController
         ]);
     }
 
-    public function showDataKomponenGaji()
+    public function getDetailGudang()
     {
-        $roleScope = session()->get('role_scope');
-
-        $data = [
-            'title_meta' => view('partials/title-meta', ['title' => 'Komponen_Gaji']),
-            'page_title' => view('partials/page-title', [
-                'title' => 'Komponen_Gaji',
-                'li_1'  => lang('Files.Data_Utama'),
-                'li_2'  => lang('Files.Komponen_Gaji'),
-            ]),
-            'roleScope' => $roleScope,
-        ];
-
-        if ($roleScope == 'all') {
-            return view('master-komponen-gaji', $data);
-        } else if ($roleScope == 'gudang') {
-            return view('master-komponen-gaji-form', $data);
-        } else {
-            session()->setFlashdata('error', 'Anda tidak mempunyai akses ke halaman ini');
-            return redirect()->to('/dashboard');
+        $id = $this->request->getGet('id');
+        if (!$id) {
+            return $this->jsonError('Gudang ID tidak ditemukan', 400);
         }
+
+        $detail = $this->gudangModel->getDataGudang(['m_gudang_id' => $id]);
+        return $this->jsonSuccess(['data' => $detail]);
     }
 
-    public function getDataKomponenGaji()
-    {
-		$komponenGaji = $this->komponenGajiModel->getDataKomponenGaji();
-
-        return $this->response->setJSON([
-            'data' => $komponenGaji
-        ]);
-    }
-    
-    public function getDetailKomponenGaji()
-    {
-        $filters = [
-            'gudang_id'   => session()->get('user')->penempatan_id ?? '',
-        ];
-
-		$detailKomponenGaji = $this->komponenGajiModel->getDataKomponenGaji($filters);
-
-        return $this->response->setJSON([
-            'data' => $detailKomponenGaji
-        ]);
-    }
-
-    public function updateDetailKomponenGaji()
+    public function addDetailGudang()
     {
         $user = session()->get('user');
+        if (!$user) {
+            return $this->jsonError('Tidak terautentik', 401);
+        }
 
-        if (!$user || empty($user->penempatan_id)) {
-            return $this->response->setStatusCode(401)->setJSON([
-                'success' => false, 'message' => 'Tidak terautentik', 'code' => 401
-            ]);
+        if (!$this->validate('masterGudang')) {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Validasi gagal',
+                'errors' => $this->validator->getErrors()
+            ])->setStatusCode(422);
         }
 
         $input = $this->request->getPost();
 
-        if (!$this->validate('komponenGajiUpdate')) {
-            return $this->response->setStatusCode(422)->setJSON([
-                'success' => false,
-                'message' => 'Validasi gagal',
-                'errors'  => $this->validator->getErrors(),
-                'code'    => 422,
+        $data = [
+            'nama'                  => $input['nama_gudang'],
+            'takaran_daging_kelapa' => $input['takaran_daging_kelapa'],
+            'upah_takaran_daging'   => $input['upah_takaran_daging'],
+            'takaran_kopra_kelapa'  => $input['takaran_kopra_kelapa'],
+            'upah_takaran_kopra'    => $input['upah_takaran_kopra'],
+            'gaji_driver'           => $input['gaji_driver'],
+            'created_by'	        => $user->email ?? null,
+        ];
+
+        $saved = $this->gudangModel->saveDataGudang($data);
+
+        if ($saved === false) {
+            $errors = $this->gudangModel->errors() ?: 'Gagal menyimpan data';
+            return $this->jsonError($errors, 500);
+        }
+
+        // 201 Created
+        return $this->jsonSuccess([
+            'message' => 'Berhasil Tambah Data Gudang',
+        ], 201);
+    }
+	
+    public function updateDetailGudang()
+    {
+        $user = session()->get('user');
+        if (!$user) {
+            return $this->jsonError('Tidak terautentik', 401);
+        }
+
+        if (!$this->validate('masterGudang')) {
+            return $this->jsonError('Validasi gagal', 422, [
+                'errors' => $this->validator->getErrors(),
             ]);
+        }
+
+        $input = $this->request->getPost();
+        $id = $input['id'] ?? null;
+
+        if (!$id) {
+            return $this->jsonError('Gudang ID tidak ditemukan', 400);
         }
 
         $data = [
-            'gudang_id'            => $user->penempatan_id,
-            'takaran_daging'       => $input['takaran_daging_kelapa'],
-            'upah_takaran_daging'  => $input['upah_takaran_daging'],
-            'takaran_kopra'        => $input['takaran_kopra_kelapa'],
-            'upah_takaran_kopra'   => $input['upah_takaran_kopra'],
-            'updated_by'           => $user->email ?? null,
+            'nama'                  => $input['nama_gudang'],
+            'takaran_daging_kelapa' => $input['takaran_daging_kelapa'],
+            'upah_takaran_daging'   => $input['upah_takaran_daging'],
+            'takaran_kopra_kelapa'  => $input['takaran_kopra_kelapa'],
+            'upah_takaran_kopra'    => $input['upah_takaran_kopra'],
+            'gaji_driver'           => $input['gaji_driver'],
+            'updated_by'	        => $user->email ?? null,
         ];
 
-        $save = $this->komponenGajiModel->updateKomponenGaji($data, $data['gudang_id']);
+        $saved = $this->gudangModel->saveDataGudang($data, $id);
 
-        if ($save === false) {
-            $errors = method_exists($this->komponenGajiModel, 'errors')
-                ? $this->komponenGajiModel->errors()
-                : (is_object($save) && property_exists($save, 'message') ? $save->message : 'Gagal menyimpan data');
-    
-            return $this->response->setStatusCode(500)->setJSON([
-                'success' => false,
-                'message' => $errors,
-                'code'    => 500,
-            ]);
+        if ($saved === false) {
+            log_message('error', 'Gagal menyimpan data gudang: ' . print_r($this->gudangModel->errors(), true));
+            $errors = $this->gudangModel->errors() ?: 'Gagal menyimpan data';
+            return $this->jsonError($errors, 500);
         }
-    
-        return $this->response->setJSON([
-            'success' => true,
-            'message' => 'Berhasil Update Data Komponen Gaji',
-            'code'    => 200,
-        ]);
-    }
 
+        return $this->jsonSuccess([
+            'message' => 'Berhasil Update Data Gudang',
+        ], 200);
+    }
+    
     public function showDataKategoriPengeluaran()
     {
         $data = [
@@ -424,10 +522,96 @@ class DataUtamaController extends AuthRequiredController
 
     public function getDataKategoriPengeluaran()
     {
-		$kategoriPengeluaran = $this->kategoriPengeluaranModel->getDataKategoriPengeluaran();
+		$ktgPengeluaran = $this->kategoriPengeluaranModel->getDataKategoriPengeluaran();
 
         return $this->response->setJSON([
-            'data' => $kategoriPengeluaran
+            'data' => $ktgPengeluaran
         ]);
+    }
+
+    public function getDetailKategoriPengeluaran()
+    {
+        $id = $this->request->getGet('id');
+        if (!$id) {
+            return $this->jsonError('Kategori Pengeluaran ID tidak ditemukan', 400);
+        }
+
+        $detail = $this->kategoriPengeluaranModel->getDataKategoriPengeluaran(['m_ktg_pengeluaran_id' => $id]);
+        return $this->jsonSuccess(['data' => $detail]);
+    }
+
+    public function addDetailKategoriPengeluaran()
+    {
+        $user = session()->get('user');
+        if (!$user) {
+            return $this->jsonError('Tidak terautentik', 401);
+        }
+
+        if (!$this->validate('masterKategoriPengeluaran')) {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Validasi gagal',
+                'errors' => $this->validator->getErrors()
+            ])->setStatusCode(422);
+        }
+
+        $input = $this->request->getPost();
+
+        $data = [
+            'nama'                  => $input['nama_kategori'],
+            'keterangan'            => $input['ket_kategori'],
+            'created_by'	        => $user->email ?? null,
+        ];
+
+        $saved = $this->kategoriPengeluaranModel->saveDataKategoriPengeluaran($data);
+
+        if ($saved === false) {
+            $errors = $this->kategoriPengeluaranModel->errors() ?: 'Gagal menyimpan data';
+            return $this->jsonError($errors, 500);
+        }
+
+        // 201 Created
+        return $this->jsonSuccess([
+            'message' => 'Berhasil Tambah Data Kategori Pengeluaran',
+        ], 201);
+    }
+	
+    public function updateDetailKategoriPengeluaran()
+    {
+        $user = session()->get('user');
+        if (!$user) {
+            return $this->jsonError('Tidak terautentik', 401);
+        }
+
+        if (!$this->validate('masterKategoriPengeluaran')) {
+            return $this->jsonError('Validasi gagal', 422, [
+                'errors' => $this->validator->getErrors(),
+            ]);
+        }
+
+        $input = $this->request->getPost();
+        $id = $input['id'] ?? null;
+
+        if (!$id) {
+            return $this->jsonError('Kategori Pengeluaran ID tidak ditemukan', 400);
+        }
+
+        $data = [
+            'nama'                  => $input['nama_kategori'],
+            'keterangan'            => $input['ket_kategori'],
+            'updated_by'	        => $user->email ?? null,
+        ];
+
+        $saved = $this->kategoriPengeluaranModel->saveDataKategoriPengeluaran($data, $id);
+
+        if ($saved === false) {
+            log_message('error', 'Gagal menyimpan data Kategori Pengeluaran: ' . print_r($this->kategoriPengeluaranModel->errors(), true));
+            $errors = $this->kategoriPengeluaranModel->errors() ?: 'Gagal menyimpan data';
+            return $this->jsonError($errors, 500);
+        }
+
+        return $this->jsonSuccess([
+            'message' => 'Berhasil Update Data Kategori Pengeluaran',
+        ], 200);
     }
 }

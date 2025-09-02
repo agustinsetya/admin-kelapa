@@ -8,7 +8,6 @@
     "t-master-user":"Pengguna",
     "t-master-pegawai":"Pegawai",
     "t-master-gudang":"Gudang",
-    "t-master-komponen-gaji":"Komponen Gaji",
 
     "t-supply-chain":"Supply Chain",
     "t-supply-pembelian":"Data Pembelian",
@@ -20,6 +19,7 @@
     "t-gaji-pegawai":"Gaji Pegawai",
 
     "t-report":"Laporan",
+    "t-report-komponen-gaji":"Komponen Gaji",
     "t-report-pengolahan":"Pengolahan",
     "t-report-gaji-driver":"Gaji Sopir",
     "t-report-gaji-pegawai":"Gaji Pegawai",

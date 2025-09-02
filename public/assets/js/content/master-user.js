@@ -25,7 +25,12 @@ $((function () {
             } else {
                 $("#us_pegawai_id").removeClass("is-invalid").addClass("is-valid");
             }
+        } else {
+            $("#us_pegawai_id").prop("required", false);
         }
+
+        // debug error di form
+        // document.querySelector("#master-user-form").reportValidity();
     
         if (form.checkValidity() === false) {
             e.stopPropagation();
@@ -152,15 +157,6 @@ function initializeMasterUserTable(data) {
                         'title="Detail User" ' +
                         'data-id="' + row.mt_user_id + '"> ' +
                         '<i class="text-primary bx bx-pencil fs-5"></i>' +
-                    '</button>';
-                    
-                    actionUserButton += '<button type="button" class="btn btn-icon btn-hapus-user" ' +
-                        'data-bs-toggle="tooltip" ' +
-                        'data-bs-placement="top" ' +
-                        'title="Hapus User" ' +
-                        'data-bs-target="#hapusUserModal" ' +
-                        'data-id="' + row.mt_user_id + '"> ' +
-                        '<i class="text-danger bx bx-trash fs-5"></i>' +
                     '</button>';
 
                     actionUserButton += '</div>';

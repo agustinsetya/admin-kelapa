@@ -38,11 +38,6 @@
                             </a>
                         </li>
                         <li>
-                            <a href="<?= url_to('master-komponen-gaji') ?>">
-                                <span data-key="t-master-komponen-gaji"><?= lang('Files.Komponen_Gaji') ?></span>
-                            </a>
-                        </li>
-                        <li>
                             <a href="<?= url_to('master-kategori-pengeluaran') ?>">
                                 <span data-key="t-master-kategori-pengeluaran"><?= lang('Files.Kategori_Pengeluaran') ?></span>
                             </a>
@@ -104,6 +99,11 @@
                         <li>
                             <a href="<?= url_to('report-pengolahan') ?>">
                                 <span data-key="t-report-pengolahan"><?= lang('Files.Data_Pengolahan') ?></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?= url_to('report-komponen-gaji') ?>">
+                                <span data-key="t-report-komponen-gaji"><?= lang('Files.Komponen_Gaji') ?></span>
                             </a>
                         </li>
                         <li>

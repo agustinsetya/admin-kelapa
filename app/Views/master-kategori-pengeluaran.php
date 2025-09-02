@@ -51,6 +51,9 @@
                                             <tbody></tbody>
                                         </table>
                                     </div>
+
+                                    <!-- Include the modal -->
+                                    <?= $this->include('modals/master-kategori-pengeluaran-modal') ?>
                                 </div>
                             </div>
                         </div>
@@ -85,6 +88,7 @@
         <script type="text/javascript">
             var base_url = '<?= base_url() ?>';
         </script>
+        <script src="<?= base_url('assets/js/content/general.js') ?>"></script>
         <script src="<?= base_url('assets/js/content/master-kategori-pengeluaran.js') ?>"></script>
     </body>
 </html>

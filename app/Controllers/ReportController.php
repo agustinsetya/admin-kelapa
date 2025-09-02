@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\PengolahanModel;
 use App\Models\GajiPegawaiModel;
+use App\Models\KomponenGajiModel;
 use App\Models\GudangModel;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Controllers\Concerns\ApiResponse;
@@ -14,12 +15,14 @@ class ReportController extends AuthRequiredController
 
     protected $pengolahanModel;
     protected $gajiPegawaiModel;
+    protected $komponenGajiModel;
     protected $gudangModel;
 
     public function __construct()
     {
         $this->pengolahanModel = new PengolahanModel();
         $this->gajiPegawaiModel = new GajiPegawaiModel();
+        $this->komponenGajiModel = new KomponenGajiModel();
         $this->gudangModel = new GudangModel();
     }
 
@@ -117,6 +120,32 @@ class ReportController extends AuthRequiredController
         $gajiPegawai = $this->gajiPegawaiModel->getDataGajiPegawai($filters);
 
         return $this->jsonSuccess(['data' => $gajiPegawai]);
+    }
+
+    public function showReportKomponenGaji()
+    {
+        $roleScope = session()->get('role_scope');
+
+        $data = [
+            'title_meta' => view('partials/title-meta', ['title' => 'Komponen_Gaji']),
+            'page_title' => view('partials/page-title', [
+                'title' => 'Komponen_Gaji',
+                'li_1'  => lang('Files.Report'),
+                'li_2'  => lang('Files.Komponen_Gaji'),
+            ]),
+            'roleScope' => $roleScope,
+        ];
+
+        return view('report-komponen-gaji', $data);
+    }
+
+    public function getReportKomponenGaji()
+    {
+		$komponenGaji = $this->komponenGajiModel->getDataKomponenGaji();
+
+        return $this->response->setJSON([
+            'data' => $komponenGaji
+        ]);
     }
 
     private function filtersFromUser(): array

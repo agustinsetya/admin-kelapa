@@ -8,7 +8,6 @@
     "t-master-user":"User",
     "t-master-pegawai":"Employee",
     "t-master-gudang":"Warehouse",
-    "t-master-komponen-gaji":"Salary Component",
 
     "t-supply-chain":"Supply Chain",
     "t-supply-pembelian":"Purchasing Data",
@@ -21,6 +20,7 @@
 
     "t-report":"Report",
     "t-report-pengolahan":"Processing",
+    "t-report-komponen-gaji":"Salary Component",
     "t-report-gaji-driver":"Driver Salary",
     "t-report-gaji-pegawai":"Employee Salary",
 

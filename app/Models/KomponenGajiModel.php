@@ -15,6 +15,8 @@ class KomponenGajiModel extends Model
         'upah_takaran_daging',
         'takaran_kopra',
         'upah_takaran_kopra',
+        'gaji_driver',
+        'created_by',
         'updated_by',
     ];
     protected $useTimestamps = true;

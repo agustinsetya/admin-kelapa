@@ -11,6 +11,8 @@ class PegawaiModel extends Model
     protected $returnType = 'object';
     protected $allowedFields = ['kd_pegawai','nama','jenis_kelamin','email','role_id','penempatan_id'];
     protected $useTimestamps = true;
+    protected $createdField  = 'created_at';
+    protected $updatedField  = 'updated_at';
 
     public function getDataPegawai(?array $filters = null): array
     {
@@ -37,6 +39,10 @@ class PegawaiModel extends Model
             $user->where('mt_user.kd_pegawai IS NULL');
         }
         
+        if (isset($filters['mt_pegawai_id']) && is_numeric($filters['mt_pegawai_id'])) {
+            $user->where('mt_pegawai.mt_pegawai_id', (int)$filters['mt_pegawai_id']);
+        }
+        
         if (isset($filters['role_id']) && is_numeric($filters['role_id'])) {
             $user->where('mt_pegawai.role_id', (int)$filters['role_id']);
         }
@@ -46,5 +52,28 @@ class PegawaiModel extends Model
         }
         
 		return $user->findAll();
+    }
+
+    public function saveDataPegawai(array $data, $pegawaiId = null): bool
+    {
+        $data['mt_pegawai_id'] = $pegawaiId;
+
+        $this->db->transStart();
+
+        $user = $this->where('mt_pegawai_id', $pegawaiId)->first();
+
+        if ($user) {
+            $ok = $this->update($pegawaiId, $data);
+        } else {
+            $ok = $this->insert($data, false) !== false;
+        }
+
+        if (!$ok) {
+            $this->db->transRollback();
+            return false;
+        }
+
+        $this->db->transComplete();
+        return $this->db->transStatus();
     }
 }

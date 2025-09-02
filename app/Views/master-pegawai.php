@@ -38,7 +38,7 @@
                                                         <label class="form-label mb-1">Role</label>
                                                         <select name="role_id" id="role_id" class="form-select">
                                                             <option value="" read-only>Pilih Role</option>
-                                                            <?php foreach ($userRole as $r): ?>
+                                                            <?php foreach ($role as $r): ?>
                                                                 <option value="<?= esc($r->m_role_id) ?>"><?= esc($r->nama) ?></option>
                                                             <?php endforeach; ?>
                                                         </select>
@@ -83,6 +83,9 @@
                                             <tbody></tbody>
                                         </table>
                                     </div>
+
+                                    <!-- Include the modal -->
+                                    <?= $this->include('modals/master-pegawai-modal') ?>
                                 </div>
                             </div>
                         </div>
@@ -117,6 +120,7 @@
         <script type="text/javascript">
             var base_url = '<?= base_url() ?>';
         </script>
+        <script src="<?= base_url('assets/js/content/general.js') ?>"></script>
         <script src="<?= base_url('assets/js/content/master-pegawai.js') ?>"></script>
     </body>
 </html>

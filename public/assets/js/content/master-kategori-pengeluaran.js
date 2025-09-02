@@ -44,33 +44,39 @@ $((function () {
             method: 'POST',
             data: payload,
             dataType: 'json',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
         })
         .done(function (response) {
-            if (response?.csrf) {
-                const name = response.csrf.name;
-                const hash = response.csrf.hash;
-                $('input[name="'+ name +'"]').val(hash);
+            if (response?.csrf?.name && response?.csrf?.hash) {
+                $('meta[name="csrf-token-name"]').attr('content', response.csrf.name);
+                $('meta[name="csrf-token"]').attr('content', response.csrf.hash);
             }
 
             if (response?.success) {
-                alert('Simpan Data Kategori Pengeluaran Berhasil!');
+                successAlert("Simpan Data Kategori Pengeluaran Berhasil!");
                 $("#masterKategoriPengeluaranModal").modal("hide");
-
+            
                 applyFilterKategoriPengeluaran();
             } else {
-                alert(response?.message || 'Simpan Data Gagal!');
+                const message = response?.errors ?? response?.message ?? 'Simpan Data Gagal!';
+                errorAlert('Simpan Data Gagal!', message);
             }
         })
         .fail(function (jqXHR) {
             try {
                 const res = jqXHR.responseJSON;
-                if (res?.csrf) {
-                    $('input[name="'+ res.csrf.name +'"]').val(res.csrf.hash);
+        
+                if (res?.csrf?.name && res?.csrf?.hash) {
+                    $('meta[name="csrf-token-name"]').attr('content', res.csrf.name);
+                    $('meta[name="csrf-token"]').attr('content', res.csrf.hash);
                 }
-                const msg = res?.message || res?.error || 'Terjadi kesalahan saat menyimpan';
-                alert(msg);
+        
+                const msg = res?.errors ?? res?.message ?? res?.error ?? 'Terjadi kesalahan saat menyimpan';
+                errorAlert('Gagal Menyimpan', msg);
             } catch (e) {
-                alert('Terjadi kesalahan. Cek konsol.');
+                errorAlert('Error!', 'Terjadi kesalahan. Cek konsol.');
                 console.error('Save error:', jqXHR.status, jqXHR.responseText);
             }
         })
@@ -143,15 +149,6 @@ function initializeMasterKategoriPengeluaranTable(data) {
                         'data-id="' + row.m_ktg_pengeluaran_id + '"> ' +
                         '<i class="text-primary bx bx-pencil fs-5"></i>' +
                     '</button>';
-                    
-                    actionKategoriPengeluaranButton += '<button type="button" class="btn btn-icon btn-hapus-kategori-pengeluaran" ' +
-                        'data-bs-toggle="tooltip" ' +
-                        'data-bs-placement="top" ' +
-                        'title="Hapus Kategori Pengeluaran" ' +
-                        'data-bs-target="#kategoriPengeluaranModal" ' +
-                        'data-id="' + row.m_ktg_pengeluaran_id + '"> ' +
-                        '<i class="text-danger bx bx-trash fs-5"></i>' +
-                    '</button>';
 
                     actionKategoriPengeluaranButton += '</div>';
                 
@@ -181,7 +178,7 @@ function getDetailMasterKategoriPengeluaran(button) {
         },
         success: function (response) {
             if (response && response.data) {
-                openModalKategori-pengeluaran("edit", response.data[0]);
+                openModalKategoriPengeluaran("edit", response.data[0]);
             } else {
                 alert("Data tidak ditemukan!");
             }
@@ -195,15 +192,14 @@ function getDetailMasterKategoriPengeluaran(button) {
 function openModalKategoriPengeluaran(mode, data = null) {
     $("#master-kategori-pengeluaran-form")[0].reset();
     $("#master-kategori-pengeluaran-form").removeClass("was-validated");
-    $("#us_pegawai_id").val(null).trigger("change").removeClass("is-invalid is-valid");
 
     $("#master-kategori-pengeluaran-form input[name='_method']").remove();
 
     if (mode === "edit" && data) {
         $("#masterKategoriPengeluaranModal .modal-title").text("Edit Data Kategori Pengeluaran");
 
-        $("#us_pegawai_id").val(data.kd_pegawai).trigger("change");
-        $("#email").val(data.email);
+        $("#nama_kategori").val(data.nama);
+        $("#ket_kategori").val(data.keterangan);
     
         $("#master-kategori-pengeluaran-form").data("action", "edit");
         $("#master-kategori-pengeluaran-form").data("id", data.m_ktg_pengeluaran_id);

@@ -33,6 +33,7 @@
                                                     <th>Upah per Takaran Daging</th>
                                                     <th>Takaran Kopra (kg)</th>
                                                     <th>Upah per Takaran Kopra</th>
+                                                    <th>Gaji Driver</th>
                                                     <th>Last Update</th>
                                                 </tr>
                                             </thead>
@@ -74,6 +75,7 @@
             var base_url = '<?= base_url() ?>';
             var roleScope = '<?= $roleScope ?>';
         </script>
-        <script src="<?= base_url('assets/js/content/master-komponen-gaji.js') ?>"></script>
+        <script src="<?= base_url('assets/js/content/general.js') ?>"></script>
+        <script src="<?= base_url('assets/js/content/report-komponen-gaji.js') ?>"></script>
     </body>
 </html>
