@@ -104,8 +104,10 @@ $routes->group('finance', ['filter' => 'auth'], function ($routes) {
 
 // Report
 $routes->group('report', ['filter' => 'auth'], function ($routes) {
-    $routes->get('', 'ReportController::index', ['as' => 'report']);
-    $routes->get('chart-data', 'ReportController::chartData', ['as' => 'report-chart-data']);
+    $routes->get('pengolahan', 'ReportController::showReportPengolahan', ['as' => 'report-pengolahan']);
+    $routes->get('pengolahan/data', 'ReportController::getReportPengolahan', ['as' => 'report-data-pengolahan']);
+    $routes->get('gaji-driver', 'ReportController::showReportGajiDriver', ['as' => 'report-gaji-driver']);
+    $routes->get('gaji-pegawai', 'ReportController::showReportGajiPegawai', ['as' => 'report-gaji-pegawai']);
 });
 
 // Contoh untuk filter in filter

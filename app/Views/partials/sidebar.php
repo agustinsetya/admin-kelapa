@@ -94,12 +94,29 @@
                         </li>
                     </ul>
                 </li>
-
+                
                 <li>
-                    <a href="<?= url_to('report') ?>">
+                    <a href="javascript: void(0);" class="has-arrow">
                         <i data-feather="pie-chart"></i>
                         <span data-key="t-report"><?= lang('Files.Report') ?></span>
                     </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li>
+                            <a href="<?= url_to('report-pengolahan') ?>">
+                                <span data-key="t-report-pengolahan"><?= lang('Files.Data_Pengolahan') ?></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?= url_to('report-gaji-driver') ?>">
+                                <span data-key="t-report-gaji-driver"><?= lang('Files.Gaji_Driver') ?></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?= url_to('report-gaji-pegawai') ?>">
+                                <span data-key="t-report-gaji-pegawai"><?= lang('Files.Gaji_Pegawai') ?></span>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
             </ul>
         </div>

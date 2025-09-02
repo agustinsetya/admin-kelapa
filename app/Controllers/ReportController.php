@@ -18,20 +18,26 @@ class ReportController extends AuthRequiredController
         $this->gudangModel = new GudangModel();
     }
 
-    public function index()
+    public function showReportPengolahan()
     {
-        //
         $gudang = $this->gudangModel->findAll();
+
         $data = [
-            'title_meta' => view('partials/title-meta', ['title' => 'Laporan']),
-            'page_title' => view('partials/page-title', ['title' => 'Laporan', 'li_1' => 'Laporan', 'li_2' => 'Laporan']),
-            'gudang' => $gudang
-        ];
+			'title_meta' => view('partials/title-meta', [
+				'title' => 'Report_Pengolahan'
+			]),
+			'page_title' => view('partials/page-title', [
+				'title' => 'Report_Pengolahan',
+				'li_1'  => lang('Files.Report'),
+				'li_2'  => lang('Files.Report_Pengolahan')
+            ]),
+            'gudang' => $gudang,
+		];
 
         return view('report', $data);
     }
 
-    public function chartData(): ResponseInterface
+    public function getReportPengolahan(): ResponseInterface
     {
         $gudangId  = $this->request->getGet('gudang_id');
         $startDate = $this->request->getGet('start_date');

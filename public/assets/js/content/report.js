@@ -77,7 +77,7 @@
     if (start)     params.append('start_date', start);
     if (end)       params.append('end_date', end);
 
-    const url = `${base_url}/report/chart-data${params.toString() ? '?' + params.toString() : ''}`;
+    const url = `${base_url}/report/pengolahan/data${params.toString() ? '?' + params.toString() : ''}`;
     const resp = await fetch(url, { headers: { Accept: 'application/json' } });
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const json = await resp.json();
