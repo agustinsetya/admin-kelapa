@@ -53,6 +53,90 @@ class DataUtamaController extends AuthRequiredController
             'data' => $userRoles
         ]);
     }
+
+    public function getDetailUserRoles()
+    {
+        $id = $this->request->getGet('id');
+        if (!$id) {
+            return $this->jsonError('ID User Roles tidak ditemukan', 400);
+        }
+
+        $detail = $this->userRolesModel->getDataUserRoles(['m_role_id' => $id]);
+        return $this->jsonSuccess(['data' => $detail]);
+    }
+
+	public function addDetailUserRoles()
+    {
+        $user = session()->get('user');
+        if (!$user) {
+            return $this->jsonError('Tidak terautentik', 401);
+        }
+
+        if (!$this->validate('masterUserRoles')) {
+            return $this->jsonError('Validasi gagal', 422, [
+                'errors' => $this->validator->getErrors(),
+            ]);
+        }
+
+        $input = $this->request->getPost();
+
+        $data = [
+            'nama'		    => $input['nama_peran'],
+            'role_scope'	=> $input['lingkup_peran'],
+            'created_by'	=> $user->email ?? null,
+        ];
+
+        $saved = $this->userRolesModel->saveDataUserRoles($data);
+
+        if ($saved === false) {
+            $errors = $this->userRolesModel->errors() ?: 'Gagal menyimpan data';
+            return $this->jsonError($errors, 500);
+        }
+
+        // 201 Created
+        return $this->jsonSuccess([
+            'message' => 'Berhasil Tambah Data User Roles',
+        ], 201);
+
+    }
+	
+    public function updateDetailUserRoles()
+    {
+        $user = session()->get('user');
+        if (!$user) {
+            return $this->jsonError('Tidak terautentik', 401);
+        }
+
+        if (!$this->validate('masterUserRoles')) {
+            return $this->jsonError('Validasi gagal', 422, [
+                'errors' => $this->validator->getErrors(),
+            ]);
+        }
+
+        $input = $this->request->getPost();
+        $id = $input['id'] ?? null;
+
+        if (!$id) {
+            return $this->jsonError('ID User Roles tidak ditemukan', 400);
+        }
+
+        $data = [
+            'nama'		    => $input['nama_peran'],
+            'role_scope'	=> $input['lingkup_peran'],
+            'updated_by'	=> $user->email ?? null,
+        ];
+
+        $saved = $this->userRolesModel->saveDataUserRoles($data, $id);
+
+        if ($saved === false) {
+            $errors = $this->userRolesModel->errors() ?: 'Gagal menyimpan data';
+            return $this->jsonError($errors, 500);
+        }
+
+        return $this->jsonSuccess([
+            'message' => 'Berhasil Update Data User Roles',
+        ], 200);
+    }
     
     public function showDataUser()
     {
@@ -63,7 +147,7 @@ class DataUtamaController extends AuthRequiredController
                 'li_1'  => lang('Files.Data_Utama'),
                 'li_2'  => lang('Files.User'),
             ]),
-            'pegawai'   => $this->pegawaiModel->getDataPegawai(),
+            // 'pegawai'   => $this->pegawaiModel->getDataPegawai(['exclude_existing_user' => true]),
         ];
 
         return view('master-user', $data);
@@ -97,9 +181,11 @@ class DataUtamaController extends AuthRequiredController
         }
 
         if (!$this->validate('masterUser')) {
-            return $this->jsonError('Validasi gagal', 422, [
-                'errors' => $this->validator->getErrors(),
-            ]);
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Validasi gagal',
+                'errors' => $this->validator->getErrors()
+            ])->setStatusCode(422);
         }
 
         $input = $this->request->getPost();
@@ -147,7 +233,6 @@ class DataUtamaController extends AuthRequiredController
         }
 
         $data = [
-            'kd_pegawai'    => $input['us_pegawai_id'],
             'email'         => $input['email'],
             'updated_by'	=> $user->email ?? null,
         ];
@@ -190,6 +275,11 @@ class DataUtamaController extends AuthRequiredController
             'role_id'   => $this->request->getGet('role'),
             'gudang_id' => $this->request->getGet('gudang'),
         ];
+
+        $excludeUser = $this->request->getGet('exclude_existing_user');
+        if ($excludeUser !== null) {
+            $filters['exclude_existing_user'] = filter_var($excludeUser, FILTER_VALIDATE_BOOLEAN);
+        }
 
 		$pegawai = $this->pegawaiModel->getDataPegawai($filters);
 

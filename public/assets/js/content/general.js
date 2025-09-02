@@ -29,7 +29,6 @@ function showBtnLoading(btnId, options = {}) {
         $btn.data("original-class", $btn.attr("class"));
     }
 
-    // Opsi default
     const defaults = {
         text: "Loading",
         icon: "bx bx-hourglass bx-spin font-size-16 align-middle me-2",
@@ -39,7 +38,6 @@ function showBtnLoading(btnId, options = {}) {
 
     const settings = { ...defaults, ...options };
 
-    // Update tombol jadi loading
     $btn
         .removeClass()
         .addClass(settings.class)
@@ -62,6 +60,75 @@ function resetButton(btnId) {
     }
 
     $btn.prop("disabled", false);
+}
+
+function successAlert(alertText, url = null) {
+    Swal.fire({
+        title: "Good job!",
+        text: alertText,
+        icon: "success",
+        customClass: {
+            confirmButton: "btn btn-primary waves-effect waves-light",
+        },
+        buttonsStyling: false,
+    }).then(function (result) {
+        if (url !== null) {
+            location.href = `${siteUrl}/` + url;
+        }
+    });
+}
+
+function successAlert(alertText, url = null) {
+    Swal.fire({
+        title: "Good job!",
+        text: alertText,
+        icon: "success",
+        customClass: {
+            confirmButton: "btn btn-primary waves-effect waves-light",
+        },
+        buttonsStyling: false,
+    }).then(function (result) {
+        if (url !== null) {
+            location.href = `${siteUrl}/` + url;
+        }
+    });
+}
+
+function errorAlert(title = 'Gagal!', alertContent = null) {
+    let html = '';
+    
+    if (typeof alertContent === 'object') {
+        html = Object.values(alertContent).join('<br>');
+    } else {
+        html = alertContent;
+    }
+
+    Swal.fire({
+        title: title,
+        html: html,
+        icon: "error",
+        buttonsStyling: false,
+        customClass: {
+            confirmButton: "btn btn-danger",
+        },
+    });
+}
+
+function confirmDelete(url) {
+    Swal.fire({
+        title: 'Yakin mau hapus data ini?',
+        text: "Tindakan ini tidak bisa dibatalkan!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Ya, hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            location.href = `${siteUrl}/` + url;
+        }
+    });
 }
 
 // Date Range Picker

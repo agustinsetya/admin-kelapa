@@ -118,6 +118,20 @@ class Validation extends BaseConfig
         ],
     ];
     
+    public $masterUserRoles = [
+        'nama_peran'      => 'required',
+        'lingkup_peran'   => 'required',
+    ];
+
+    public $masterUserRoles_errors = [
+        'nama_peran' => [
+            'required' => 'Nama Peran wajib diisi.',
+        ],
+        'lingkup_peran' => [
+            'required'  => 'Lingkup Peran tidak boleh kosong.',
+        ],
+    ];
+    
     public $masterUser = [
         'us_pegawai_id' => 'required|numeric',
         'email'         => 'required|valid_email|is_unique[mt_user.email]',

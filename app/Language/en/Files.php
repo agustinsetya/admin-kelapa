@@ -16,6 +16,8 @@ return [
     "Dashboard" => "Dashboard",
     "Data_Utama" => "Master",
     "User_Roles" => "User Roles",
+    "Nama_Peran" => "User Roles Name",
+    "Lingkup_Peran" => "User Roles Scope",
     "Pegawai" => "Employee",
     "User" => "User",
     "Gudang" => "Warehouse",
@@ -70,5 +72,6 @@ return [
     "Input_Biaya" => "Input Cost",
     "Jumlah" => "Ammount",
     "Input_Jumlah" => "Input Ammount",
+    "Input_Nama" => "Input Name",
     "Bonus_Produksi" => "Production Bonus",
 ];

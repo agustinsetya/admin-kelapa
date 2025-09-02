@@ -6,6 +6,8 @@
         <link href="<?= base_url('assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css') ?>" rel="stylesheet" type="text/css" />
         <link href="<?= base_url('assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css') ?>" rel="stylesheet" type="text/css" />
         
+        <link href="<?= base_url('assets/libs/sweetalert2/sweetalert2.min.css') ?>" rel="stylesheet" type="text/css" />
+        
         <!-- custom css -->
         <link href="<?= base_url('assets/css/content/general.css') ?>" rel="stylesheet" type="text/css" />
 
@@ -29,7 +31,7 @@
                                                             id="btn-tambah-user-roles"
                                                             class="btn btn-success text-nowrap w-100 w-md-auto"
                                                             data-bs-toggle="modal"
-                                                            data-bs-target="#addUserRolesModal">
+                                                            data-bs-target="#masterUserRolesModal">
                                                         <i class="bx bx-plus me-1"></i>Tambah
                                                     </button>
                                                 </div>
@@ -49,6 +51,9 @@
                                             <tbody></tbody>
                                         </table>
                                     </div>
+
+                                    <!-- Include the modal -->
+                                    <?= $this->include('modals/master-user-roles-modal') ?>
                                 </div>
                             </div>
                         </div>
@@ -76,11 +81,14 @@
         <!-- Responsive table -->
         <script src="<?= base_url('assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js') ?>"></script>
         <script src="<?= base_url('assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') ?>"></script>
+        
+        <script src="<?= base_url('assets/libs/sweetalert2/sweetalert2.min.js') ?>"></script>
 
         <!-- custom js -->
         <script type="text/javascript">
             var base_url = '<?= base_url() ?>';
         </script>
+        <script src="<?= base_url('assets/js/content/general.js') ?>"></script>
         <script src="<?= base_url('assets/js/content/master-user-roles.js') ?>"></script>
     </body>
 </html>

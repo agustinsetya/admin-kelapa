@@ -56,8 +56,9 @@
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
-                                                    <th>Periode</th>
+                                                    <th>Tanggal Proses Gaji</th>
                                                     <th>Nama</th>
+                                                    <th>Gudang</th>
                                                     <th>Total Upah Daging</th>
                                                     <th>Total Upah Kopra</th>
                                                     <th>Bonus</th>

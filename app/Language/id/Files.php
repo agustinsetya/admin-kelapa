@@ -16,6 +16,8 @@ return [
     "Dashboard" => "Dashboard",
     "Data_Utama" => "Data Utama",
     "User_Roles" => "Peran Pengguna",
+    "Nama_Peran" => "Nama Peran",
+    "Lingkup_Peran" => "LIngkup Peran",
     "Pegawai" => "Pegawai",
     "User" => "Pengguna",
     "Gudang" => "Gudang",
@@ -71,5 +73,6 @@ return [
     "Input_Biaya" => "Masukkan Biaya",
     "Jumlah" => "Jumlah",
     "Input_Jumlah" => "Masukkan Jumlah",
+    "Input_Nama" => "Masukkan Nama",
     "Bonus_Produksi" => "Bonus Produksi",
 ];

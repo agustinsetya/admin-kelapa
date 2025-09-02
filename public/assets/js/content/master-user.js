@@ -18,11 +18,13 @@ $((function () {
         var action = $("#master-user-form").data("action");
         var id = $("#master-user-form").data("id") ?? '';
     
-        const pegawaiValue = $("#us_pegawai_id").val();
-        if (!pegawaiValue) {
-            $("#us_pegawai_id").addClass("is-invalid");
-        } else {
-            $("#us_pegawai_id").removeClass("is-invalid").addClass("is-valid");
+        if (action === 'add') {
+            const pegawaiValue = $("#us_pegawai_id").val();
+            if (!pegawaiValue) {
+                $("#us_pegawai_id").addClass("is-invalid");
+            } else {
+                $("#us_pegawai_id").removeClass("is-invalid").addClass("is-valid");
+            }
         }
     
         if (form.checkValidity() === false) {
@@ -44,36 +46,42 @@ $((function () {
             method: 'POST',
             data: payload,
             dataType: 'json',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
         })
         .done(function (response) {
-            if (response?.csrf) {
-                const name = response.csrf.name;
-                const hash = response.csrf.hash;
-                $('input[name="'+ name +'"]').val(hash);
+            if (response?.csrf?.name && response?.csrf?.hash) {
+                $('meta[name="csrf-token-name"]').attr('content', response.csrf.name);
+                $('meta[name="csrf-token"]').attr('content', response.csrf.hash);
             }
 
             if (response?.success) {
-                alert('Simpan Data User Berhasil!');
+                successAlert("Simpan Data User Berhasil!");
                 $("#masterUserModal").modal("hide");
-
+            
                 applyFilterUser();
             } else {
-                alert(response?.message || 'Simpan Data Gagal!');
-            }
+                const message = response?.errors ?? response?.message ?? 'Simpan Data Gagal!';
+                errorAlert('Simpan Data Gagal!', message);
+            }          
         })
         .fail(function (jqXHR) {
             try {
                 const res = jqXHR.responseJSON;
-                if (res?.csrf) {
-                    $('input[name="'+ res.csrf.name +'"]').val(res.csrf.hash);
+        
+                if (res?.csrf?.name && res?.csrf?.hash) {
+                    $('meta[name="csrf-token-name"]').attr('content', res.csrf.name);
+                    $('meta[name="csrf-token"]').attr('content', res.csrf.hash);
                 }
-                const msg = res?.message || res?.error || 'Terjadi kesalahan saat menyimpan';
-                alert(msg);
+        
+                const msg = res?.errors ?? res?.message ?? res?.error ?? 'Terjadi kesalahan saat menyimpan';
+                errorAlert('Gagal Menyimpan', msg);
             } catch (e) {
-                alert('Terjadi kesalahan. Cek konsol.');
+                errorAlert('Error!', 'Terjadi kesalahan. Cek konsol.');
                 console.error('Save error:', jqXHR.status, jqXHR.responseText);
             }
-        })
+        })     
         .always(function () {
             resetButton("btn-save-user","Simpan","btn btn-primary waves-effect waves-light");
         });
@@ -84,6 +92,7 @@ function applyFilterUser() {
     getDataMasterUser().done(function(response) {
         const rows = Array.isArray(response?.data) ? response.data : [];
         initializeMasterUserTable(rows);
+        reloadDropdownPegawai();
     }).fail(function(jqXHR, textStatus, errorThrown) {
         console.error("Request failed:", textStatus, errorThrown, jqXHR.responseText);
     });
@@ -184,26 +193,63 @@ function getDetailMasterUser(button) {
             if (response && response.data) {
                 openModalUser("edit", response.data[0]);
             } else {
-                alert("Data tidak ditemukan!");
+                errorAlert('', "Data tidak ditemukan!");
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            alert("Terjadi kesalahan: " + textStatus);
+            errorAlert('', "Terjadi kesalahan: " + textStatus);
         },
+    });
+}
+
+function reloadDropdownPegawai() {
+    $.ajax({
+        url: base_url + "/master/pegawai/data",
+        method: "GET",
+        data: {
+            exclude_existing_user: true
+        },
+        dataType: "json",
+        success: function(response) {
+            const $dropdown = $("#us_pegawai_id");
+            $dropdown.empty();
+
+            $dropdown.append('<option value="">Pilih Pegawai</option>');
+
+            if (Array.isArray(response.data)) {
+                response.data.forEach(function(pegawai) {
+                    $dropdown.append(
+                        $('<option>', {
+                            value: pegawai.kd_pegawai,
+                            text: pegawai.nama_pegawai
+                        })
+                    );
+                });
+            }
+
+            $dropdown.trigger("change");
+        },
+        error: function(xhr) {
+            console.error("Gagal memuat data pegawai:", xhr.responseText);
+        }
     });
 }
 
 function openModalUser(mode, data = null) {
     $("#master-user-form")[0].reset();
     $("#master-user-form").removeClass("was-validated");
-    $("#us_pegawai_id").val(null).trigger("change").removeClass("is-invalid is-valid");
+    
+    $("#tx_pegawai_nama").val("").hide().prop("disabled", false);
+    $("#us_pegawai_id").show().val(null).trigger("change").removeClass("is-invalid is-valid");
 
     $("#master-user-form input[name='_method']").remove();
 
     if (mode === "edit" && data) {
         $("#masterUserModal .modal-title").text("Edit Data User");
 
-        $("#us_pegawai_id").val(data.kd_pegawai).trigger("change");
+        $("#tx_pegawai_nama").val(data.nama_pegawai).show().prop("disabled", true);
+        $("#us_pegawai_id").hide();
+
         $("#email").val(data.email);
     
         $("#master-user-form").data("action", "edit");

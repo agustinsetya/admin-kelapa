@@ -6,20 +6,16 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form class="needs-validation" id="master-user-form" novalidate>
-                <?= csrf_field() ?>
-                <input type="hidden" name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>">
-
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="mb-3">
                                 <label class="form-label mb-1">Pegawai</label>
-                                <select name="us_pegawai_id" id="us_pegawai_id" class="form-select">
+                                <select name="us_pegawai_id" id="us_pegawai_id" class="form-select" required>
                                     <option value="" disabled selected>Pilih Pegawai</option>
-                                    <?php foreach ($pegawai as $p): ?>
-                                        <option value="<?= esc($p->kd_pegawai) ?>"><?= esc($p->nama_pegawai) ?></option>
-                                    <?php endforeach; ?>
                                 </select>
+                                
+                                <input class="form-control" type="tx_pegawai_nama" name="tx_pegawai_nama" id="tx_pegawai_nama" disabled>
                             </div>
                         </div>
                     </div>
@@ -27,7 +23,7 @@
                         <div class="col-lg-12">
                             <div class="mb-3">
                                 <label for="email" class="form-label"><?= lang('Files.Email') ?></label>
-                                <input class="form-control" type="email" name="email" id="email" placeholder="ex: email@example.com">
+                                <input class="form-control" type="email" name="email" id="email" placeholder="ex: email@example.com" required>
                             </div>
                         </div>
                     </div>

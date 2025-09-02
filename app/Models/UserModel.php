@@ -35,6 +35,10 @@ class UserModel extends Model
                 ->join('m_role', 'm_role.m_role_id = mt_pegawai.role_id', 'left')
                 ->join('m_gudang', 'm_gudang.m_gudang_id = mt_pegawai.penempatan_id', 'left');
 
+        if (isset($filters['mt_user_id']) && is_numeric($filters['mt_user_id'])) {
+            $user->where('mt_user.mt_user_id', (int)$filters['mt_user_id']);
+        }
+        
         if (isset($filters['kd_pegawai']) && is_numeric($filters['kd_pegawai'])) {
             $user->where('mt_user.kd_pegawai', (int)$filters['kd_pegawai']);
         }
@@ -45,6 +49,21 @@ class UserModel extends Model
     public function saveDataUser(array $data, $userId = null): bool
     {
         $data['mt_user_id'] = $userId;
+
+        if (!empty($data['email'])) {
+            $existingUser = $this->where('email', $data['email']);
+    
+            if ($userId) {
+                $existingUser->where('mt_user_id !=', $userId);
+            }
+    
+            $existingUser = $existingUser->first();
+    
+            if ($existingUser) {
+                session()->setFlashdata('error', 'Email sudah digunakan oleh pengguna lain.');
+                return false;
+            }
+        }
 
         $this->db->transStart();
 

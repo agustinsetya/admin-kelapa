@@ -7,6 +7,8 @@
         <link href="<?= base_url('assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css') ?>" rel="stylesheet" type="text/css" />
         <link href="<?= base_url('assets/libs/daterangepicker/daterangepicker.min.css') ?>" rel="stylesheet">
 
+        <link href="<?= base_url('assets/libs/sweetalert2/sweetalert2.min.css') ?>" rel="stylesheet" type="text/css" />
+
         <!-- custom css -->
         <link href="<?= base_url('assets/css/content/general.css') ?>" rel="stylesheet" type="text/css" />
         
@@ -113,6 +115,8 @@
         <script src="<?= base_url('assets/libs/imask/imask.min.js') ?>"></script>
         <!-- form mask init -->
         <script src="<?= base_url('assets/js/pages/form-mask.init.js') ?>"></script>
+
+        <script src="<?= base_url('assets/libs/sweetalert2/sweetalert2.min.js') ?>"></script>
 
         <!-- custom js -->
         <script type="text/javascript">

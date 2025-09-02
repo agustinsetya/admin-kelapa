@@ -5,7 +5,7 @@
                 <li class="menu-title" data-key="t-menu"><?= lang('Files.Menu') ?></li>
 
                 <li>
-                    <a href="dashboard">
+                    <a href="<?= url_to('dashboard') ?>">
                         <i data-feather="home"></i>
                         <span data-key="t-dashboard"><?= lang('Files.Dashboard') ?></span>
                     </a>

@@ -57,6 +57,9 @@ $routes->get('dashboard', 'HomeController::index', [
 $routes->group('master', ['filter' => 'auth', 'role:1'], function ($routes) {
     $routes->get('user-roles', 'DataUtamaController::showDataUserRoles', ['as' => 'master-user-roles']);
     $routes->get('user-roles/data', 'DataUtamaController::getDataUserRoles', ['as' => 'master-user-roles-data']);
+    $routes->get('user-roles/detail', 'DataUtamaController::getDetailUserRoles', ['as' => 'master-detail-user-roles']);
+    $routes->post('user-roles/add', 'DataUtamaController::addDetailUserRoles', ['as' => 'master-add-user-roles']);
+    $routes->patch('user-roles/update', 'DataUtamaController::updateDetailUserRoles', ['as' => 'supply-update-user-roles']);
     $routes->get('user', 'DataUtamaController::showDataUser', ['as' => 'master-user']);
     $routes->get('user/data', 'DataUtamaController::getDataUser', ['as' => 'master-user-data']);
     $routes->get('user/detail', 'DataUtamaController::getDetailUser', ['as' => 'master-detail-user']);
@@ -108,6 +111,7 @@ $routes->group('report', ['filter' => 'auth'], function ($routes) {
     $routes->get('pengolahan/data', 'ReportController::getReportPengolahan', ['as' => 'report-data-pengolahan']);
     $routes->get('gaji-driver', 'ReportController::showReportGajiDriver', ['as' => 'report-gaji-driver']);
     $routes->get('gaji-pegawai', 'ReportController::showReportGajiPegawai', ['as' => 'report-gaji-pegawai']);
+    $routes->get('gaji-pegawai/data', 'ReportController::getReportGajiPegawai', ['as' => 'report-data-gaji-pegawai']);
 });
 
 // Contoh untuk filter in filter

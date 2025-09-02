@@ -11,7 +11,7 @@ class HomeController extends AuthRequiredController
 			'page_title' => view('partials/page-title', ['title' => 'Dashboard', 'li_1' => 'Dashboard', 'li_2' => 'Dashboard'])
 		];
 		
-		return view('index', $data);
+		return view('dashboard', $data);
 	}
 
 	public function show_pages_maintenance()

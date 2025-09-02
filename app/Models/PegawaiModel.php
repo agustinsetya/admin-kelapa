@@ -32,6 +32,11 @@ class PegawaiModel extends Model
                 ->join('m_role', 'm_role.m_role_id = mt_pegawai.role_id', 'left')
                 ->join('m_gudang', 'm_gudang.m_gudang_id = mt_pegawai.penempatan_id', 'left');
 
+        if (!empty($filters['exclude_existing_user']) && $filters['exclude_existing_user'] === true) {
+            $user->join('mt_user', 'mt_user.kd_pegawai = mt_pegawai.kd_pegawai', 'left');
+            $user->where('mt_user.kd_pegawai IS NULL');
+        }
+        
         if (isset($filters['role_id']) && is_numeric($filters['role_id'])) {
             $user->where('mt_pegawai.role_id', (int)$filters['role_id']);
         }

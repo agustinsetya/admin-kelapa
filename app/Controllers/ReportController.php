@@ -3,18 +3,23 @@
 namespace App\Controllers;
 
 use App\Models\PengolahanModel;
+use App\Models\GajiPegawaiModel;
 use App\Models\GudangModel;
 use CodeIgniter\HTTP\ResponseInterface;
-use Config\Database;
+use App\Controllers\Concerns\ApiResponse;
 
 class ReportController extends AuthRequiredController
 {
+    use ApiResponse;
+
     protected $pengolahanModel;
+    protected $gajiPegawaiModel;
     protected $gudangModel;
 
     public function __construct()
     {
         $this->pengolahanModel = new PengolahanModel();
+        $this->gajiPegawaiModel = new GajiPegawaiModel();
         $this->gudangModel = new GudangModel();
     }
 
@@ -36,6 +41,23 @@ class ReportController extends AuthRequiredController
 
         return view('report-pengolahan', $data);
     }
+
+    public function showReportGajiPegawai()
+	{
+		$data = [
+			'title_meta' => view('partials/title-meta', [
+				'title' => 'Report_Gaji_Pegawai'
+			]),
+			'page_title' => view('partials/page-title', [
+				'title' => 'Report_Gaji_Pegawai',
+				'li_1'  => lang('Files.Report'),
+				'li_2'  => lang('Files.Report_Gaji_Pegawai')
+            ]),
+            'gudang'    => $this->gudangModel->getDataGudang(),
+		];
+		
+		return view('report-gaji-pegawai', $data);
+	}
 
     public function getReportPengolahan(): ResponseInterface
     {
@@ -72,5 +94,42 @@ class ReportController extends AuthRequiredController
                 ['name' => 'Kopra (kg)',  'data' => $kopra],
             ],
         ]);
+    }
+
+    public function getReportGajiPegawai()
+    {
+        $roleFilters	= $this->filtersFromUser();
+
+		$gudangId 		= $this->request->getGet('gudang_id') ?? null;
+		$start			= $this->request->getGet('start_date') ?? null;
+		$end			= $this->request->getGet('end_date') ?? null;
+
+		$queryFilters = [];
+		
+		if (($user->role_scope ?? null) !== 'gudang' && !empty($gudangId)) {
+			$queryFilters['gudang_id'] = $gudangId;
+		}
+		if (!empty($start)) $queryFilters['start_date'] = $start;
+		if (!empty($end))   $queryFilters['end_date']   = $end;
+
+		$filters = array_merge($queryFilters, $roleFilters);
+
+        $gajiPegawai = $this->gajiPegawaiModel->getDataGajiPegawai($filters);
+
+        return $this->jsonSuccess(['data' => $gajiPegawai]);
+    }
+
+    private function filtersFromUser(): array
+    {
+        $user = session()->get('user');
+        if (!$user) {
+            return [];
+        }
+
+        if (($user->role_scope ?? null) === 'gudang') {
+            return ['gudang_id' => $user->penempatan_id ?? ''];
+        }
+
+        return [];
     }
 }
