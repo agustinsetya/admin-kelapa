@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 02, 2025 at 07:39 AM
+-- Generation Time: Sep 02, 2025 at 03:30 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.3.3
 
@@ -68,16 +68,19 @@ CREATE TABLE `mt_pegawai` (
   `role_id` int(2) NOT NULL,
   `penempatan_id` int(10) DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `created_by` varchar(100) NOT NULL,
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `updated_by` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `mt_pegawai`
 --
 
-INSERT INTO `mt_pegawai` (`mt_pegawai_id`, `kd_pegawai`, `nama`, `jenis_kelamin`, `role_id`, `penempatan_id`, `created_at`, `updated_at`) VALUES
-(1, '9000000586', 'Agustin Setya', 'P', 1, 1, '2025-08-18 19:55:58', '2025-08-27 17:21:01'),
-(2, '9000000123', 'Rian', 'L', 4, 1, '2025-08-18 19:55:58', '2025-08-21 09:32:45');
+INSERT INTO `mt_pegawai` (`mt_pegawai_id`, `kd_pegawai`, `nama`, `jenis_kelamin`, `role_id`, `penempatan_id`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
+(1, '9000000586', 'Agustin Setya', 'P', 1, 1, '2025-08-18 19:55:58', '', '2025-08-27 17:21:01', ''),
+(2, '9000000123', 'Riansss', 'L', 4, 3, '2025-08-18 19:55:58', '', '2025-09-02 13:03:17', ''),
+(3, '0512132132', 'tes', 'L', 2, 4, '2025-09-02 13:07:27', '', '2025-09-02 13:07:27', '');
 
 -- --------------------------------------------------------
 
@@ -198,7 +201,7 @@ CREATE TABLE `mt_user` (
 
 INSERT INTO `mt_user` (`mt_user_id`, `kd_pegawai`, `email`, `password`, `created_at`, `updated_at`) VALUES
 (1, '9000000586', 'agustin@gmail.com', '$2y$10$P6bTD/iV6ghdA86GAUEAGe39izhoNIMdQOcQpBGMBoJ/MkRcBsl3e', '2025-08-18 19:55:58', '2025-08-31 02:24:18'),
-(5, '9000000123', 'rian@gmail.com', '$2y$10$1MeQpwx8BusjTpEiXn.GK.Tqw7zeytQCN7fcZq4me.4e345v0eStK', '2025-09-02 07:16:54', '2025-09-02 07:16:54');
+(5, '9000000123', 'rians@gmail.com', '$2y$10$1MeQpwx8BusjTpEiXn.GK.Tqw7zeytQCN7fcZq4me.4e345v0eStK', '2025-09-02 07:16:54', '2025-09-02 10:58:20');
 
 -- --------------------------------------------------------
 
@@ -209,21 +212,29 @@ INSERT INTO `mt_user` (`mt_user_id`, `kd_pegawai`, `email`, `password`, `created
 CREATE TABLE `m_gudang` (
   `m_gudang_id` int(10) NOT NULL,
   `nama` varchar(100) NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+  `takaran_daging` int(10) NOT NULL DEFAULT 0,
+  `upah_takaran_daging` float NOT NULL DEFAULT 0,
+  `takaran_kopra` int(10) NOT NULL DEFAULT 0,
+  `upah_takaran_kopra` float NOT NULL DEFAULT 0,
+  `gaji_driver` float NOT NULL DEFAULT 0,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `created_by` varchar(100) NOT NULL,
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `updated_by` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `m_gudang`
 --
 
-INSERT INTO `m_gudang` (`m_gudang_id`, `nama`, `status`, `created_at`) VALUES
-(1, 'Gudang Luluk', 1, '2025-08-21 09:32:09'),
-(2, 'Gudang Sutik', 1, '2025-08-21 09:32:09'),
-(3, 'Gudang Berkah', 1, '2025-08-28 18:04:57'),
-(4, 'Gudang Rejeki', 1, '2025-08-28 18:04:57'),
-(5, 'Gudang Untung', 1, '2025-08-28 18:06:21'),
-(6, 'Gudang Kabul', 1, '2025-08-28 18:06:21');
+INSERT INTO `m_gudang` (`m_gudang_id`, `nama`, `takaran_daging`, `upah_takaran_daging`, `takaran_kopra`, `upah_takaran_kopra`, `gaji_driver`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
+(1, 'Gudang Luluk', 0, 125000, 0, 450000, 575000, '2025-08-21 09:32:09', '', '2025-09-02 14:31:42', 'agustin@gmail.com'),
+(2, 'Gudang Sutik', 0, 0, 0, 0, 0, '2025-08-21 09:32:09', '', '2025-09-02 20:25:48', ''),
+(3, 'Gudang Berkah', 0, 0, 0, 0, 0, '2025-08-28 18:04:57', '', '2025-09-02 20:25:48', ''),
+(4, 'Gudang Rejeki', 0, 0, 0, 0, 0, '2025-08-28 18:04:57', '', '2025-09-02 20:25:48', ''),
+(5, 'Gudang Untung', 0, 0, 0, 0, 0, '2025-08-28 18:06:21', '', '2025-09-02 20:25:48', ''),
+(6, 'Gudang Kabul', 0, 0, 0, 0, 0, '2025-08-28 18:06:21', '', '2025-09-02 20:25:48', ''),
+(7, 'tes', 0, 500000, 0, 400000, 400000, '2025-09-02 14:36:22', 'agustin@gmail.com', '2025-09-02 14:36:22', '');
 
 -- --------------------------------------------------------
 
@@ -240,18 +251,18 @@ CREATE TABLE `m_komponen_gaji` (
   `upah_takaran_kopra` float NOT NULL DEFAULT 0,
   `gaji_driver` float NOT NULL DEFAULT 0,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `created_by` varchar(100) NOT NULL,
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `updated_by` varchar(100) NOT NULL
+  `created_by` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `m_komponen_gaji`
 --
 
-INSERT INTO `m_komponen_gaji` (`m_komponen_gaji_id`, `gudang_id`, `takaran_daging`, `upah_takaran_daging`, `takaran_kopra`, `upah_takaran_kopra`, `gaji_driver`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
-(1, 1, 75, 50000, 35, 10000, 0, '2025-08-21 10:12:03', 'agustin@gmail.com', '2025-08-27 14:14:35', 'agustin@gmail.com'),
-(2, 2, 750, 500000, 350, 8000, 0, '2025-08-21 10:12:03', 'agustin@gmail.com', '2025-08-21 10:12:03', '');
+INSERT INTO `m_komponen_gaji` (`m_komponen_gaji_id`, `gudang_id`, `takaran_daging`, `upah_takaran_daging`, `takaran_kopra`, `upah_takaran_kopra`, `gaji_driver`, `created_at`, `created_by`) VALUES
+(1, 1, 75, 50000, 35, 10000, 0, '2025-08-21 10:12:03', 'agustin@gmail.com'),
+(2, 2, 750, 500000, 350, 8000, 0, '2025-08-21 10:12:03', 'agustin@gmail.com'),
+(3, 1, 45, 125000, 70, 450000, 0, '2025-09-02 14:31:42', 'agustin@gmail.com'),
+(4, 7, 50, 500000, 40, 400000, 400000, '2025-09-02 14:36:22', 'agustin@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -263,16 +274,20 @@ CREATE TABLE `m_ktg_pengeluaran` (
   `m_ktg_pengeluaran_id` int(10) NOT NULL,
   `nama` varchar(100) NOT NULL,
   `keterangan` text NOT NULL,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `created_by` varchar(100) NOT NULL,
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `updated_by` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `m_ktg_pengeluaran`
 --
 
-INSERT INTO `m_ktg_pengeluaran` (`m_ktg_pengeluaran_id`, `nama`, `keterangan`, `created_at`) VALUES
-(1, 'BBM', 'Solar/BBM untuk kendaraan, genset, forklift, dan lain-lain.', '0000-00-00 00:00:00'),
-(2, 'Perawatan & Perbaikan', 'Servis mesin press, penggantian spare part conveyor, pelumasan mesin, jasa teknisi.', '0000-00-00 00:00:00');
+INSERT INTO `m_ktg_pengeluaran` (`m_ktg_pengeluaran_id`, `nama`, `keterangan`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
+(1, 'BBM', 'Solar/BBM untuk kendaraan, genset, forklift, dan lain-lain.', '0000-00-00 00:00:00', '', '2025-09-02 22:26:21', ''),
+(2, 'Perawatan & Perbaikan', 'Servis mesin press, penggantian spare part conveyor, pelumasan mesin, jasa teknisi.', '0000-00-00 00:00:00', '', '2025-09-02 15:26:50', ''),
+(3, 'tes', 'tes', '2025-09-02 15:26:56', '', '2025-09-02 15:26:56', '');
 
 -- --------------------------------------------------------
 
@@ -300,9 +315,7 @@ INSERT INTO `m_role` (`m_role_id`, `nama`, `role_scope`, `created_at`, `created_
 (3, 'HRD', 'all', '0000-00-00 00:00:00', '', '2025-09-02 11:37:03', ''),
 (4, 'Admin Gudang', 'gudang', '0000-00-00 00:00:00', '', '2025-09-02 11:37:03', ''),
 (5, 'Pegawai', 'gudang', '0000-00-00 00:00:00', '', '2025-09-02 11:37:03', ''),
-(6, 'Driver', 'gudang', '0000-00-00 00:00:00', '', '2025-09-02 11:37:03', ''),
-(8, 'tes', 'gudang', '2025-09-02 06:06:15', '', '2025-09-02 06:58:28', ''),
-(9, 'testing', 'gudang', '2025-09-02 06:58:17', '', '2025-09-02 06:58:23', '');
+(6, 'Driver', 'gudang', '0000-00-00 00:00:00', '', '2025-09-02 11:37:03', '');
 
 --
 -- Indexes for dumped tables
@@ -396,7 +409,7 @@ ALTER TABLE `mt_gaji_pegawai`
 -- AUTO_INCREMENT for table `mt_pegawai`
 --
 ALTER TABLE `mt_pegawai`
-  MODIFY `mt_pegawai_id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `mt_pegawai_id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `mt_pembelian`
@@ -426,19 +439,19 @@ ALTER TABLE `mt_user`
 -- AUTO_INCREMENT for table `m_gudang`
 --
 ALTER TABLE `m_gudang`
-  MODIFY `m_gudang_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `m_gudang_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `m_komponen_gaji`
 --
 ALTER TABLE `m_komponen_gaji`
-  MODIFY `m_komponen_gaji_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `m_komponen_gaji_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `m_ktg_pengeluaran`
 --
 ALTER TABLE `m_ktg_pengeluaran`
-  MODIFY `m_ktg_pengeluaran_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `m_ktg_pengeluaran_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `m_role`
