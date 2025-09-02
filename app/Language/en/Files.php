@@ -56,7 +56,7 @@ return [
     "Username" => "Username",
     "Password" => "Password",
     "Email" => "Email",
-    "Input_Username" => "Input Employee Code",
+    "Input_Username" => "Input Email",
     "Input_Password" => "Input Password",
     "Welcome_Back" => "Welcome Back",
     "Login_To_Continue" => "Sign in to Continue",

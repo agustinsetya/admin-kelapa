@@ -57,7 +57,7 @@ return [
     "Username" => "Username",
     "Password" => "Password",
     "Email" => "Email",
-    "Input_Username" => "Masukkan Kode Pegawai",
+    "Input_Username" => "Masukkan Email",
     "Input_Password" => "Masukkan Password",
     "Welcome_Back" => "Selamat Datang Kembali",
     "Login_To_Continue" => "Masuk Untuk Melanjutkan",
