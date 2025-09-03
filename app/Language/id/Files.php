@@ -38,6 +38,7 @@ return [
     "Kulit_Kelapa" => "Kulit Kelapa",
     "Kopra" => "Kopra",
     "Data_Pengolahan" => "Pengolahan",
+    "Data_Pengiriman" => "Pengiriman",
     "Finance" => "Keuangan",
     "Pengeluaran" => "Pengeluaran",
     "Gaji_Driver" => "Gaji Sopir",

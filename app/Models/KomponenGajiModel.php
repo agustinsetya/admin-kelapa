@@ -6,8 +6,8 @@ use CodeIgniter\Model;
 
 class KomponenGajiModel extends Model
 {
-    protected $table         = 'm_komponen_gaji';
-    protected $primaryKey    = 'm_komponen_gaji_id';
+    protected $table         = 'mt_komponen_gaji';
+    protected $primaryKey    = 'mt_komponen_gaji_id';
     protected $returnType    = 'object';
     protected $allowedFields = [
         'gudang_id',
@@ -26,19 +26,19 @@ class KomponenGajiModel extends Model
     public function getDataKomponenGaji(array $filters = []): array
     {
         $komponenGaji = $this->select('
-                    m_komponen_gaji.m_komponen_gaji_id,
-                    m_komponen_gaji.gudang_id,
-                    m_komponen_gaji.takaran_daging,
-                    m_komponen_gaji.upah_takaran_daging,
-                    m_komponen_gaji.takaran_kopra,
-                    m_komponen_gaji.upah_takaran_kopra,
+                    mt_komponen_gaji.mt_komponen_gaji_id,
+                    mt_komponen_gaji.gudang_id,
+                    mt_komponen_gaji.takaran_daging,
+                    mt_komponen_gaji.upah_takaran_daging,
+                    mt_komponen_gaji.takaran_kopra,
+                    mt_komponen_gaji.upah_takaran_kopra,
                     m_gudang.nama AS nama_gudang,
-                    m_komponen_gaji.updated_at
+                    mt_komponen_gaji.updated_at
                 ')
-                ->join('m_gudang', 'm_gudang.m_gudang_id = m_komponen_gaji.gudang_id', 'left');
+                ->join('m_gudang', 'm_gudang.m_gudang_id = mt_komponen_gaji.gudang_id', 'left');
 
         if (isset($filters['gudang_id']) && is_numeric($filters['gudang_id'])) {
-            $komponenGaji->where('m_komponen_gaji.gudang_id', (int)$filters['gudang_id']);
+            $komponenGaji->where('mt_komponen_gaji.gudang_id', (int)$filters['gudang_id']);
         }
         
 		return $komponenGaji->findAll();

@@ -101,7 +101,7 @@ class GajiPegawaiModel extends Model
                 if ($lastQuery) {
                     log_message('error', 'GAJI FAIL INSERT SQL: ' . $lastQuery->getQuery());
                 }
-                log_message('error', 'GAJI DB-SCHEMA: ' . $this->db->getDatabase()); // pastikan schema = cvkelapa
+                log_message('error', 'GAJI DB-SCHEMA: ' . $this->db->getDatabase());
                 $this->db->transRollback();
                 return false;
             }

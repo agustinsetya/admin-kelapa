@@ -12,6 +12,7 @@
     "t-supply-chain":"Supply Chain",
     "t-supply-pembelian":"Purchasing Data",
     "t-supply-pengolahan":"Processing Data",
+    "t-supply-pengiriman":"Distribution Data",
 
     "t-finance":"Finance",
     "t-pengeluaran":"Expenditure",

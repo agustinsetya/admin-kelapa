@@ -38,6 +38,7 @@ return [
     "Kulit_Kelapa" => "Coconut Shell",
     "Kopra" => "Copra",
     "Data_Pengolahan" => "Processing",
+    "Data_Pengiriman" => "Distribution",
     "Finance" => "Finance",
     "Pengeluaran" => "Expenditure",
     "Gaji_Driver" => "Driver Salary",

@@ -113,7 +113,14 @@ function applyFilterGajiPegawai(gudang = null, start = '', end = '') {
     }
     getDataGajiPegawai(_activeFilter.gudang, _activeFilter.start_date, _activeFilter.end_date)
         .done(function(response) {
-            const rows = Array.isArray(response?.data) ? response.data : [];
+            console.log("🔎 Response from server:", response);
+    const rows = Array.isArray(response?.data) ? response.data : [];
+
+    // Debug salah satu baris
+    if (rows.length) {
+        console.log("🔍 Sample row:", rows[0]);
+        console.log("💰 bonus_total:", rows[0].bonus_total);
+    }
             initializeFinanceGajiPegawaiTable(rows);
         })
         .fail(function(jqXHR, textStatus, errorThrown) {

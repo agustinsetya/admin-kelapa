@@ -94,6 +94,11 @@ $routes->group('supply-chain', ['filter' => 'auth'], function ($routes) {
     $routes->get('pengolahan/detail', 'SupplyChainController::getDetailPengolahan', ['as' => 'supply-detail-pengolahan']);
     $routes->post('pengolahan/add', 'SupplyChainController::addDetailPengolahan', ['as' => 'supply-add-pengolahan']);
     $routes->patch('pengolahan/update', 'SupplyChainController::updateDetailPengolahan', ['as' => 'supply-update-pengolahan']);
+    $routes->get('pengiriman', 'SupplyChainController::showDataPengiriman', ['as' => 'supply-pengiriman']);
+    $routes->get('pengiriman/data', 'SupplyChainController::getDataPengiriman', ['as' => 'supply-data-pengiriman']);
+    $routes->get('pengiriman/detail', 'SupplyChainController::getDetailPengiriman', ['as' => 'supply-detail-pengiriman']);
+    $routes->post('pengiriman/add', 'SupplyChainController::addDetailPengiriman', ['as' => 'supply-add-pengiriman']);
+    $routes->patch('pengiriman/update', 'SupplyChainController::updateDetailPengiriman', ['as' => 'supply-update-pengiriman']);
 });
 
 // Payroll

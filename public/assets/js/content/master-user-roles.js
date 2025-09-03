@@ -61,7 +61,7 @@ $((function () {
                 applyFilterUserRoles();
             } else {
                 const message = response?.errors ?? response?.message ?? 'Simpan Data Gagal!';
-                errorAlert('Simpan Data Gagal!', message);
+                errorAlert(message, 'Simpan Data Gagal!');
             }
         })
         .fail(function (jqXHR) {
@@ -187,11 +187,11 @@ function getDetailMasterUserRoles(button) {
             if (response && response.data) {
                 openModalUserRoles("edit", response.data[0]);
             } else {
-                errorAlert('', "Data tidak ditemukan!");
+                errorAlert("Data tidak ditemukan!");
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            errorAlert('', "Terjadi kesalahan: " + textStatus);
+            errorAlert("Terjadi kesalahan: " + textStatus);
         },
     });
 }

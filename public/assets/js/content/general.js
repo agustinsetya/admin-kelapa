@@ -94,7 +94,7 @@ function successAlert(alertText, url = null) {
     });
 }
 
-function errorAlert(title = 'Gagal!', alertContent = null) {
+function errorAlert(alertContent = null, title = 'Gagal!') {
     let html = '';
     
     if (typeof alertContent === 'object') {

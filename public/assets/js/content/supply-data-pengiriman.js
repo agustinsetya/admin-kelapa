@@ -1,22 +1,22 @@
 "use strict";
 
 $((function () {
-    applyFilterPengolahan();
+    applyFilterPengiriman();
 
-    $("#btn-tambah-pengolahan").on("click", function () {
-        openModalPengolahan("add");
+    $("#btn-tambah-pengiriman").on("click", function () {
+        openModalPengiriman("add");
     });
 
-    $(document).on('click', '.btn-edit-pengolahan', function () {
-        getDetailSupplyPengolahan(this);
+    $(document).on('click', '.btn-edit-pengiriman', function () {
+        getDetailSupplyPengiriman(this);
     });
 
-    $("body").on("click", "#btn-save-pengolahan", function (e) {
+    $("body").on("click", "#btn-save-pengiriman", function (e) {
         e.preventDefault();
     
-        var form = $("#supply-pengolahan-form")[0];
-        var action = $("#supply-pengolahan-form").data("action");
-        var id = $("#supply-pengolahan-form").data("id") ?? '';
+        var form = $("#supply-pengiriman-form")[0];
+        var action = $("#supply-pengiriman-form").data("action");
+        var id = $("#supply-pengiriman-form").data("id") ?? '';
     
         const gudangValue = $("#peng_gudang_id").val();
         if (!gudangValue) {
@@ -41,13 +41,13 @@ $((function () {
         const $bonus_produksi = $("#bonus_produksi");
         $bonus_produksi.val(unmaskRupiah($bonus_produksi.val()));
 
-        let url = '/supply-chain/pengolahan/add';
-        if (action === 'edit') url = '/supply-chain/pengolahan/update';
+        let url = '/supply-chain/pengiriman/add';
+        if (action === 'edit') url = '/supply-chain/pengiriman/update';
 
         let payload = $(form).serialize();
         if (action === 'edit' && id) payload += '&id=' + encodeURIComponent(id);
 
-        showBtnLoading("btn-save-pengolahan", { text: "Menyimpan Data..." });
+        showBtnLoading("btn-save-pengiriman", { text: "Menyimpan Data..." });
 
         $.ajax({
             url: base_url + url,
@@ -65,10 +65,10 @@ $((function () {
             }
 
             if (response?.success) {
-                successAlert('Simpan Data Pengolahan Berhasil!');
-                $("#supplyPengolahanModal").modal("hide");
+                successAlert('Simpan Data Pengiriman Berhasil!');
+                $("#supplyPengirimanModal").modal("hide");
 
-                applyFilterPengolahan();
+                applyFilterPengiriman();
             } else {
                 const message = response?.errors ?? response?.message ?? 'Simpan Data Gagal!';
                 errorAlert(message, 'Simpan Data Gagal!');
@@ -91,30 +91,30 @@ $((function () {
             }
         })
         .always(function () {
-            resetButton("btn-save-pengolahan","Simpan","btn btn-primary waves-effect waves-light");
+            resetButton("btn-save-pengiriman","Simpan","btn btn-primary waves-effect waves-light");
         });
     });
 }));
 
-function applyFilterPengolahan() {
-    getDataSupplyPengolahan().done(function(response) {
+function applyFilterPengiriman() {
+    getDataSupplyPengiriman().done(function(response) {
         const rows = Array.isArray(response?.data) ? response.data : [];
-        initializeSupplyPengolahanTable(rows);
+        initializeSupplyPengirimanTable(rows);
     }).fail(function(jqXHR, textStatus, errorThrown) {
         console.error("Request failed:", textStatus, errorThrown, jqXHR.responseText);
     });
 }
 
-function getDataSupplyPengolahan() {
+function getDataSupplyPengiriman() {
     return $.ajax({
-        url: base_url + '/supply-chain/pengolahan/data',
+        url: base_url + '/supply-chain/pengiriman/data',
         method: 'GET',
         dataType: 'json'
     });
 }
 
-function initializeSupplyPengolahanTable(data) {
-    const $dpg = $(".dt-pengolahanTable").first();
+function initializeSupplyPengirimanTable(data) {
+    const $dpg = $(".dt-pengirimanTable").first();
     const list = Array.isArray(data) ? data : [];
 
     if ($.fn.dataTable.isDataTable($dpg)) {
@@ -129,7 +129,7 @@ function initializeSupplyPengolahanTable(data) {
         data: list,
         columns: [
             { data: null, defaultContent: "" },
-            { data: 'tg_pengolahan', defaultContent: "-" },
+            { data: 'tg_pengiriman', defaultContent: "-" },
             { data: 'nama_gudang', defaultContent: "-" },
             { data: 'nama_pegawai', defaultContent: "-" },
             { data: 'berat_daging', defaultContent: "-" },
@@ -172,13 +172,13 @@ function initializeSupplyPengolahanTable(data) {
                 width: '72px',
                 render: (data, type, row) => {
                     const isDisabled = row.is_stat_gaji == 1 ? 'disabled' : '';
-                    const tooltip = row.is_stat_gaji == 1 ? 'Sudah diproses' : 'Detail Pengolahan';
+                    const tooltip = row.is_stat_gaji == 1 ? 'Sudah diproses' : 'Detail Pengiriman';
             
                     return `
                         <div class="d-flex align-items-center">
-                            <button type="button" class="btn btn-icon btn-edit-pengolahan"
+                            <button type="button" class="btn btn-icon btn-edit-pengiriman"
                                 data-bs-toggle="tooltip" data-bs-placement="top"
-                                title="${tooltip}" data-id="${row.mt_pengolahan_id}" ${isDisabled}>
+                                title="${tooltip}" data-id="${row.mt_pengiriman_id}" ${isDisabled}>
                                 <i class="text-primary bx bx-pencil fs-5"></i>
                             </button>
                         </div>
@@ -198,18 +198,18 @@ function initializeSupplyPengolahanTable(data) {
 }
 
 
-function getDetailSupplyPengolahan(button) {
+function getDetailSupplyPengiriman(button) {
     var id = $(button).data("id");
 
     $.ajax({
-        url: base_url + '/supply-chain/pengolahan/detail',
+        url: base_url + '/supply-chain/pengiriman/detail',
         method: "GET",
         data: {
             id: id,
         },
         success: function (response) {
             if (response && response.data) {
-                openModalPengolahan("edit", response.data[0]);
+                openModalPengiriman("edit", response.data[0]);
             } else {
                 errorAlert("Data tidak ditemukan!");
             }
@@ -220,35 +220,35 @@ function getDetailSupplyPengolahan(button) {
     });
 }
 
-function openModalPengolahan(mode, data = null) {
-    $("#supply-pengolahan-form")[0].reset();
-    $("#supply-pengolahan-form").removeClass("was-validated");
+function openModalPengiriman(mode, data = null) {
+    $("#supply-pengiriman-form")[0].reset();
+    $("#supply-pengiriman-form").removeClass("was-validated");
     $("#peng_gudang_id, #peng_pegawai_id").val(null).trigger("change").removeClass("is-invalid is-valid");
 
-    $("#supply-pengolahan-form input[name='_method']").remove();
+    $("#supply-pengiriman-form input[name='_method']").remove();
 
     if (mode === "edit" && data) {
-        $("#supplyPengolahanModal .modal-title").text("Edit Data Pengolahan");
+        $("#supplyPengirimanModal .modal-title").text("Edit Data Pengiriman");
     
-        $("#tg_pengolahan").val(data.tg_pengolahan.split("T")[0]);
+        $("#tg_pengiriman").val(data.tg_pengiriman.split("T")[0]);
         $("#peng_gudang_id").val(data.gudang_id).trigger("change");
         $("#peng_pegawai_id").val(data.kd_pegawai).trigger("change");
         $("#berat_daging").val(data.berat_daging);
         $("#berat_kopra").val(data.berat_kopra);
         $("#bonus").val(formatRupiah(data.berat_kopra) ?? 0);
     
-        $("#supply-pengolahan-form").data("action", "edit");
-        $("#supply-pengolahan-form").data("id", data.mt_pengolahan_id);
+        $("#supply-pengiriman-form").data("action", "edit");
+        $("#supply-pengiriman-form").data("id", data.mt_pengiriman_id);
 
-        $("#supply-pengolahan-form").append(
+        $("#supply-pengiriman-form").append(
             '<input type="hidden" name="_method" value="PATCH">'
         );
     } else {
-        $("#supplyPengolahanModal .modal-title").text("Tambah Data Pengolahan");
+        $("#supplyPengirimanModal .modal-title").text("Tambah Data Pengiriman");
     
-        $("#supply-pengolahan-form").data("action", "add");
-        $("#supply-pengolahan-form").removeData("id");
+        $("#supply-pengiriman-form").data("action", "add");
+        $("#supply-pengiriman-form").removeData("id");
     }
 
-    $("#supplyPengolahanModal").modal("show");
+    $("#supplyPengirimanModal").modal("show");
 }

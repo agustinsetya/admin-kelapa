@@ -4,13 +4,13 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class PengolahanModel extends Model
+class PengirimanModel extends Model
 {
-    protected $table         = 'mt_pengolahan';
-    protected $primaryKey    = 'mt_pengolahan_id';
+    protected $table         = 'mt_pengiriman';
+    protected $primaryKey    = 'mt_pengiriman_id';
     protected $returnType    = 'object';
     protected $allowedFields = [
-        'tg_pengolahan',
+        'tg_pengiriman',
         'gudang_id',
         'kd_pegawai',
         'berat_daging',
@@ -25,49 +25,49 @@ class PengolahanModel extends Model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
-    public function getDataPengolahan(array $filters = []): array
+    public function getDataPengiriman(array $filters = []): array
     {
-        $pengolahan = $this->select('
-                    mt_pengolahan.mt_pengolahan_id,
-                    mt_pengolahan.tg_pengolahan,
-                    mt_pengolahan.gudang_id,
-                    mt_pengolahan.kd_pegawai,
-                    mt_pengolahan.berat_daging,
-                    mt_pengolahan.berat_kopra,
-                    mt_pengolahan.bonus,
-                    mt_pengolahan.tg_proses_gaji,
-                    mt_pengolahan.is_stat_gaji,
+        $pengiriman = $this->select('
+                    mt_pengiriman.mt_pengiriman_id,
+                    mt_pengiriman.tg_pengiriman,
+                    mt_pengiriman.gudang_id,
+                    mt_pengiriman.kd_pegawai,
+                    mt_pengiriman.berat_daging,
+                    mt_pengiriman.berat_kopra,
+                    mt_pengiriman.bonus,
+                    mt_pengiriman.tg_proses_gaji,
+                    mt_pengiriman.is_stat_gaji,
                     m_gudang.nama AS nama_gudang,
                     mt_pegawai.nama AS nama_pegawai,
-                    mt_pengolahan.created_at,
+                    mt_pengiriman.created_at,
                 ')
-            ->join('m_gudang', 'm_gudang.m_gudang_id = mt_pengolahan.gudang_id', 'left')
-            ->join('mt_pegawai', 'mt_pegawai.kd_pegawai = mt_pengolahan.kd_pegawai', 'left')
-            ->orderby('mt_pengolahan.tg_pengolahan DESC');
+            ->join('m_gudang', 'm_gudang.m_gudang_id = mt_pengiriman.gudang_id', 'left')
+            ->join('mt_pegawai', 'mt_pegawai.kd_pegawai = mt_pengiriman.kd_pegawai', 'left')
+            ->orderby('mt_pengiriman.tg_pengiriman DESC');
 
-        if (isset($filters['mt_pengolahan_id']) && is_numeric($filters['mt_pengolahan_id'])) {
-            $pengolahan->where('mt_pengolahan.mt_pengolahan_id', (int)$filters['mt_pengolahan_id']);
+        if (isset($filters['mt_pengiriman_id']) && is_numeric($filters['mt_pengiriman_id'])) {
+            $pengiriman->where('mt_pengiriman.mt_pengiriman_id', (int)$filters['mt_pengiriman_id']);
         }
 
         if (isset($filters['gudang_id']) && is_numeric($filters['gudang_id'])) {
-            $pengolahan->where('mt_pengolahan.gudang_id', (int)$filters['gudang_id']);
+            $pengiriman->where('mt_pengiriman.gudang_id', (int)$filters['gudang_id']);
         }
 
         if (isset($filters['kd_pegawai']) && is_numeric($filters['kd_pegawai'])) {
-            $pengolahan->where('mt_pengolahan.kd_pegawai', (int)$filters['kd_pegawai']);
+            $pengiriman->where('mt_pengiriman.kd_pegawai', (int)$filters['kd_pegawai']);
         }
 
         if (!empty($filters['start_date'])) {
-            $pengolahan->where('mt_pengolahan.tg_pengolahan >=', $filters['start_date']);
+            $pengiriman->where('mt_pengiriman.tg_pengiriman >=', $filters['start_date']);
         }
         if (!empty($filters['end_date'])) {
-            $pengolahan->where('mt_pengolahan.tg_pengolahan <=', $filters['end_date']);
+            $pengiriman->where('mt_pengiriman.tg_pengiriman <=', $filters['end_date']);
         }
 
-        return $pengolahan->findAll();
+        return $pengiriman->findAll();
     }
     
-    public function getDataUpahProduksi(array $filters = []): array
+    public function getDataUpahDriver(array $filters = []): array
     {
         $start = $filters['start_date'] ?? null;
         $end   = $filters['end_date'] ?? null;
@@ -91,7 +91,7 @@ class PengolahanModel extends Model
                             + COALESCE(SUM(COALESCE(p.bonus,0)), 0)
                         ) AS total_gaji_bersih
                     ", false)
-                ->from('mt_pengolahan p')
+                ->from('mt_pengiriman p')
                 ->join('m_gudang g', 'g.m_gudang_id = p.gudang_id', 'left')
                 ->join('mt_pegawai pg', 'pg.kd_pegawai = p.kd_pegawai', 'left')
                 ->where('p.is_stat_gaji', 0);
@@ -106,10 +106,10 @@ class PengolahanModel extends Model
         }
 
         if (!empty($start)) {
-            $upah->where('p.tg_pengolahan >=', $start);
+            $upah->where('p.tg_pengiriman >=', $start);
         }
         if (!empty($end)) {
-            $upah->where('p.tg_pengolahan <=', $end);
+            $upah->where('p.tg_pengiriman <=', $end);
         }
 
         return $upah
@@ -117,16 +117,16 @@ class PengolahanModel extends Model
                 ->findAll();
     }
 
-    public function saveDataPengolahan(array $data, $pengolahanId = null): bool
+    public function saveDataPengiriman(array $data, $pengirimanId = null): bool
     {
-        $data['mt_pengolahan_id'] = $pengolahanId;
+        $data['mt_pengiriman_id'] = $pengirimanId;
 
         $this->db->transStart();
 
-        $exists = $this->where('mt_pengolahan_id', $pengolahanId)->countAllResults() > 0;
+        $exists = $this->where('mt_pengiriman_id', $pengirimanId)->countAllResults() > 0;
 
         if ($exists) {
-            $ok = $this->update($pengolahanId, $data);
+            $ok = $this->update($pengirimanId, $data);
         } else {
             $ok = $this->insert($data, false) !== false;
         }

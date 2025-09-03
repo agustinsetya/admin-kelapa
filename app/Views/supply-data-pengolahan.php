@@ -47,6 +47,7 @@
                                                     <th>Nama Pegawai</th>
                                                     <th>Berat Daging (Kg)</th>
                                                     <th>Berat Kopra (Kg)</th>
+                                                    <th>Bonus</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -83,6 +84,11 @@
         <!-- Responsive table -->
         <script src="<?= base_url('assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js') ?>"></script>
         <script src="<?= base_url('assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') ?>"></script>
+
+        <!-- form mask -->
+        <script src="<?= base_url('assets/libs/imask/imask.min.js') ?>"></script>
+        <!-- form mask init -->
+        <script src="<?= base_url('assets/js/pages/form-mask.init.js') ?>"></script>
 
         <script src="<?= base_url('assets/libs/sweetalert2/sweetalert2.min.js') ?>"></script>
 

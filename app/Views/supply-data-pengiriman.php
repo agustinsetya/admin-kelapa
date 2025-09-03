@@ -7,6 +7,9 @@
 
         <link href="<?= base_url('assets/libs/sweetalert2/sweetalert2.min.css') ?>" rel="stylesheet" type="text/css" />
 
+        <!-- custom css -->
+        <link href="<?= base_url('assets/css/content/general.css') ?>" rel="stylesheet" type="text/css" />
+
         <?= $this->include('partials/head-css') ?>
     </head>
     <?= $this->include('partials/body') ?>
@@ -20,26 +23,40 @@
                             <div class="col-12">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h4 class="card-title"><?= lang('Files.Detail_Komponen_Gaji') ?></h4>
-                                        <p class="card-title-desc">Acuan penghitungan gaji karyawan, berdasarkan hasil kerja pengolahan daging dan kopra per takaran.</p>
+                                        <div class="row align-items-end g-2">
+                                            <div class="mt-2">
+                                                <div class="d-flex justify-content-md-end">
+                                                    <button type="button"
+                                                            id="btn-tambah-pengiriman"
+                                                            class="btn btn-success text-nowrap w-100 w-md-auto"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#supplyPengirimanModal">
+                                                        <i class="bx bx-plus me-1"></i>Tambah
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="card-body">
-                                        <table class="table table-bordered dt-responsive nowrap w-100 dt-komponenGajiTable">
+                                        <table class="table table-bordered dt-responsive nowrap w-100 dt-pengirimanTable">
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
+                                                    <th>Tanggal Pengiriman</th>
                                                     <th>Nama Gudang</th>
-                                                    <th>Takaran Daging (kg)</th>
-                                                    <th>Upah per Takaran Daging</th>
-                                                    <th>Takaran Kopra (kg)</th>
-                                                    <th>Upah per Takaran Kopra</th>
-                                                    <th>Gaji Driver</th>
-                                                    <th>Last Update</th>
+                                                    <th>Nama Pegawai</th>
+                                                    <th>Berat Daging (Kg)</th>
+                                                    <th>Berat Kopra (Kg)</th>
+                                                    <th>Bonus</th>
+                                                    <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody></tbody>
                                         </table>
                                     </div>
+
+                                    <!-- Include the modal -->
+                                    <?= $this->include('modals/supply-pengiriman-modal') ?>
                                 </div>
                             </div>
                         </div>
@@ -78,9 +95,8 @@
         <!-- custom js -->
         <script type="text/javascript">
             var base_url = '<?= base_url() ?>';
-            var roleScope = '<?= $roleScope ?>';
         </script>
         <script src="<?= base_url('assets/js/content/general.js') ?>"></script>
-        <script src="<?= base_url('assets/js/content/report-komponen-gaji.js') ?>"></script>
+        <script src="<?= base_url('assets/js/content/supply-data-pengiriman.js') ?>"></script>
     </body>
 </html>
