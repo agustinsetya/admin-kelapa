@@ -76,6 +76,7 @@ return [
     "Input_Jumlah" => "Masukkan Jumlah",
     "Input_Nama" => "Masukkan Nama",
     "Bonus_Produksi" => "Bonus Produksi",
+    "Bonus_Pengiriman" => "Bonus Pengiriman",
     "Kode_Pegawai" => "Kode Pegawai",
     "Input_Kode_Pegawai" => "Masukkan Kode Pegawai",
     "Kode_Pegawai" => "Nama Pegawai",

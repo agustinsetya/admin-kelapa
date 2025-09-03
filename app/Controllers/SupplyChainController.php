@@ -332,7 +332,7 @@ class SupplyChainController extends AuthRequiredController
             'kd_pegawai'	=> $input['peng_pegawai_id'],
             'berat_daging'  => $input['berat_daging'],
             'berat_kopra'   => $input['berat_kopra'],
-            'bonus'         => $input['bonus_produksi'],
+            'bonus'         => $input['bonus_pengiriman'],
             'created_by'	=> $user->email ?? null,
         ];
 
@@ -376,7 +376,7 @@ class SupplyChainController extends AuthRequiredController
             'kd_pegawai'	=> $input['peng_pegawai_id'],
             'berat_daging'  => $input['berat_daging'],
             'berat_kopra'   => $input['berat_kopra'],
-            'bonus'         => $input['bonus_produksi'],
+            'bonus'         => $input['bonus_pengiriman'],
             'updated_by'	=> $user->email ?? null,
         ];
 

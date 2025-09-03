@@ -118,6 +118,36 @@ class Validation extends BaseConfig
         ],
     ];
     
+    public $supplyChainPengiriman = [
+        'tg_pengiriman'   => 'required',
+        'peng_gudang_id'  => 'required|numeric',
+        'peng_pegawai_id' => 'required|numeric',
+        'berat_daging'    => 'required|numeric',
+        'berat_kopra'     => 'required|numeric',
+    ];
+
+    public $supplyChainPengiriman_errors = [
+        'tg_pengiriman' => [
+            'required' => 'Tanggal Pengiriman wajib diisi.',
+        ],
+        'peng_gudang_id' => [
+            'required' => 'Gudang wajib diisi.',
+            'numeric'  => 'Gudang harus angka.',
+        ],
+        'peng_pegawai_id' => [
+            'required' => 'Pegawai wajib diisi.',
+            'numeric'  => 'Pegawai harus angka.',
+        ],
+        'berat_daging' => [
+            'required' => 'Berat Daging wajib diisi.',
+            'numeric'  => 'Berat Daging harus angka.',
+        ],
+        'berat_kopra' => [
+            'required' => 'Berat Kopra wajib diisi.',
+            'numeric'  => 'Berat Kopra harus angka.',
+        ],
+    ];
+    
     public $masterUserRoles = [
         'nama_peran'      => 'required',
         'lingkup_peran'   => 'required',

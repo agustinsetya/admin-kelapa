@@ -8,18 +8,18 @@ let _activeFilter = {
 
 $((function () {
     initRangePicker('tg_periode_filter');
-    applyFilterGajiPegawai();
+    applyFilterGajiDriver();
 
-    $('#applyGajiPegawaiFilter').click(function() {
+    $('#applyGajiDriverFilter').click(function() {
         const { start, end } = getIsoRange('tg_periode_filter');
         const gudang = $('#fn_gudang_id').val() || null;
 
         _activeFilter = { gudang, start_date: start, end_date: end };
 
-        applyFilterGajiPegawai(gudang, start, end);
+        applyFilterGajiDriver(gudang, start, end);
     });
     
-    $('#resetGajiPegawaiFilter').click(function() {
+    $('#resetGajiDriverFilter').click(function() {
         $('#fn_gudang_id').val('').trigger('change');
 
         const $el = $('#tg_periode_filter');
@@ -35,18 +35,18 @@ $((function () {
 
         _activeFilter = { gudang: null, start_date: '', end_date: '' };
 
-        applyFilterGajiPegawai();
+        applyFilterGajiDriver();
     });
 
-    $("body").on("click", "#btn-proses-gaji-pegawai", function () {
+    $("body").on("click", "#btn-proses-gaji-driver", function () {
         let selectedData = [];
         const buttonId = this.id;
     
-        $(".proses-gaji-pegawai:checked").each(function () {
+        $(".proses-gaji-driver:checked").each(function () {
             const dataPeg = String($(this).data("id") || '');
-            const [kdPegawai, gudangId] = dataPeg.split("#");
-            if (kdPegawai && gudangId) {
-                selectedData.push({ kdPegawai, gudangId });
+            const [kdDriver, gudangId] = dataPeg.split("#");
+            if (kdDriver && gudangId) {
+                selectedData.push({ kdDriver, gudangId });
             }
         });
     
@@ -62,10 +62,10 @@ $((function () {
             end_date   = r.end;
         }
 
-        showBtnLoading(buttonId, { text: "Proses Gaji Pegawai..." });
+        showBtnLoading(buttonId, { text: "Proses Gaji Driver..." });
 
         $.ajax({
-            url: base_url + '/finance/gaji-pegawai/add',
+            url: base_url + '/finance/gaji-driver/add',
             method: 'POST',
             dataType: 'json',
             contentType: 'application/json; charset=utf-8',
@@ -81,10 +81,10 @@ $((function () {
             }
 
             if (response?.success) {
-                alert('Proses Gaji Pegawai Berhasil!');
-                applyFilterGajiPegawai(_activeFilter.gudang, _activeFilter.start_date, _activeFilter.end_date);
+                alert('Proses Gaji Driver Berhasil!');
+                applyFilterGajiDriver(_activeFilter.gudang, _activeFilter.start_date, _activeFilter.end_date);
             } else {
-                alert(response?.message || 'Proses Gaji Pegawai Gagal!');
+                alert(response?.message || 'Proses Gaji Driver Gagal!');
             }
         })
         .fail(function (jqXHR) {
@@ -107,22 +107,22 @@ $((function () {
     });
 }));
 
-function applyFilterGajiPegawai(gudang = null, start = '', end = '') {
+function applyFilterGajiDriver(gudang = null, start = '', end = '') {
     if (start || end || gudang !== null) {
         _activeFilter = { gudang, start_date: start, end_date: end };
     }
 
-    getDataGajiPegawai(_activeFilter.gudang, _activeFilter.start_date, _activeFilter.end_date).done(function(response) {
+    getDataGajiDriver(_activeFilter.gudang, _activeFilter.start_date, _activeFilter.end_date).done(function(response) {
         const rows = Array.isArray(response?.data) ? response.data : [];
-        initializeFinanceGajiPegawaiTable(rows);
+        initializeFinanceGajiDriverTable(rows);
     }).fail(function(jqXHR, textStatus, errorThrown) {
         console.error("Request failed: " + textStatus + ", " + errorThrown);
     });
 }
 
-function getDataGajiPegawai(gudang = null, start = '', end = '') {
+function getDataGajiDriver(gudang = null, start = '', end = '') {
     return $.ajax({
-        url: base_url + '/finance/gaji-pegawai/data',
+        url: base_url + '/finance/gaji-driver/data',
         method: 'GET',
         data: {
             gudang_id: gudang,
@@ -133,8 +133,8 @@ function getDataGajiPegawai(gudang = null, start = '', end = '') {
     });
 }
 
-function initializeFinanceGajiPegawaiTable(data) {
-    const $dgp = $(".dt-gajiPegawaiTable").first();
+function initializeFinanceGajiDriverTable(data) {
+    const $dgp = $(".dt-gajiDriverTable").first();
     const list = Array.isArray(data) ? data : [];
 
     if ($.fn.dataTable.isDataTable($dgp)) {
@@ -150,7 +150,7 @@ function initializeFinanceGajiPegawaiTable(data) {
         columns: [
             { data: null, defaultContent: "" },
             { data: null, defaultContent: "-" },
-            { data: 'nama_pegawai', defaultContent: "-" },
+            { data: 'nama_driver', defaultContent: "-" },
             { data: 'upah_total_daging', defaultContent: "-" },
             { data: 'upah_total_kopra', defaultContent: "-" },
             { data: 'bonus_total', defaultContent: "-" },
@@ -178,12 +178,12 @@ function initializeFinanceGajiPegawaiTable(data) {
             {
                 targets: 2,
                 render: function(data, type, row, meta) {
-                    var namaPegawai = data ? data : "-";
+                    var namaDriver = data ? data : "-";
                     var gudang = row.nama_gudang ? row.nama_gudang : "-";
 
                     return `
                         <div class="d-flex flex-column align-items-start">
-                            <span>${namaPegawai}</span>
+                            <span>${namaDriver}</span>
                             <span>${gudang}</span>
                         </div>
                     `;
@@ -205,8 +205,8 @@ function initializeFinanceGajiPegawaiTable(data) {
                 width: '72px',
                 render: function (data, type, row, meta) {
                     return (
-                        '<div class="d-flex flex-column align-items-center"><input type="checkbox" class="form-check-input proses-gaji-pegawai" data-id="' +
-                        row.kd_pegawai + '#' + row.gudang_id + '"/></div>'
+                        '<div class="d-flex flex-column align-items-center"><input type="checkbox" class="form-check-input proses-gaji-driver" data-id="' +
+                        row.kd_driver + '#' + row.gudang_id + '"/></div>'
                     );
                 }
             }

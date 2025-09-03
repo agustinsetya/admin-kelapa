@@ -38,8 +38,8 @@ $((function () {
             return;
         }
 
-        const $bonus_produksi = $("#bonus_produksi");
-        $bonus_produksi.val(unmaskRupiah($bonus_produksi.val()));
+        const $bonus_pengiriman = $("#bonus_pengiriman");
+        $bonus_pengiriman.val(unmaskRupiah($bonus_pengiriman.val()));
 
         let url = '/supply-chain/pengiriman/add';
         if (action === 'edit') url = '/supply-chain/pengiriman/update';
@@ -235,7 +235,7 @@ function openModalPengiriman(mode, data = null) {
         $("#peng_pegawai_id").val(data.kd_pegawai).trigger("change");
         $("#berat_daging").val(data.berat_daging);
         $("#berat_kopra").val(data.berat_kopra);
-        $("#bonus").val(formatRupiah(data.berat_kopra) ?? 0);
+        $("#bonus_pengiriman").val(formatRupiah(data.bonus) ?? 0);
     
         $("#supply-pengiriman-form").data("action", "edit");
         $("#supply-pengiriman-form").data("id", data.mt_pengiriman_id);

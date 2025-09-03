@@ -75,6 +75,7 @@ return [
     "Input_Jumlah" => "Input Ammount",
     "Input_Nama" => "Input Name",
     "Bonus_Produksi" => "Production Bonus",
+    "Bonus_Pengiriman" => "Distribution Bonus",
     "Kode_Pegawai" => "Employee Code",
     "Input_Kode_Pegawai" => "Input Employee Code",
     "Nama_Pegawai" => "Employee Name",

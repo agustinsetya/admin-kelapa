@@ -235,7 +235,7 @@ function openModalPengolahan(mode, data = null) {
         $("#peng_pegawai_id").val(data.kd_pegawai).trigger("change");
         $("#berat_daging").val(data.berat_daging);
         $("#berat_kopra").val(data.berat_kopra);
-        $("#bonus").val(formatRupiah(data.berat_kopra) ?? 0);
+        $("#bonus").val(formatRupiah(data.bonus) ?? 0);
     
         $("#supply-pengolahan-form").data("action", "edit");
         $("#supply-pengolahan-form").data("id", data.mt_pengolahan_id);
