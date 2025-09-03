@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 02, 2025 at 03:30 PM
+-- Generation Time: Sep 03, 2025 at 02:51 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.3.3
 
@@ -20,6 +20,26 @@ SET time_zone = "+00:00";
 --
 -- Database: `cvkelapa`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mt_gaji_driver`
+--
+
+CREATE TABLE `mt_gaji_driver` (
+  `mt_gaji_driver_id` int(10) NOT NULL,
+  `tg_proses_gaji` date NOT NULL,
+  `kd_pegawai` char(10) NOT NULL,
+  `gudang_id` int(10) NOT NULL,
+  `upah_perjalanan` float NOT NULL,
+  `bonus` float NOT NULL,
+  `total_gaji_bersih` float NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `created_by` varchar(100) NOT NULL,
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `updated_by` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -43,16 +63,33 @@ CREATE TABLE `mt_gaji_pegawai` (
   `updated_by` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `mt_gaji_pegawai`
+-- Table structure for table `mt_komponen_gaji`
 --
 
-INSERT INTO `mt_gaji_pegawai` (`mt_gaji_pegawai_id`, `tg_proses_gaji`, `kd_pegawai`, `gudang_id`, `upah_total_daging`, `upah_total_kopra`, `upah_produksi`, `bonus`, `total_gaji_bersih`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
-(16, '2025-09-02', '9000000123', 1, 9333330, 8000000, 17333300, 100000, 17333300, '2025-09-02 01:43:35', '', '2025-09-02 10:11:56', ''),
-(17, '2025-09-02', '9000000123', 2, 2333330, 160000, 2493330, 0, 2493330, '2025-09-02 01:43:35', '', '2025-09-02 01:43:35', ''),
-(18, '2025-09-02', '9000000123', 4, 0, 0, 0, 0, 0, '2025-09-02 02:16:28', '', '2025-09-02 02:16:28', ''),
-(19, '2025-09-02', '9000000123', 6, 0, 0, 0, 0, 0, '2025-09-02 02:16:28', '', '2025-09-02 02:16:28', ''),
-(20, '2025-09-02', '9000000586', 3, 0, 0, 0, 0, 0, '2025-09-02 02:16:34', '', '2025-09-02 02:16:34', '');
+CREATE TABLE `mt_komponen_gaji` (
+  `mt_komponen_gaji_id` int(5) NOT NULL,
+  `gudang_id` int(10) NOT NULL,
+  `takaran_daging` int(10) NOT NULL DEFAULT 0,
+  `upah_takaran_daging` float NOT NULL DEFAULT 0,
+  `takaran_kopra` int(10) NOT NULL DEFAULT 0,
+  `upah_takaran_kopra` float NOT NULL DEFAULT 0,
+  `gaji_driver` float NOT NULL DEFAULT 0,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `created_by` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `mt_komponen_gaji`
+--
+
+INSERT INTO `mt_komponen_gaji` (`mt_komponen_gaji_id`, `gudang_id`, `takaran_daging`, `upah_takaran_daging`, `takaran_kopra`, `upah_takaran_kopra`, `gaji_driver`, `created_at`, `created_by`) VALUES
+(1, 1, 75, 50000, 35, 10000, 0, '2025-08-21 10:12:03', 'agustin@gmail.com'),
+(2, 2, 750, 500000, 350, 8000, 0, '2025-08-21 10:12:03', 'agustin@gmail.com'),
+(3, 1, 45, 125000, 70, 450000, 0, '2025-09-02 14:31:42', 'agustin@gmail.com'),
+(4, 7, 50, 500000, 40, 400000, 400000, '2025-09-02 14:36:22', 'agustin@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -141,6 +178,49 @@ INSERT INTO `mt_pengeluaran` (`mt_pengeluaran_id`, `tg_pengeluaran`, `ktg_pengel
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `mt_pengiriman`
+--
+
+CREATE TABLE `mt_pengiriman` (
+  `mt_pengiriman_id` int(10) NOT NULL,
+  `tg_pengiriman` date NOT NULL DEFAULT current_timestamp(),
+  `gudang_id` int(10) NOT NULL,
+  `kd_pegawai` char(10) NOT NULL,
+  `berat_daging` int(10) NOT NULL,
+  `berat_kopra` int(10) NOT NULL,
+  `jumlah_perjalanan` int(5) NOT NULL,
+  `bonus` float NOT NULL,
+  `tg_proses_gaji` date DEFAULT NULL,
+  `is_stat_gaji` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `created_by` varchar(100) NOT NULL,
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `updated_by` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `mt_pengiriman`
+--
+
+INSERT INTO `mt_pengiriman` (`mt_pengiriman_id`, `tg_pengiriman`, `gudang_id`, `kd_pegawai`, `berat_daging`, `berat_kopra`, `jumlah_perjalanan`, `bonus`, `tg_proses_gaji`, `is_stat_gaji`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
+(3, '2025-08-26', 1, '9000000123', 250, 500, 0, 0, NULL, 0, '2025-08-28 18:12:38', 'agustin@gmail.com', '2025-09-03 10:41:14', 'agustin@gmail.com'),
+(4, '2025-08-19', 4, '9000000586', 200, 482, 0, 0, NULL, 0, '2025-08-28 18:12:38', 'agustin@gmail.com', '2025-08-28 18:16:09', ''),
+(5, '2025-08-20', 1, '9000000123', 250, 500, 0, 0, NULL, 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-03 10:41:14', 'agustin@gmail.com'),
+(6, '2025-08-20', 4, '9000000586', 200, 482, 0, 0, NULL, 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-08-28 18:16:09', ''),
+(7, '2025-08-12', 1, '9000000123', 250, 500, 0, 0, NULL, 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-03 10:41:14', 'agustin@gmail.com'),
+(8, '2025-08-14', 4, '9000000586', 200, 482, 0, 0, NULL, 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-08-28 18:16:09', ''),
+(9, '2025-08-14', 1, '9000000123', 250, 500, 0, 0, NULL, 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-03 10:41:15', 'agustin@gmail.com'),
+(10, '2025-08-06', 4, '9000000586', 200, 482, 0, 0, NULL, 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-08-28 18:16:09', ''),
+(11, '2025-08-07', 2, '9000000123', 250, 500, 0, 0, NULL, 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-03 10:41:15', 'agustin@gmail.com'),
+(12, '2025-08-12', 3, '9000000586', 200, 482, 0, 0, '0000-00-00', 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-03 10:41:15', 'agustin@gmail.com'),
+(13, '2025-08-28', 4, '9000000123', 250, 500, 0, 0, '0000-00-00', 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-03 10:41:15', 'agustin@gmail.com'),
+(14, '2025-08-28', 3, '9000000586', 200, 482, 0, 0, '0000-00-00', 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-03 10:41:15', 'agustin@gmail.com'),
+(15, '2025-08-28', 6, '9000000123', 250, 500, 0, 0, '0000-00-00', 0, '2025-08-28 18:14:55', 'agustin@gmail.com', '2025-09-03 10:41:15', 'agustin@gmail.com'),
+(16, '2025-08-28', 4, '9000000586', 250, 482, 0, 550000, NULL, 0, '2025-08-28 18:14:55', 'agustin@gmail.com', '2025-09-03 14:27:45', 'agustin@gmail.com');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `mt_pengolahan`
 --
 
@@ -165,20 +245,20 @@ CREATE TABLE `mt_pengolahan` (
 --
 
 INSERT INTO `mt_pengolahan` (`mt_pengolahan_id`, `tg_pengolahan`, `gudang_id`, `kd_pegawai`, `berat_daging`, `berat_kopra`, `bonus`, `tg_proses_gaji`, `is_stat_gaji`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
-(3, '2025-08-26', 1, '9000000123', 250, 500, 0, NULL, 1, '2025-08-28 18:12:38', 'agustin@gmail.com', '2025-09-02 08:43:35', 'agustin@gmail.com'),
+(3, '2025-08-26', 1, '9000000123', 250, 500, 0, NULL, 0, '2025-08-28 18:12:38', 'agustin@gmail.com', '2025-09-03 10:41:14', 'agustin@gmail.com'),
 (4, '2025-08-19', 4, '9000000586', 200, 482, 0, NULL, 0, '2025-08-28 18:12:38', 'agustin@gmail.com', '2025-08-28 18:16:09', ''),
-(5, '2025-08-20', 1, '9000000123', 250, 500, 0, NULL, 1, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-02 08:43:35', 'agustin@gmail.com'),
+(5, '2025-08-20', 1, '9000000123', 250, 500, 0, NULL, 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-03 10:41:14', 'agustin@gmail.com'),
 (6, '2025-08-20', 4, '9000000586', 200, 482, 0, NULL, 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-08-28 18:16:09', ''),
-(7, '2025-08-12', 1, '9000000123', 250, 500, 0, NULL, 1, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-02 08:43:35', 'agustin@gmail.com'),
+(7, '2025-08-12', 1, '9000000123', 250, 500, 0, NULL, 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-03 10:41:14', 'agustin@gmail.com'),
 (8, '2025-08-14', 4, '9000000586', 200, 482, 0, NULL, 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-08-28 18:16:09', ''),
-(9, '2025-08-14', 1, '9000000123', 250, 500, 0, NULL, 1, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-02 08:43:35', 'agustin@gmail.com'),
+(9, '2025-08-14', 1, '9000000123', 250, 500, 0, NULL, 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-03 10:41:15', 'agustin@gmail.com'),
 (10, '2025-08-06', 4, '9000000586', 200, 482, 0, NULL, 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-08-28 18:16:09', ''),
-(11, '2025-08-07', 2, '9000000123', 250, 500, 0, NULL, 1, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-02 08:43:35', 'agustin@gmail.com'),
-(12, '2025-08-12', 3, '9000000586', 200, 482, 0, '0000-00-00', 1, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-02 09:16:34', 'agustin@gmail.com'),
-(13, '2025-08-28', 4, '9000000123', 250, 500, 0, '0000-00-00', 1, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-02 09:16:28', 'agustin@gmail.com'),
-(14, '2025-08-28', 3, '9000000586', 200, 482, 0, '0000-00-00', 1, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-02 09:16:34', 'agustin@gmail.com'),
-(15, '2025-08-28', 6, '9000000123', 250, 500, 0, '0000-00-00', 1, '2025-08-28 18:14:55', 'agustin@gmail.com', '2025-09-02 09:16:28', 'agustin@gmail.com'),
-(16, '2025-08-28', 4, '9000000586', 200, 482, 0, NULL, 0, '2025-08-28 18:14:55', 'agustin@gmail.com', '2025-08-28 18:14:55', '');
+(11, '2025-08-07', 2, '9000000123', 250, 500, 0, NULL, 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-03 10:41:15', 'agustin@gmail.com'),
+(12, '2025-08-12', 3, '9000000586', 200, 482, 0, '0000-00-00', 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-03 10:41:15', 'agustin@gmail.com'),
+(13, '2025-08-28', 4, '9000000123', 250, 500, 0, '0000-00-00', 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-03 10:41:15', 'agustin@gmail.com'),
+(14, '2025-08-28', 3, '9000000586', 200, 482, 0, '0000-00-00', 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-03 10:41:15', 'agustin@gmail.com'),
+(15, '2025-08-28', 6, '9000000123', 250, 500, 0, '0000-00-00', 0, '2025-08-28 18:14:55', 'agustin@gmail.com', '2025-09-03 10:41:15', 'agustin@gmail.com'),
+(16, '2025-08-28', 4, '9000000586', 200, 482, 500000, NULL, 0, '2025-08-28 18:14:55', 'agustin@gmail.com', '2025-09-03 01:48:43', 'agustin@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -231,38 +311,10 @@ INSERT INTO `m_gudang` (`m_gudang_id`, `nama`, `takaran_daging`, `upah_takaran_d
 (1, 'Gudang Luluk', 0, 125000, 0, 450000, 575000, '2025-08-21 09:32:09', '', '2025-09-02 14:31:42', 'agustin@gmail.com'),
 (2, 'Gudang Sutik', 0, 0, 0, 0, 0, '2025-08-21 09:32:09', '', '2025-09-02 20:25:48', ''),
 (3, 'Gudang Berkah', 0, 0, 0, 0, 0, '2025-08-28 18:04:57', '', '2025-09-02 20:25:48', ''),
-(4, 'Gudang Rejeki', 0, 0, 0, 0, 0, '2025-08-28 18:04:57', '', '2025-09-02 20:25:48', ''),
+(4, 'Gudang Rejeki', 150, 210000, 300, 450000, 500000, '2025-08-28 18:04:57', '', '2025-09-03 10:06:31', ''),
 (5, 'Gudang Untung', 0, 0, 0, 0, 0, '2025-08-28 18:06:21', '', '2025-09-02 20:25:48', ''),
 (6, 'Gudang Kabul', 0, 0, 0, 0, 0, '2025-08-28 18:06:21', '', '2025-09-02 20:25:48', ''),
 (7, 'tes', 0, 500000, 0, 400000, 400000, '2025-09-02 14:36:22', 'agustin@gmail.com', '2025-09-02 14:36:22', '');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `m_komponen_gaji`
---
-
-CREATE TABLE `m_komponen_gaji` (
-  `m_komponen_gaji_id` int(5) NOT NULL,
-  `gudang_id` int(10) NOT NULL,
-  `takaran_daging` int(10) NOT NULL DEFAULT 0,
-  `upah_takaran_daging` float NOT NULL DEFAULT 0,
-  `takaran_kopra` int(10) NOT NULL DEFAULT 0,
-  `upah_takaran_kopra` float NOT NULL DEFAULT 0,
-  `gaji_driver` float NOT NULL DEFAULT 0,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `created_by` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `m_komponen_gaji`
---
-
-INSERT INTO `m_komponen_gaji` (`m_komponen_gaji_id`, `gudang_id`, `takaran_daging`, `upah_takaran_daging`, `takaran_kopra`, `upah_takaran_kopra`, `gaji_driver`, `created_at`, `created_by`) VALUES
-(1, 1, 75, 50000, 35, 10000, 0, '2025-08-21 10:12:03', 'agustin@gmail.com'),
-(2, 2, 750, 500000, 350, 8000, 0, '2025-08-21 10:12:03', 'agustin@gmail.com'),
-(3, 1, 45, 125000, 70, 450000, 0, '2025-09-02 14:31:42', 'agustin@gmail.com'),
-(4, 7, 50, 500000, 40, 400000, 400000, '2025-09-02 14:36:22', 'agustin@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -322,12 +374,27 @@ INSERT INTO `m_role` (`m_role_id`, `nama`, `role_scope`, `created_at`, `created_
 --
 
 --
+-- Indexes for table `mt_gaji_driver`
+--
+ALTER TABLE `mt_gaji_driver`
+  ADD PRIMARY KEY (`mt_gaji_driver_id`),
+  ADD KEY `fk_gaji_pegawai` (`kd_pegawai`),
+  ADD KEY `fk_gaji_peg_gudang` (`gudang_id`);
+
+--
 -- Indexes for table `mt_gaji_pegawai`
 --
 ALTER TABLE `mt_gaji_pegawai`
   ADD PRIMARY KEY (`mt_gaji_pegawai_id`),
   ADD KEY `fk_gaji_pegawai` (`kd_pegawai`),
   ADD KEY `fk_gaji_peg_gudang` (`gudang_id`);
+
+--
+-- Indexes for table `mt_komponen_gaji`
+--
+ALTER TABLE `mt_komponen_gaji`
+  ADD PRIMARY KEY (`mt_komponen_gaji_id`),
+  ADD KEY `gudang_id` (`gudang_id`);
 
 --
 -- Indexes for table `mt_pegawai`
@@ -355,6 +422,14 @@ ALTER TABLE `mt_pengeluaran`
   ADD KEY `gudang_id` (`gudang_id`);
 
 --
+-- Indexes for table `mt_pengiriman`
+--
+ALTER TABLE `mt_pengiriman`
+  ADD PRIMARY KEY (`mt_pengiriman_id`),
+  ADD KEY `kd_pegawai` (`kd_pegawai`),
+  ADD KEY `gudang_id` (`gudang_id`);
+
+--
 -- Indexes for table `mt_pengolahan`
 --
 ALTER TABLE `mt_pengolahan`
@@ -377,13 +452,6 @@ ALTER TABLE `m_gudang`
   ADD KEY `m_gudang_id` (`m_gudang_id`);
 
 --
--- Indexes for table `m_komponen_gaji`
---
-ALTER TABLE `m_komponen_gaji`
-  ADD PRIMARY KEY (`m_komponen_gaji_id`),
-  ADD KEY `gudang_id` (`gudang_id`);
-
---
 -- Indexes for table `m_ktg_pengeluaran`
 --
 ALTER TABLE `m_ktg_pengeluaran`
@@ -400,10 +468,22 @@ ALTER TABLE `m_role`
 --
 
 --
+-- AUTO_INCREMENT for table `mt_gaji_driver`
+--
+ALTER TABLE `mt_gaji_driver`
+  MODIFY `mt_gaji_driver_id` int(10) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `mt_gaji_pegawai`
 --
 ALTER TABLE `mt_gaji_pegawai`
   MODIFY `mt_gaji_pegawai_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+--
+-- AUTO_INCREMENT for table `mt_komponen_gaji`
+--
+ALTER TABLE `mt_komponen_gaji`
+  MODIFY `mt_komponen_gaji_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `mt_pegawai`
@@ -424,6 +504,12 @@ ALTER TABLE `mt_pengeluaran`
   MODIFY `mt_pengeluaran_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT for table `mt_pengiriman`
+--
+ALTER TABLE `mt_pengiriman`
+  MODIFY `mt_pengiriman_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
 -- AUTO_INCREMENT for table `mt_pengolahan`
 --
 ALTER TABLE `mt_pengolahan`
@@ -440,12 +526,6 @@ ALTER TABLE `mt_user`
 --
 ALTER TABLE `m_gudang`
   MODIFY `m_gudang_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
-
---
--- AUTO_INCREMENT for table `m_komponen_gaji`
---
-ALTER TABLE `m_komponen_gaji`
-  MODIFY `m_komponen_gaji_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `m_ktg_pengeluaran`
@@ -469,6 +549,12 @@ ALTER TABLE `m_role`
 ALTER TABLE `mt_gaji_pegawai`
   ADD CONSTRAINT `fk_gaji_peg_gudang` FOREIGN KEY (`gudang_id`) REFERENCES `m_gudang` (`m_gudang_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_gaji_peg_pegawai` FOREIGN KEY (`kd_pegawai`) REFERENCES `mt_pegawai` (`kd_pegawai`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `mt_komponen_gaji`
+--
+ALTER TABLE `mt_komponen_gaji`
+  ADD CONSTRAINT `fk_komponen_gaji_gudang` FOREIGN KEY (`gudang_id`) REFERENCES `m_gudang` (`m_gudang_id`);
 
 --
 -- Constraints for table `mt_pegawai`
@@ -503,12 +589,6 @@ ALTER TABLE `mt_pengolahan`
 --
 ALTER TABLE `mt_user`
   ADD CONSTRAINT `fk_user_pegawai` FOREIGN KEY (`kd_pegawai`) REFERENCES `mt_pegawai` (`kd_pegawai`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `m_komponen_gaji`
---
-ALTER TABLE `m_komponen_gaji`
-  ADD CONSTRAINT `fk_komponen_gaji_gudang` FOREIGN KEY (`gudang_id`) REFERENCES `m_gudang` (`m_gudang_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
