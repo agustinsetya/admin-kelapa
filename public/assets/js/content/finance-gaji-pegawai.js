@@ -21,93 +21,50 @@ $((function () {
     
     $('#resetGajiPegawaiFilter').click(function() {
         $('#fn_gudang_id').val('').trigger('change');
-
+    
         const $el = $('#tg_periode_filter');
-        $el.val('');
+    
         if (hasDRP()) {
             const drp = $el.data('daterangepicker');
             if (drp) {
-                drp.setStartDate(moment());
-                drp.setEndDate(moment());
-                $el.trigger('cancel.daterangepicker', drp);
+                $el.trigger('cancel.daterangepicker');
             }
+        } else {
+            $el.val('');
         }
-
+    
         _activeFilter = { gudang: null, start_date: '', end_date: '' };
-
+    
         applyFilterGajiPegawai();
-    });
+    });    
 
     $("body").on("click", "#btn-proses-gaji-pegawai", function () {
-        let selectedData = [];
         const buttonId = this.id;
+        const selectedData = getSelectedDataFromCheckbox();
     
-        $(".proses-gaji-pegawai:checked").each(function () {
-            const dataPeg = String($(this).data("id") || '');
-            const [kdPegawai, gudangId] = dataPeg.split("#");
-            if (kdPegawai && gudangId) {
-                selectedData.push({ kdPegawai, gudangId });
-            }
-        });
+        let { start_date, end_date, gudang } = _activeFilter;
     
-        if (!selectedData.length) {
-            errorAlert("Tidak ada data karyawan yang dipilih!");
-            return;
-        }
-
-        let { start_date, end_date } = _activeFilter;
         if (!start_date || !end_date) {
             const r = getIsoRange('tg_periode_filter');
             start_date = r.start;
             end_date   = r.end;
         }
-
-        showBtnLoading(buttonId, { text: "Proses Gaji Pegawai..." });
-
-        $.ajax({
-            url: base_url + 'finance/gaji-pegawai/add',
-            method: 'POST',
-            dataType: 'json',
-            contentType: 'application/json; charset=utf-8',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            data: JSON.stringify({ data: selectedData, start_date, end_date })
-        })
-        .done(function (response) {
-            if (response?.csrf?.name && response?.csrf?.hash) {
-                $('meta[name="csrf-token-name"]').attr('content', response.csrf.name);
-                $('meta[name="csrf-token"]').attr('content', response.csrf.hash);
-            }
-
-            if (response?.success) {
-                successAlert('Proses Gaji Pegawai Berhasil!');
-                applyFilterGajiPegawai(_activeFilter.gudang, _activeFilter.start_date, _activeFilter.end_date);
-            } else {
-                const message = response?.errors ?? response?.message ?? 'Simpan Data Gagal!';
-                errorAlert(message, 'Simpan Data Gagal!');
-            }
-        })
-        .fail(function (jqXHR) {
-            try {
-                const res = jqXHR.responseJSON;
-        
-                if (res?.csrf?.name && res?.csrf?.hash) {
-                    $('meta[name="csrf-token-name"]').attr('content', res.csrf.name);
-                    $('meta[name="csrf-token"]').attr('content', res.csrf.hash);
+    
+        if (selectedData.length > 0) {
+            prosesGajiPegawai(selectedData, start_date, end_date, buttonId);
+        } else {
+            confirmProcess(() => {
+                const allData = getAllDataFromGajiTable();
+    
+                if (!allData.length) {
+                    errorAlert('Tidak ada data yang bisa diproses!');
+                    return;
                 }
-        
-                const msg = res?.errors ?? res?.message ?? res?.error ?? 'Terjadi kesalahan saat menyimpan';
-                errorAlert('Gagal Menyimpan', msg);
-            } catch (e) {
-                errorAlert('Error!', 'Terjadi kesalahan. Cek konsol.');
-                console.error('Save error:', jqXHR.status, jqXHR.responseText);
-            }
-        })
-        .always(function () {
-            resetButton(buttonId,"Proses Gaji","btn btn-warning waves-effect waves-light");
-        });
-    });
+    
+                prosesGajiPegawai(allData, start_date, end_date, buttonId);
+            });
+        }
+    });    
 }));
 
 function applyFilterGajiPegawai(gudang = null, start = '', end = '') {
@@ -224,3 +181,79 @@ function initializeFinanceGajiPegawaiTable(data) {
             't<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>'
     });
 }
+
+function getAllDataFromGajiTable() {
+    const data = [];
+
+    $('.dt-gajiPegawaiTable tbody tr').each(function () {
+        const dataId = $(this).find('input.proses-gaji-pegawai').data('id');
+        if (dataId) {
+            const [kdPegawai, gudangId] = String(dataId).split("#");
+            if (kdPegawai && gudangId) {
+                data.push({ kdPegawai, gudangId });
+            }
+        }
+    });
+
+    return data;
+}
+
+function getSelectedDataFromCheckbox() {
+    const selected = [];
+
+    $(".proses-gaji-pegawai:checked").each(function () {
+        const dataId = String($(this).data("id") || '');
+        const [kdPegawai, gudangId] = dataId.split("#");
+        if (kdPegawai && gudangId) {
+            selected.push({ kdPegawai, gudangId });
+        }
+    });
+
+    return selected;
+}
+
+function prosesGajiPegawai(dataToSend, start_date, end_date, buttonId) {
+    showBtnLoading(buttonId, { text: "Proses Gaji Pegawai..." });
+
+    $.ajax({
+        url: base_url + 'finance/gaji-pegawai/add',
+        method: 'POST',
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data: JSON.stringify({ data: dataToSend, start_date, end_date })
+    })
+    .done(function (response) {
+        if (response?.csrf?.name && response?.csrf?.hash) {
+            $('meta[name="csrf-token-name"]').attr('content', response.csrf.name);
+            $('meta[name="csrf-token"]').attr('content', response.csrf.hash);
+        }
+
+        if (response?.success) {
+            successAlert('Proses Gaji Pegawai Berhasil!');
+            applyFilterGajiPegawai(_activeFilter.gudang, start_date, end_date);
+        } else {
+            const message = response?.errors ?? response?.message ?? 'Simpan Data Gagal!';
+            errorAlert(message, 'Simpan Data Gagal!');
+        }
+    })
+    .fail(function (jqXHR) {
+        try {
+            const res = jqXHR.responseJSON;
+            if (res?.csrf?.name && res?.csrf?.hash) {
+                $('meta[name="csrf-token-name"]').attr('content', res.csrf.name);
+                $('meta[name="csrf-token"]').attr('content', res.csrf.hash);
+            }
+            const msg = res?.errors ?? res?.message ?? res?.error ?? 'Terjadi kesalahan saat menyimpan';
+            errorAlert('Gagal Menyimpan', msg);
+        } catch (e) {
+            errorAlert('Error!', 'Terjadi kesalahan. Cek konsol.');
+            console.error('Save error:', jqXHR.status, jqXHR.responseText);
+        }
+    })
+    .always(function () {
+        resetButton(buttonId, "Proses Gaji", "btn btn-warning waves-effect waves-light");
+    });
+}    

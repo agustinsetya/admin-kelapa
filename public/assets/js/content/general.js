@@ -131,6 +131,23 @@ function confirmDelete(url) {
     });
 }
 
+function confirmProcess(callback, options = {}) {
+    Swal.fire({
+        title: options.title || 'Yakin mau lanjut?',
+        text: options.text || "Tindakan ini tidak bisa dibatalkan!",
+        icon: options.icon || 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: options.confirmButtonText || 'Ya, lanjutkan!',
+        cancelButtonText: options.cancelButtonText || 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed && typeof callback === 'function') {
+            callback();
+        }
+    });
+}
+
 // Date Range Picker
 const hasDRP = () => !!($ && $.fn && $.fn.daterangepicker);
 const byId = (id) => document.getElementById(id);
