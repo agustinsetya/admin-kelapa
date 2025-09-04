@@ -51,7 +51,7 @@ $((function () {
         });
     
         if (!selectedData.length) {
-            alert("Tidak ada data karyawan yang dipilih!");
+            errorAlert("Tidak ada data karyawan yang dipilih!");
             return;
         }
 
@@ -81,23 +81,26 @@ $((function () {
             }
 
             if (response?.success) {
-                alert('Proses Gaji Driver Berhasil!');
+                successAlert('Proses Gaji Driver Berhasil!');
                 applyFilterGajiDriver(_activeFilter.gudang, _activeFilter.start_date, _activeFilter.end_date);
             } else {
-                alert(response?.message || 'Proses Gaji Driver Gagal!');
+                const message = response?.errors ?? response?.message ?? 'Simpan Data Gagal!';
+                errorAlert(message, 'Simpan Data Gagal!');
             }
         })
         .fail(function (jqXHR) {
             try {
                 const res = jqXHR.responseJSON;
+        
                 if (res?.csrf?.name && res?.csrf?.hash) {
                     $('meta[name="csrf-token-name"]').attr('content', res.csrf.name);
                     $('meta[name="csrf-token"]').attr('content', res.csrf.hash);
                 }
-                const msg = res?.message || res?.error || 'Terjadi kesalahan saat menyimpan';
-                alert(msg);
+        
+                const msg = res?.errors ?? res?.message ?? res?.error ?? 'Terjadi kesalahan saat menyimpan';
+                errorAlert('Gagal Menyimpan', msg);
             } catch (e) {
-                alert('Terjadi kesalahan. Cek konsol.');
+                errorAlert('Error!', 'Terjadi kesalahan. Cek konsol.');
                 console.error('Save error:', jqXHR.status, jqXHR.responseText);
             }
         })

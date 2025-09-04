@@ -44,33 +44,39 @@ $((function () {
             method: 'POST',
             data: payload,
             dataType: 'json',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
         })
         .done(function (response) {
-            if (response?.csrf) {
-                const name = response.csrf.name;
-                const hash = response.csrf.hash;
-                $('input[name="'+ name +'"]').val(hash);
+            if (response?.csrf?.name && response?.csrf?.hash) {
+                $('meta[name="csrf-token-name"]').attr('content', response.csrf.name);
+                $('meta[name="csrf-token"]').attr('content', response.csrf.hash);
             }
 
             if (response?.success) {
-                alert('Simpan Data Pembelian Berhasil!');
+                successAlert('Simpan Data Pembelian Berhasil!');
                 $("#supplyPembelianModal").modal("hide");
 
                 applyFilterPembelian();
             } else {
-                alert(response?.message || 'Simpan Data Gagal!');
+                const message = response?.errors ?? response?.message ?? 'Simpan Data Gagal!';
+                errorAlert(message, 'Simpan Data Gagal!');
             }
         })
         .fail(function (jqXHR) {
             try {
                 const res = jqXHR.responseJSON;
-                if (res?.csrf) {
-                    $('input[name="'+ res.csrf.name +'"]').val(res.csrf.hash);
+        
+                if (res?.csrf?.name && res?.csrf?.hash) {
+                    $('meta[name="csrf-token-name"]').attr('content', res.csrf.name);
+                    $('meta[name="csrf-token"]').attr('content', res.csrf.hash);
                 }
-                const msg = res?.message || res?.error || 'Terjadi kesalahan saat menyimpan';
-                alert(msg);
+        
+                const msg = res?.errors ?? res?.message ?? res?.error ?? 'Terjadi kesalahan saat menyimpan';
+                errorAlert('Gagal Menyimpan', msg);
             } catch (e) {
-                alert('Terjadi kesalahan. Cek konsol.');
+                errorAlert('Error!', 'Terjadi kesalahan. Cek konsol.');
                 console.error('Save error:', jqXHR.status, jqXHR.responseText);
             }
         })
@@ -163,11 +169,11 @@ function getDetailSupplyPembelian(button) {
             if (response && response.data) {
                 openModalPembelian("edit", response.data[0]);
             } else {
-                alert("Data tidak ditemukan!");
+                errorAlert("Data tidak ditemukan!");
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            alert("Terjadi kesalahan: " + textStatus);
+            errorAlert("Terjadi kesalahan: " + textStatus);
         },
     });
 }
