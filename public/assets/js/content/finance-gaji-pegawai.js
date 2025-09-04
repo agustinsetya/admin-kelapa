@@ -65,7 +65,7 @@ $((function () {
         showBtnLoading(buttonId, { text: "Proses Gaji Pegawai..." });
 
         $.ajax({
-            url: base_url + '/finance/gaji-pegawai/add',
+            url: base_url + 'finance/gaji-pegawai/add',
             method: 'POST',
             dataType: 'json',
             contentType: 'application/json; charset=utf-8',
@@ -125,7 +125,7 @@ function applyFilterGajiPegawai(gudang = null, start = '', end = '') {
 
 function getDataGajiPegawai(gudang = null, start = '', end = '') {
     return $.ajax({
-        url: base_url + '/finance/gaji-pegawai/data',
+        url: base_url + 'finance/gaji-pegawai/data',
         method: 'GET',
         data: {
             gudang_id: gudang,
@@ -154,9 +154,9 @@ function initializeFinanceGajiPegawaiTable(data) {
             { data: null, defaultContent: "" },
             { data: null, defaultContent: "-" },
             { data: 'nama_pegawai', defaultContent: "-" },
-            { data: 'upah_total_daging', defaultContent: "-" },
-            { data: 'upah_total_kopra', defaultContent: "-" },
-            { data: 'bonus_total', defaultContent: "-" },
+            { data: 'total_upah_daging', defaultContent: "-" },
+            { data: 'total_upah_kopra', defaultContent: "-" },
+            { data: 'total_bonus', defaultContent: "-" },
             { data: 'total_gaji_bersih', defaultContent: "-" },
             { data: null, defaultContent: "" }             
         ],
@@ -195,7 +195,7 @@ function initializeFinanceGajiPegawaiTable(data) {
             {
                 targets: [3,4,5,6],
                 render: function(data, type, row, meta) {
-                    return formatRupiah(data);
+                    return formatRupiah(data ?? 0);
                 }
             },
             {

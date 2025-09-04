@@ -85,9 +85,9 @@ function initializeReportGajiPegawaiTable(data) {
             { data: 'tg_proses_gaji', defaultContent: "-" },
             { data: 'nama_pegawai', defaultContent: "-" },
             { data: 'nama_gudang', defaultContent: "-" },
-            { data: 'upah_total_daging', defaultContent: "-" },
-            { data: 'upah_total_kopra', defaultContent: "-" },
-            { data: 'bonus', defaultContent: "-" },
+            { data: 'total_upah_daging', defaultContent: "-" },
+            { data: 'total_upah_kopra', defaultContent: "-" },
+            { data: 'total_bonus', defaultContent: "-" },
             { data: 'total_gaji_bersih', defaultContent: "-" },     
         ],
         columnDefs: [

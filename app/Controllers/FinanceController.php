@@ -299,26 +299,21 @@ class FinanceController extends AuthRequiredController
 
         $upahProduksiPegawai = !empty($resultUpah) ? array_merge(...$resultUpah) : [];
 
-        $roundMoney = function ($n) {
-            return (int) round((float)$n, 0, PHP_ROUND_HALF_UP);
-        };
-
         foreach ($upahProduksiPegawai as &$row) {
-            $row->gudang_id          = (int)($row->gudang_id ?? 0);
-            $row->upah_total_daging  = $roundMoney($row->upah_total_daging ?? 0);
-            $row->upah_total_kopra   = $roundMoney($row->upah_total_kopra ?? 0);
-            $row->upah_produksi      = $roundMoney($row->upah_produksi ?? 0);
-            $row->bonus_total        = $roundMoney($row->bonus_total ?? 0);
-            $row->total_gaji_bersih  = $roundMoney($row->total_gaji_bersih ?? 0);
+            $row['total_upah_daging']   = $row['total_upah_daging'] ?? 0;
+            $row['total_upah_kopra']    = $row['total_upah_kopra'] ?? 0;
+            $row['total_upah_produksi'] = $row['total_upah_produksi'] ?? 0;
+            $row['total_bonus']         = $row['total_bonus'] ?? 0;
+            $row['total_gaji_bersih']   = $row['total_gaji_bersih'] ?? 0;
         }
-        unset($row);
+        unset($row); 
 
         $saved = $this->gajiPegawaiModel->prosesGajiPegawai(
-                    $upahProduksiPegawai,
-                    $user->email ?? null,
-                    $periodeStart,
-                    $periodeEnd
-                );
+            $user->email ?? null,
+            $periodeStart,
+            $periodeEnd,
+            $upahProduksiPegawai,
+        );
 
         if ($saved === false) {
             $errors = $this->gajiPegawaiModel->errors() ?: 'Gagal menyimpan data';
@@ -330,6 +325,7 @@ class FinanceController extends AuthRequiredController
             'message' => 'Gaji Pegawai Berhasil diproses.',
         ], 201);
     }
+
     
     public function getDataUpahDriver()
     {
