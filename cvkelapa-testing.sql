@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 03, 2025 at 02:51 PM
+-- Generation Time: Sep 04, 2025 at 04:24 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.3.3
 
@@ -32,14 +32,22 @@ CREATE TABLE `mt_gaji_driver` (
   `tg_proses_gaji` date NOT NULL,
   `kd_pegawai` char(10) NOT NULL,
   `gudang_id` int(10) NOT NULL,
-  `upah_perjalanan` float NOT NULL,
-  `bonus` float NOT NULL,
-  `total_gaji_bersih` float NOT NULL,
+  `total_upah_perjalanan` int(15) NOT NULL,
+  `total_bonus` int(15) NOT NULL,
+  `total_gaji_bersih` int(15) NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `created_by` varchar(100) NOT NULL,
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `updated_by` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `mt_gaji_driver`
+--
+
+INSERT INTO `mt_gaji_driver` (`mt_gaji_driver_id`, `tg_proses_gaji`, `kd_pegawai`, `gudang_id`, `total_upah_perjalanan`, `total_bonus`, `total_gaji_bersih`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
+(1, '2025-09-04', '9000000123', 1, 0, 0, 0, '2025-09-04 04:11:13', '', '2025-09-04 04:11:13', ''),
+(2, '2025-09-04', '9000000586', 4, 3500000, 450000, 3950000, '2025-09-04 04:13:45', '', '2025-09-04 04:13:45', '');
 
 -- --------------------------------------------------------
 
@@ -52,16 +60,26 @@ CREATE TABLE `mt_gaji_pegawai` (
   `tg_proses_gaji` date NOT NULL,
   `kd_pegawai` char(10) NOT NULL,
   `gudang_id` int(10) NOT NULL,
-  `upah_total_daging` float NOT NULL,
-  `upah_total_kopra` float NOT NULL,
-  `upah_produksi` float NOT NULL,
-  `bonus` float NOT NULL,
-  `total_gaji_bersih` float NOT NULL,
+  `total_upah_daging` int(15) NOT NULL,
+  `total_upah_kopra` int(15) NOT NULL,
+  `total_upah_produksi` int(15) NOT NULL,
+  `total_bonus` int(15) NOT NULL,
+  `total_gaji_bersih` int(15) NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `created_by` varchar(100) NOT NULL,
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `updated_by` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `mt_gaji_pegawai`
+--
+
+INSERT INTO `mt_gaji_pegawai` (`mt_gaji_pegawai_id`, `tg_proses_gaji`, `kd_pegawai`, `gudang_id`, `total_upah_daging`, `total_upah_kopra`, `total_upah_produksi`, `total_bonus`, `total_gaji_bersih`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
+(30, '2025-09-04', '9000000123', 1, 0, 0, 0, 0, 0, '2025-09-04 03:39:10', '', '2025-09-04 03:39:10', ''),
+(31, '2025-09-04', '9000000123', 2, 0, 0, 0, 0, 0, '2025-09-04 03:41:06', '', '2025-09-04 03:41:06', ''),
+(32, '2025-09-04', '9000000586', 3, 0, 0, 0, 0, 0, '2025-09-04 03:41:06', '', '2025-09-04 03:41:06', ''),
+(33, '2025-09-04', '9000000586', 4, 840000, 2169000, 3009000, 0, 3009000, '2025-09-04 03:41:06', '', '2025-09-04 03:41:06', '');
 
 -- --------------------------------------------------------
 
@@ -73,10 +91,10 @@ CREATE TABLE `mt_komponen_gaji` (
   `mt_komponen_gaji_id` int(5) NOT NULL,
   `gudang_id` int(10) NOT NULL,
   `takaran_daging` int(10) NOT NULL DEFAULT 0,
-  `upah_takaran_daging` float NOT NULL DEFAULT 0,
+  `upah_takaran_daging` int(15) NOT NULL DEFAULT 0,
   `takaran_kopra` int(10) NOT NULL DEFAULT 0,
-  `upah_takaran_kopra` float NOT NULL DEFAULT 0,
-  `gaji_driver` float NOT NULL DEFAULT 0,
+  `upah_takaran_kopra` int(15) NOT NULL DEFAULT 0,
+  `gaji_driver` int(15) NOT NULL DEFAULT 0,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `created_by` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -117,7 +135,7 @@ CREATE TABLE `mt_pegawai` (
 INSERT INTO `mt_pegawai` (`mt_pegawai_id`, `kd_pegawai`, `nama`, `jenis_kelamin`, `role_id`, `penempatan_id`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
 (1, '9000000586', 'Agustin Setya', 'P', 1, 1, '2025-08-18 19:55:58', '', '2025-08-27 17:21:01', ''),
 (2, '9000000123', 'Riansss', 'L', 4, 3, '2025-08-18 19:55:58', '', '2025-09-02 13:03:17', ''),
-(3, '0512132132', 'tes', 'L', 2, 4, '2025-09-02 13:07:27', '', '2025-09-02 13:07:27', '');
+(3, '0512132132', 'tes', 'L', 6, 4, '2025-09-02 13:07:27', '', '2025-09-04 06:23:22', '');
 
 -- --------------------------------------------------------
 
@@ -158,7 +176,7 @@ CREATE TABLE `mt_pengeluaran` (
   `ktg_pengeluaran_id` int(10) NOT NULL,
   `gudang_id` int(10) NOT NULL,
   `jumlah` int(10) NOT NULL,
-  `biaya` float NOT NULL,
+  `biaya` int(15) NOT NULL,
   `kd_pegawai` char(10) NOT NULL,
   `status` enum('BELUM_BAYAR','SUDAH_BAYAR') NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
@@ -189,7 +207,7 @@ CREATE TABLE `mt_pengiriman` (
   `berat_daging` int(10) NOT NULL,
   `berat_kopra` int(10) NOT NULL,
   `jumlah_perjalanan` int(5) NOT NULL,
-  `bonus` float NOT NULL,
+  `bonus` int(15) NOT NULL,
   `tg_proses_gaji` date DEFAULT NULL,
   `is_stat_gaji` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
@@ -203,19 +221,19 @@ CREATE TABLE `mt_pengiriman` (
 --
 
 INSERT INTO `mt_pengiriman` (`mt_pengiriman_id`, `tg_pengiriman`, `gudang_id`, `kd_pegawai`, `berat_daging`, `berat_kopra`, `jumlah_perjalanan`, `bonus`, `tg_proses_gaji`, `is_stat_gaji`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
-(3, '2025-08-26', 1, '9000000123', 250, 500, 0, 0, NULL, 0, '2025-08-28 18:12:38', 'agustin@gmail.com', '2025-09-03 10:41:14', 'agustin@gmail.com'),
-(4, '2025-08-19', 4, '9000000586', 200, 482, 0, 0, NULL, 0, '2025-08-28 18:12:38', 'agustin@gmail.com', '2025-08-28 18:16:09', ''),
-(5, '2025-08-20', 1, '9000000123', 250, 500, 0, 0, NULL, 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-03 10:41:14', 'agustin@gmail.com'),
-(6, '2025-08-20', 4, '9000000586', 200, 482, 0, 0, NULL, 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-08-28 18:16:09', ''),
-(7, '2025-08-12', 1, '9000000123', 250, 500, 0, 0, NULL, 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-03 10:41:14', 'agustin@gmail.com'),
-(8, '2025-08-14', 4, '9000000586', 200, 482, 0, 0, NULL, 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-08-28 18:16:09', ''),
-(9, '2025-08-14', 1, '9000000123', 250, 500, 0, 0, NULL, 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-03 10:41:15', 'agustin@gmail.com'),
+(3, '2025-08-26', 1, '9000000123', 250, 500, 0, 0, '2025-09-04', 1, '2025-08-28 18:12:38', 'agustin@gmail.com', '2025-09-04 11:11:13', 'agustin@gmail.com'),
+(4, '2025-08-19', 4, '9000000586', 200, 482, 0, 0, '2025-09-04', 1, '2025-08-28 18:12:38', 'agustin@gmail.com', '2025-09-04 11:13:45', 'agustin@gmail.com'),
+(5, '2025-08-20', 1, '9000000123', 250, 500, 0, 0, '2025-09-04', 1, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-04 11:11:13', 'agustin@gmail.com'),
+(6, '2025-08-20', 4, '9000000586', 200, 482, 5, 450000, '2025-09-04', 1, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-04 11:13:45', 'agustin@gmail.com'),
+(7, '2025-08-12', 1, '9000000123', 250, 500, 0, 0, '2025-09-04', 1, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-04 11:11:13', 'agustin@gmail.com'),
+(8, '2025-08-14', 4, '9000000586', 200, 482, 2, 0, '2025-09-04', 1, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-04 11:13:45', 'agustin@gmail.com'),
+(9, '2025-08-14', 1, '9000000123', 250, 500, 0, 0, '2025-09-04', 1, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-04 11:11:13', 'agustin@gmail.com'),
 (10, '2025-08-06', 4, '9000000586', 200, 482, 0, 0, NULL, 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-08-28 18:16:09', ''),
 (11, '2025-08-07', 2, '9000000123', 250, 500, 0, 0, NULL, 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-03 10:41:15', 'agustin@gmail.com'),
 (12, '2025-08-12', 3, '9000000586', 200, 482, 0, 0, '0000-00-00', 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-03 10:41:15', 'agustin@gmail.com'),
 (13, '2025-08-28', 4, '9000000123', 250, 500, 0, 0, '0000-00-00', 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-03 10:41:15', 'agustin@gmail.com'),
 (14, '2025-08-28', 3, '9000000586', 200, 482, 0, 0, '0000-00-00', 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-03 10:41:15', 'agustin@gmail.com'),
-(15, '2025-08-28', 6, '9000000123', 250, 500, 0, 0, '0000-00-00', 0, '2025-08-28 18:14:55', 'agustin@gmail.com', '2025-09-03 10:41:15', 'agustin@gmail.com'),
+(15, '2025-08-28', 6, '9000000123', 250, 500, 2, 0, '0000-00-00', 0, '2025-08-28 18:14:55', 'agustin@gmail.com', '2025-09-04 11:08:58', 'agustin@gmail.com'),
 (16, '2025-08-28', 4, '9000000586', 250, 482, 0, 550000, NULL, 0, '2025-08-28 18:14:55', 'agustin@gmail.com', '2025-09-03 14:27:45', 'agustin@gmail.com');
 
 -- --------------------------------------------------------
@@ -231,7 +249,7 @@ CREATE TABLE `mt_pengolahan` (
   `kd_pegawai` char(10) NOT NULL,
   `berat_daging` int(10) NOT NULL,
   `berat_kopra` int(10) NOT NULL,
-  `bonus` float NOT NULL,
+  `bonus` int(15) NOT NULL,
   `tg_proses_gaji` date DEFAULT NULL,
   `is_stat_gaji` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
@@ -245,20 +263,20 @@ CREATE TABLE `mt_pengolahan` (
 --
 
 INSERT INTO `mt_pengolahan` (`mt_pengolahan_id`, `tg_pengolahan`, `gudang_id`, `kd_pegawai`, `berat_daging`, `berat_kopra`, `bonus`, `tg_proses_gaji`, `is_stat_gaji`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
-(3, '2025-08-26', 1, '9000000123', 250, 500, 0, NULL, 0, '2025-08-28 18:12:38', 'agustin@gmail.com', '2025-09-03 10:41:14', 'agustin@gmail.com'),
-(4, '2025-08-19', 4, '9000000586', 200, 482, 0, NULL, 0, '2025-08-28 18:12:38', 'agustin@gmail.com', '2025-08-28 18:16:09', ''),
-(5, '2025-08-20', 1, '9000000123', 250, 500, 0, NULL, 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-03 10:41:14', 'agustin@gmail.com'),
-(6, '2025-08-20', 4, '9000000586', 200, 482, 0, NULL, 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-08-28 18:16:09', ''),
-(7, '2025-08-12', 1, '9000000123', 250, 500, 0, NULL, 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-03 10:41:14', 'agustin@gmail.com'),
-(8, '2025-08-14', 4, '9000000586', 200, 482, 0, NULL, 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-08-28 18:16:09', ''),
-(9, '2025-08-14', 1, '9000000123', 250, 500, 0, NULL, 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-03 10:41:15', 'agustin@gmail.com'),
-(10, '2025-08-06', 4, '9000000586', 200, 482, 0, NULL, 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-08-28 18:16:09', ''),
-(11, '2025-08-07', 2, '9000000123', 250, 500, 0, NULL, 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-03 10:41:15', 'agustin@gmail.com'),
-(12, '2025-08-12', 3, '9000000586', 200, 482, 0, '0000-00-00', 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-03 10:41:15', 'agustin@gmail.com'),
-(13, '2025-08-28', 4, '9000000123', 250, 500, 0, '0000-00-00', 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-03 10:41:15', 'agustin@gmail.com'),
-(14, '2025-08-28', 3, '9000000586', 200, 482, 0, '0000-00-00', 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-03 10:41:15', 'agustin@gmail.com'),
-(15, '2025-08-28', 6, '9000000123', 250, 500, 0, '0000-00-00', 0, '2025-08-28 18:14:55', 'agustin@gmail.com', '2025-09-03 10:41:15', 'agustin@gmail.com'),
-(16, '2025-08-28', 4, '9000000586', 200, 482, 500000, NULL, 0, '2025-08-28 18:14:55', 'agustin@gmail.com', '2025-09-03 01:48:43', 'agustin@gmail.com');
+(3, '2025-08-26', 1, '9000000123', 250, 500, 0, '2025-09-04', 1, '2025-08-28 18:12:38', 'agustin@gmail.com', '2025-09-04 10:39:10', 'agustin@gmail.com'),
+(4, '2025-08-19', 4, '9000000586', 200, 482, 0, '2025-09-04', 1, '2025-08-28 18:12:38', 'agustin@gmail.com', '2025-09-04 10:41:06', 'agustin@gmail.com'),
+(5, '2025-08-20', 1, '9000000123', 250, 500, 0, '2025-09-04', 1, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-04 10:39:10', 'agustin@gmail.com'),
+(6, '2025-08-20', 4, '9000000586', 200, 482, 0, '2025-09-04', 1, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-04 10:41:06', 'agustin@gmail.com'),
+(7, '2025-08-12', 1, '9000000123', 250, 500, 0, '2025-09-04', 1, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-04 10:39:10', 'agustin@gmail.com'),
+(8, '2025-08-14', 4, '9000000586', 200, 482, 0, '2025-09-04', 1, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-04 10:41:06', 'agustin@gmail.com'),
+(9, '2025-08-14', 1, '9000000123', 250, 500, 0, '2025-09-04', 1, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-04 10:39:10', 'agustin@gmail.com'),
+(10, '2025-08-06', 4, '9000000586', 200, 482, 0, '2025-09-04', 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-04 10:28:09', 'agustin@gmail.com'),
+(11, '2025-08-07', 2, '9000000123', 250, 500, 0, '2025-09-04', 1, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-04 10:41:06', 'agustin@gmail.com'),
+(12, '2025-08-12', 3, '9000000586', 200, 482, 0, '2025-09-04', 1, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-04 10:41:06', 'agustin@gmail.com'),
+(13, '2025-08-28', 4, '9000000123', 250, 500, 0, '2025-09-04', 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-04 10:28:09', 'agustin@gmail.com'),
+(14, '2025-08-28', 3, '9000000586', 200, 482, 0, '2025-09-04', 0, '2025-08-28 18:14:06', 'agustin@gmail.com', '2025-09-04 10:15:54', 'agustin@gmail.com'),
+(15, '2025-08-28', 6, '9000000123', 250, 500, 0, '2025-09-04', 0, '2025-08-28 18:14:55', 'agustin@gmail.com', '2025-09-04 10:15:54', 'agustin@gmail.com'),
+(16, '2025-08-28', 4, '9000000586', 200, 482, 500000, '2025-09-04', 0, '2025-08-28 18:14:55', 'agustin@gmail.com', '2025-09-04 10:28:09', 'agustin@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -293,10 +311,10 @@ CREATE TABLE `m_gudang` (
   `m_gudang_id` int(10) NOT NULL,
   `nama` varchar(100) NOT NULL,
   `takaran_daging` int(10) NOT NULL DEFAULT 0,
-  `upah_takaran_daging` float NOT NULL DEFAULT 0,
+  `upah_takaran_daging` int(15) NOT NULL DEFAULT 0,
   `takaran_kopra` int(10) NOT NULL DEFAULT 0,
-  `upah_takaran_kopra` float NOT NULL DEFAULT 0,
-  `gaji_driver` float NOT NULL DEFAULT 0,
+  `upah_takaran_kopra` int(15) NOT NULL DEFAULT 0,
+  `gaji_driver` int(15) NOT NULL DEFAULT 0,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `created_by` varchar(100) NOT NULL,
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
@@ -313,7 +331,7 @@ INSERT INTO `m_gudang` (`m_gudang_id`, `nama`, `takaran_daging`, `upah_takaran_d
 (3, 'Gudang Berkah', 0, 0, 0, 0, 0, '2025-08-28 18:04:57', '', '2025-09-02 20:25:48', ''),
 (4, 'Gudang Rejeki', 150, 210000, 300, 450000, 500000, '2025-08-28 18:04:57', '', '2025-09-03 10:06:31', ''),
 (5, 'Gudang Untung', 0, 0, 0, 0, 0, '2025-08-28 18:06:21', '', '2025-09-02 20:25:48', ''),
-(6, 'Gudang Kabul', 0, 0, 0, 0, 0, '2025-08-28 18:06:21', '', '2025-09-02 20:25:48', ''),
+(6, 'Gudang Kabul', 0, 0, 0, 0, 250000, '2025-08-28 18:06:21', '', '2025-09-04 11:10:27', ''),
 (7, 'tes', 0, 500000, 0, 400000, 400000, '2025-09-02 14:36:22', 'agustin@gmail.com', '2025-09-02 14:36:22', '');
 
 -- --------------------------------------------------------
@@ -471,13 +489,13 @@ ALTER TABLE `m_role`
 -- AUTO_INCREMENT for table `mt_gaji_driver`
 --
 ALTER TABLE `mt_gaji_driver`
-  MODIFY `mt_gaji_driver_id` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `mt_gaji_driver_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `mt_gaji_pegawai`
 --
 ALTER TABLE `mt_gaji_pegawai`
-  MODIFY `mt_gaji_pegawai_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `mt_gaji_pegawai_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `mt_komponen_gaji`
