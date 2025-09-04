@@ -81,10 +81,11 @@ function initializeReportGajiDriverTable(data) {
         data: list,
         columns: [
             { data: null, defaultContent: "" },
-            { data: null, defaultContent: "-" },
+            { data: 'tg_proses_gaji', defaultContent: "-" },
             { data: 'nama_driver', defaultContent: "-" },
-            { data: 'upah_perjalanan', defaultContent: "-" },
-            { data: 'bonus', defaultContent: "-" },
+            { data: 'nama_gudang', defaultContent: "-" },
+            { data: 'total_upah_perjalanan', defaultContent: "-" },
+            { data: 'total_bonus', defaultContent: "-" },
             { data: 'total_gaji_bersih', defaultContent: "-" },         
         ],
         columnDefs: [
@@ -95,32 +96,9 @@ function initializeReportGajiDriverTable(data) {
                     return meta.row + meta.settings._iDisplayStart + 1;
                 }
             },
+            { targets: 1, render: (d) => d ? formatTanggal(d) : "-" },
             {
-                targets: 1,
-                render: function () {
-                    const s = _activeFilter.start_date;
-                    if (!s) return '-';
-                    const m = moment(s, 'YYYY-MM-DD', true);
-                    
-                    return m.isValid() ? m.format('MMMM YYYY') : s;
-                }
-            },
-            {
-                targets: 2,
-                render: function(data, type, row, meta) {
-                    var namaDriver = data ? data : "-";
-                    var gudang = row.nama_gudang ? row.nama_gudang : "-";
-
-                    return `
-                        <div class="d-flex flex-column align-items-start">
-                            <span>${namaDriver}</span>
-                            <span>${gudang}</span>
-                        </div>
-                    `;
-                }
-            },
-            {
-                targets: [3,4,5],
+                targets: [4,5,6],
                 render: function(data, type, row, meta) {
                     return formatRupiah(data);
                 }

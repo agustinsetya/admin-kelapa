@@ -326,7 +326,6 @@ class FinanceController extends AuthRequiredController
         ], 201);
     }
 
-    
     public function getDataUpahDriver()
     {
         $roleFilters	= $this->filtersFromUser();
@@ -370,20 +369,20 @@ class FinanceController extends AuthRequiredController
         }
 
         if (empty($input['data']) || !is_array($input['data'])) {
-            return $this->jsonError('Data driver tidak valid.', 422);
+            return $this->jsonError('Data Driver tidak valid.', 422);
         }
 
-        $dataDriver = $input['data'];
+        $dataPegawai = $input['data'];
         $resultUpah = [];
 
-        foreach ($dataDriver as $driver) {
-            if (empty($driver['kdPegawai']) || empty($driver['gudangId'])) {
-                return $this->jsonError('Data driver atau gudang tidak lengkap.', 422);
+        foreach ($dataPegawai as $pegawai) {
+            if (empty($pegawai['kdPegawai']) || empty($pegawai['gudangId'])) {
+                return $this->jsonError('Data pegawai atau gudang tidak lengkap.', 422);
             }
 
             $filters = [
-                'kd_pegawai' => $driver['kdPegawai'],
-                'gudang_id'  => $driver['gudangId'],
+                'kd_pegawai' => $pegawai['kdPegawai'],
+                'gudang_id'  => $pegawai['gudangId'],
                 'start_date' => $periodeStart,
                 'end_date'   => $periodeEnd,
             ];
@@ -391,32 +390,27 @@ class FinanceController extends AuthRequiredController
             $upah = $this->pengirimanModel->getDataUpahPengiriman($filters);
 
             if (empty($upah)) {
-                return $this->jsonError('Upah tidak ditemukan untuk driver: ' . $driver['kdDriver'], 404);
+                return $this->jsonError('Upah tidak ditemukan untuk pegawai: ' . $pegawai['kdPegawai'], 404);
             }
 
             $resultUpah[] = $upah;
         }
 
-        $upahPerjalananDriver = !empty($resultUpah) ? array_merge(...$resultUpah) : [];
+        $upahPengiriman = !empty($resultUpah) ? array_merge(...$resultUpah) : [];
 
-        $roundMoney = function ($n) {
-            return (int) round((float)$n, 0, PHP_ROUND_HALF_UP);
-        };
-
-        foreach ($upahPerjalananDriver as &$row) {
-            $row->gudang_id          = (int)($row->gudang_id ?? 0);
-            $row->upah_perjalanan    = $roundMoney($row->upah_perjalanan ?? 0);
-            $row->bonus_total        = $roundMoney($row->bonus_total ?? 0);
-            $row->total_gaji_bersih  = $roundMoney($row->total_gaji_bersih ?? 0);
+        foreach ($upahPengiriman as &$row) {
+            $row['total_upah_perjalanan']   = $row['total_upah_perjalanan'] ?? 0;
+            $row['total_bonus']             = $row['total_bonus'] ?? 0;
+            $row['total_gaji_bersih']       = $row['total_gaji_bersih'] ?? 0;
         }
-        unset($row);
+        unset($row); 
 
         $saved = $this->gajiDriverModel->prosesGajiDriver(
-                    $upahPerjalananDriver,
-                    $user->email ?? null,
-                    $periodeStart,
-                    $periodeEnd
-                );
+            $user->email ?? null,
+            $periodeStart,
+            $periodeEnd,
+            $upahPengiriman,
+        );
 
         if ($saved === false) {
             $errors = $this->gajiDriverModel->errors() ?: 'Gagal menyimpan data';

@@ -314,4 +314,24 @@ class Validation extends BaseConfig
             'is_natural_no_zero' => 'Gudang tidak valid.',
         ],
     ];
+    
+    public $financeGajiDriver = [
+        'data'             => 'required',
+        'data.*.kdPegawai' => 'required|is_natural_no_zero',
+        'data.*.gudangId'  => 'required|is_natural_no_zero',
+    ];
+
+    public $financeGajiDriver_errors = [
+        'data' => [
+            'required' => 'Data pegawai harus dipilih.',
+        ],
+        'data.*.kdPegawai' => [
+            'required'           => 'Kode Pegawai wajib diisi.',
+            'is_natural_no_zero' => 'Kode Pegawai tidak valid.',
+        ],
+        'data.*.gudangId' => [
+            'required'           => 'Gudang wajib diisi.',
+            'is_natural_no_zero' => 'Gudang tidak valid.',
+        ],
+    ];
 }

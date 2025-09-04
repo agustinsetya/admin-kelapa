@@ -13,8 +13,8 @@ class GajiDriverModel extends Model
         'tg_proses_gaji',
         'kd_pegawai',
         'gudang_id',
-        'upah_perjalanan',
-        'bonus',
+        'total_upah_perjalanan',
+        'total_bonus',
         'total_gaji_bersih',
         'created_at',
         'updated_by',
@@ -30,8 +30,8 @@ class GajiDriverModel extends Model
                     mt_gaji_driver.tg_proses_gaji,
                     mt_gaji_driver.gudang_id,
                     mt_gaji_driver.kd_pegawai,
-                    mt_gaji_driver.upah_perjalanan,
-                    mt_gaji_driver.bonus,
+                    mt_gaji_driver.total_upah_perjalanan,
+                    mt_gaji_driver.total_bonus,
                     mt_gaji_driver.total_gaji_bersih,
                     m_gudang.nama AS nama_gudang,
                     mt_pegawai.nama AS nama_driver,
@@ -45,7 +45,7 @@ class GajiDriverModel extends Model
             $gajiDriver->where('mt_gaji_driver.gudang_id', (int)$filters['gudang_id']);
         }
 
-        if (isset($filters['kd_pegawai']) && is_numeric($filters['kd_pegawai'])) {
+        if (isset($filters['kd_pegawai'])) {
             $gajiDriver->where('mt_gaji_driver.kd_pegawai', (int)$filters['kd_pegawai']);
         }
 
@@ -64,76 +64,67 @@ class GajiDriverModel extends Model
         string $createdBy,
         ?string $periodeStart,
         ?string $periodeEnd,
-        array $upahDriver = [],
-    ): bool
-    {
+        array $upahDriver = []
+    ): bool {
         $this->db->transBegin();
-
+    
         if ($periodeStart) $periodeStart = date('Y-m-d', strtotime($periodeStart));
         if ($periodeEnd)   $periodeEnd   = date('Y-m-d', strtotime($periodeEnd));
-
+    
         foreach ($upahDriver as $row) {
-            if (empty($row->kd_pegawai) || empty($row->gudang_id)) {
+            if (empty($row['kd_pegawai']) || empty($row['gudang_id'])) {
                 log_message('error', 'GAJI FAIL: kd_pegawai/gudang_id kosong');
                 $this->db->transRollback();
                 return false;
             }
-
+    
             $data = [
-                'tg_proses_gaji'    => date('Y-m-d'),
-                'kd_pegawai'        => (int)$row->kd_pegawai,
-                'gudang_id'         => (int)$row->gudang_id,
-                'upah_perjalanan'     => (float)$row->upah_perjalanan,
-                'bonus'             => (float)$row->bonus_total,
-                'total_gaji_bersih' => (float)$row->total_gaji_bersih,
-                'created_by'        => $createdBy,
+                'tg_proses_gaji'        => date('Y-m-d'),
+                'kd_pegawai'            => $row['kd_pegawai'],
+                'gudang_id'             => (int)$row['gudang_id'],
+                'total_upah_perjalanan' => $row['total_upah_perjalanan'] ?? 0,
+                'total_bonus'           => $row['total_bonus'] ?? 0,
+                'total_gaji_bersih'     => $row['total_gaji_bersih'] ?? 0,
+                'created_by'            => $createdBy,
             ];
-
+    
             $saved = $this->insert($data);
             if ($saved === false) {
-                log_message('error', 'GAJI FAIL INSERT data: '. json_encode($data));
+                log_message('error', 'GAJI FAIL INSERT data: ' . json_encode($data));
                 $lastQuery = $this->db->getLastQuery();
                 if ($lastQuery) {
                     log_message('error', 'GAJI FAIL INSERT SQL: ' . $lastQuery->getQuery());
                 }
-                log_message('error', 'GAJI DB-SCHEMA: ' . $this->db->getDatabase());
                 $this->db->transRollback();
                 return false;
             }
         }
-
+    
         foreach ($upahDriver as $row) {
             $tb = $this->db->table('mt_pengiriman')
-                ->where('kd_pegawai', (int)$row->kd_pegawai)
-                ->where('gudang_id',  (int)$row->gudang_id)
+                ->where('kd_pegawai', (int)$row['kd_pegawai'])
+                ->where('gudang_id',  (int)$row['gudang_id'])
                 ->where('is_stat_gaji', 0);
-
+    
             if ($periodeStart && $periodeEnd) {
                 $tb->where('tg_pengiriman >=', $periodeStart)
-                ->where('tg_pengiriman <=', $periodeEnd);
+                   ->where('tg_pengiriman <=', $periodeEnd);
             }
-
+    
             $ok = $tb->set([
-                'is_stat_gaji'      => 1,
-                'tg_proses_gaji'    => $createdBy,
-                'updated_by'        => $createdBy,
+                'is_stat_gaji'   => 1,
+                'tg_proses_gaji' => date('Y-m-d'),
+                'updated_by'     => $createdBy,
             ])->update();
-
+    
             if ($ok === false) {
-                log_message('error', '[UPDATE pengiriman FAIL] ' . $this->db->getLastQuery()->getQuery());
+                $lastQuery = $this->db->getLastQuery();
+                log_message('error', '[UPDATE pengiriman FAIL] ' . ($lastQuery ? $lastQuery->getQuery() : 'No query'));
                 $this->db->transRollback();
                 return false;
             }
         }
-
-        log_message(
-            'debug',
-            '[DEBUG] Upah Produksi SQL: ' . json_encode(
-                $this->db->getLastQuery()->getQuery(),
-                JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE
-            )
-        );
-
+    
         $this->db->transCommit();
         return true;
     }

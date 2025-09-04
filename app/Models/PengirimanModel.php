@@ -74,49 +74,41 @@ class PengirimanModel extends Model
         $start = $filters['start_date'] ?? null;
         $end   = $filters['end_date'] ?? null;
 
-        $upah = $this->select(
-                    "p.kd_pegawai, pg.nama AS nama_pegawai, p.gudang_id, g.nama AS nama_gudang,
-                        COALESCE(SUM( (COALESCE(p.berat_daging,0) / NULLIF(g.takaran_daging,0)) * COALESCE(g.upah_takaran_daging,0) ), 0)
-                            AS upah_total_daging,
-                        COALESCE(SUM( (COALESCE(p.berat_kopra,0) / NULLIF(g.takaran_kopra,0)) * COALESCE(g.upah_takaran_kopra,0) ), 0)
-                            AS upah_total_kopra,
-                        (
-                            COALESCE(SUM( (COALESCE(p.berat_daging,0) / NULLIF(g.takaran_daging,0)) * COALESCE(g.upah_takaran_daging,0) ), 0) +
-                            COALESCE(SUM( (COALESCE(p.berat_kopra,0) / NULLIF(g.takaran_kopra,0)) * COALESCE(g.upah_takaran_kopra,0) ), 0)
-                        ) AS upah_perjalanan,
-                        COALESCE(SUM(COALESCE(p.bonus,0)), 0) AS bonus_total,
-                        (
-                            (
-                                COALESCE(SUM( (COALESCE(p.berat_daging,0) / NULLIF(g.takaran_daging,0)) * COALESCE(g.upah_takaran_daging,0) ), 0) +
-                                COALESCE(SUM( (COALESCE(p.berat_kopra,0) / NULLIF(g.takaran_kopra,0)) * COALESCE(g.upah_takaran_kopra,0) ), 0)
-                            )
-                            + COALESCE(SUM(COALESCE(p.bonus,0)), 0)
-                        ) AS total_gaji_bersih
-                    ", false)
-                ->from('mt_pengiriman p')
-                ->join('m_gudang g', 'g.m_gudang_id = p.gudang_id', 'left')
-                ->join('mt_pegawai pg', 'pg.kd_pegawai = p.kd_pegawai', 'left')
-                ->where('p.is_stat_gaji', 0);
+        $upah = $this->db->table('mt_pengiriman p');
+        $upah->select("
+            p.kd_pegawai, pg.nama AS nama_driver, p.gudang_id, g.nama AS nama_gudang,
+            SUM(ROUND((COALESCE(p.jumlah_perjalanan, 0) * NULLIF(g.gaji_driver, 0)), 0)) AS total_upah_perjalanan,
+            SUM(COALESCE(p.bonus, 0)) AS total_bonus,
+            (
+                SUM(ROUND((COALESCE(p.jumlah_perjalanan, 0) * NULLIF(g.gaji_driver, 0)), 0)) +
+                SUM(COALESCE(p.bonus, 0))
+            ) AS total_gaji_bersih
+        ", false);
 
+        $upah->join('m_gudang g', 'g.m_gudang_id = p.gudang_id', 'left');
+        $upah->join('mt_pegawai pg', 'pg.kd_pegawai = p.kd_pegawai', 'left');
+        $upah->where('p.is_stat_gaji', 0);
+
+        // Filters
         if (!empty($filters['kd_pegawai'])) {
-            $kdPegawai = is_array($filters['kd_pegawai']) ? $filters['kd_pegawai'] : [$filters['kd_pegawai']];
-            $upah->whereIn('p.kd_pegawai', $kdPegawai);
+            $upah->whereIn('p.kd_pegawai', (array) $filters['kd_pegawai']);
         }
 
-        if (isset($filters['gudang_id']) && is_numeric($filters['gudang_id'])) {
-            $upah->where('p.gudang_id', (int)$filters['gudang_id']);
+        if (!empty($filters['gudang_id'])) {
+            $upah->where('p.gudang_id', $filters['gudang_id']);
         }
 
         if (!empty($start)) {
             $upah->where('p.tg_pengiriman >=', $start);
         }
+
         if (!empty($end)) {
             $upah->where('p.tg_pengiriman <=', $end);
         }
 
-        return $upah
-                ->groupBy('p.kd_pegawai, pg.nama, p.gudang_id, g.nama')
-                ->findAll();
+        $upah->groupBy('p.kd_pegawai, p.gudang_id');
+
+        return $upah->get()->getResultArray();
     }
 
     public function saveDataPengiriman(array $data, $pengirimanId = null): bool

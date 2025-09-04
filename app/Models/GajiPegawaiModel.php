@@ -132,5 +132,5 @@ class GajiPegawaiModel extends Model
     
         $this->db->transCommit();
         return true;
-    }    
+    }
 }
