@@ -80,8 +80,8 @@
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
                     <!-- item-->
-                    <a class="dropdown-item" href="apps-contacts-profile"><i class="mdi mdi mdi-face-man font-size-16 align-middle me-1"></i> <?= lang('Files.Profile') ?></a>
-                    <div class="dropdown-divider"></div>
+                    <!-- <a class="dropdown-item" href="apps-contacts-profile"><i class="mdi mdi mdi-face-man font-size-16 align-middle me-1"></i> <?= lang('Files.Profile') ?></a>
+                    <div class="dropdown-divider"></div> -->
                     <a class="dropdown-item" href="<?= url_to('auth-logout-post') ?>"><i class="mdi mdi-logout font-size-16 align-middle me-1"></i><?= lang('Files.Logout') ?></a>
                 </div>
             </div>
