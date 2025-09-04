@@ -8,63 +8,6 @@ $((function () {
     } else {
         console.error('Role scope tidak valid');
     }
-
-    $("body").on("click", "#btn-save-komponen-gaji", function (e) {
-        e.preventDefault();
-    
-        var form = $("#detail-komponen-gaji-form")[0];
-    
-        if (form.checkValidity() === false) {
-            e.stopPropagation();
-            form.classList.add("was-validated");
-            return;
-        }
-
-        const $upahDaging = $("#upah-takaran-daging-kelapa");
-        const $upahKopra  = $("#upah-takaran-kopra-kelapa");
-
-        $upahDaging.val(unmaskRupiah($upahDaging.val()));
-        $upahKopra.val(unmaskRupiah($upahKopra.val()));
-    
-        const formData = $("#detail-komponen-gaji-form").serialize();
-    
-        $.ajax({
-            url: base_url + '/master/komponen-gaji',
-            method: "POST",
-            data: formData,
-            beforeSend: () => {
-                showBtnLoading("btn-save-komponen-gaji", { text: "Menyimpan Data..." });
-            },
-            success: function (response) {
-                resetButton(
-                    "btn-save-komponen-gaji",
-                    "Simpan",
-                    "btn btn-primary waves-effect waves-light"
-                );
-        
-                if (response.success) {
-                    alert("Simpan Komponen Gaji Berhasil!");
-                } else {
-                    alert(response?.message || "Simpan Data Gagal!");
-                }
-            },
-            error: function (jqXHR) {
-                const payload = jqXHR.responseJSON || {};
-                const message =
-                    payload.code === 422
-                    ? "Data tidak valid"
-                    : payload.message || "Terjadi kesalahan saat menyimpan";
-                alert(message);
-
-                resetButton(
-                    "btn-save-komponen-gaji",
-                    "Simpan",
-                    "btn btn-primary waves-effect waves-light"
-                );
-                alert("error", payload);
-            },
-        });
-    });
 }));
 
 function applyFilter() {
@@ -77,7 +20,7 @@ function applyFilter() {
 
 function getDataKomponenGaji() {
     return $.ajax({
-        url:  base_url + '/master/komponen-gaji/data',
+        url:  base_url + 'report/komponen-gaji/data',
         method: 'GET',
         dataType: 'json'
     });
@@ -100,12 +43,13 @@ function initializeKomponenGajiTable(data) {
             data: isDataInvalid ? [] : safeData,
             columns: [
                 { data: null, defaultContent: "" },
+                { data: 'created_at', defaultContent: "-" },          
                 { data: 'nama_gudang', defaultContent: "-" },
                 { data: 'takaran_daging', defaultContent: "-" },          
                 { data: 'upah_takaran_daging', defaultContent: "-" },          
                 { data: 'takaran_kopra', defaultContent: "-" },          
                 { data: 'upah_takaran_kopra', defaultContent: "-" },          
-                { data: 'updated_at', defaultContent: "-" },          
+                { data: 'gaji_driver', defaultContent: "-" },          
             ],
             columnDefs: [
                 // Additional column
@@ -116,15 +60,15 @@ function initializeKomponenGajiTable(data) {
                     }
                 },
                 {
-                    targets: [3,5],
+                    targets: 1,
                     render: function(data, type, row, meta) {
-                        return formatRupiah(data);
+                        return formatTanggal(data);
                     }
                 },
                 {
-                    targets: 6,
+                    targets: [4,6,7],
                     render: function(data, type, row, meta) {
-                        return formatTanggal(data);
+                        return formatRupiah(data);
                     }
                 },
             ],
@@ -138,87 +82,4 @@ function initializeKomponenGajiTable(data) {
                 't<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
         });
     }
-}
-
-function getDetailKomponenGaji() {
-    $.ajax({
-        url: base_url + "/master/komponen-gaji/detail",
-        method: "GET",
-        success: function (response) {
-            if (response && response['data'] && response['data'].length > 0) {
-                var komponen = response['data'][0];
-
-                $('#takaran-daging-kelapa').val(komponen.takaran_daging);
-                $('#upah-takaran-daging-kelapa').val(formatRupiah(komponen.upah_takaran_daging));
-                $('#takaran-kopra-kelapa').val(komponen.takaran_kopra);
-                $('#upah-takaran-kopra-kelapa').val(formatRupiah(komponen.upah_takaran_kopra));
-            } else {
-            alert("Data tidak ditemukan!");
-            }
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            alert("Terjadi kesalahan: " + textStatus);
-        },
-    });
-}
-
-function formatTanggal(tanggal) {
-    const date = new Date(tanggal);
-    const day = date.getDate();
-    const month = date.toLocaleString("id-ID", { month: "long" });
-    const year = date.getFullYear();
-    return `${day} ${month} ${year}`;
-}
-
-function formatRupiah(angka) {
-    if (angka == null || isNaN(angka)) return "";
-    return "Rp. " + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-};
-
-function unmaskRupiah(str) {
-    return (str || '').toString().replace(/[^\d]/g, '');
-}
-
-function showBtnLoading(btnId, options = {}) {
-    const $btn = $("#" + btnId);
-
-    // Simpan HTML & class asli kalau belum disimpan
-    if (!$btn.data("original-html")) {
-        $btn.data("original-html", $btn.html());
-        $btn.data("original-class", $btn.attr("class"));
-    }
-
-    // Opsi default
-    const defaults = {
-        text: "Loading",
-        icon: "bx bx-hourglass bx-spin font-size-16 align-middle me-2",
-        class: "btn btn-light waves-effect",
-        disabled: true,
-    };
-
-    const settings = { ...defaults, ...options };
-
-    // Update tombol jadi loading
-    $btn
-        .removeClass()
-        .addClass(settings.class)
-        .prop("disabled", settings.disabled)
-        .html(`<i class="${settings.icon}"></i> ${settings.text}`
-    );
-}
-
-function resetButton(btnId) {
-    const $btn = $("#" + btnId);
-
-    const originalHtml = $btn.data("original-html");
-    const originalClass = $btn.data("original-class");
-
-    if (originalHtml !== undefined) {
-        $btn.html(originalHtml);
-    }
-    if (originalClass !== undefined) {
-        $btn.removeClass().addClass(originalClass);
-    }
-
-    $btn.prop("disabled", false);
 }

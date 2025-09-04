@@ -7,6 +7,8 @@ use App\Models\KategoriPengeluaranModel;
 use App\Models\GudangModel;
 use App\Models\PegawaiModel;
 use App\Models\PengolahanModel;
+use App\Models\PengirimanModel;
+use App\Models\GajiDriverModel;
 use App\Models\GajiPegawaiModel;
 use App\Controllers\Concerns\ApiResponse;
 
@@ -19,6 +21,8 @@ class FinanceController extends AuthRequiredController
 	protected $gudangModel;
     protected $pegawaiModel;
     protected $pengolahanModel;
+    protected $pengirimanModel;
+    protected $gajiDriverModel;
     protected $gajiPegawaiModel;
 
 	public function __construct()
@@ -28,6 +32,8 @@ class FinanceController extends AuthRequiredController
 		$this->gudangModel = new GudangModel();
         $this->pegawaiModel = new PegawaiModel();
         $this->pengolahanModel = new PengolahanModel();
+        $this->pengirimanModel = new PengirimanModel();
+        $this->gajiDriverModel = new GajiDriverModel();
         $this->gajiPegawaiModel = new GajiPegawaiModel();
     }
 
@@ -76,7 +82,8 @@ class FinanceController extends AuthRequiredController
 				'title' => 'Gaji_Driver',
 				'li_1'  => lang('Files.Finance'),
 				'li_2'  => lang('Files.Gaji_Driver')
-			])
+            ]),
+            'gudang'    => $this->gudangModel->getDataGudang(),
 		];
 		
 		return view('finance-gaji-driver', $data);
@@ -290,7 +297,7 @@ class FinanceController extends AuthRequiredController
             $resultUpah[] = $upah;
         }
 
-        $upahProduksiPegawai = array_merge(...$resultUpah);
+        $upahProduksiPegawai = !empty($resultUpah) ? array_merge(...$resultUpah) : [];
 
         $roundMoney = function ($n) {
             return (int) round((float)$n, 0, PHP_ROUND_HALF_UP);
@@ -321,6 +328,108 @@ class FinanceController extends AuthRequiredController
         // 201 Created
         return $this->jsonSuccess([
             'message' => 'Gaji Pegawai Berhasil diproses.',
+        ], 201);
+    }
+    
+    public function getDataUpahDriver()
+    {
+        $roleFilters	= $this->filtersFromUser();
+
+		$gudangId 		= $this->request->getGet('gudang_id') ?? null;
+		$start			= $this->request->getGet('start_date') ?? null;
+		$end			= $this->request->getGet('end_date') ?? null;
+
+		$queryFilters = [];
+		
+		if (($user->role_scope ?? null) !== 'gudang' && !empty($gudangId)) {
+			$queryFilters['gudang_id'] = $gudangId;
+		}
+		if (!empty($start)) $queryFilters['start_date'] = $start;
+		if (!empty($end))   $queryFilters['end_date']   = $end;
+
+		$filters = array_merge($queryFilters, $roleFilters);
+
+        $upahPerjalananDriver = $this->pengirimanModel->getDataUpahPengiriman($filters);
+
+        return $this->jsonSuccess(['data' => $upahPerjalananDriver]);
+    }
+
+    public function addDetailGajiDriver()
+    {
+        $user = session()->get('user');
+        if (!$user) {
+            return $this->jsonError('Tidak terautentik', 401);
+        }
+
+        $input = $this->request->getJSON(true);
+        if (!$input) $input = $this->request->getPost();
+
+        $periodeStart = $input['start_date'] ?? null;
+        $periodeEnd   = $input['end_date']   ?? null;
+
+        if (!$this->validate('financeGajiDriver')) {
+            return $this->jsonError('Validasi gagal', 422, [
+                'errors' => $this->validator->getErrors(),
+            ]);
+        }
+
+        if (empty($input['data']) || !is_array($input['data'])) {
+            return $this->jsonError('Data driver tidak valid.', 422);
+        }
+
+        $dataDriver = $input['data'];
+        $resultUpah = [];
+
+        foreach ($dataDriver as $driver) {
+            if (empty($driver['kdPegawai']) || empty($driver['gudangId'])) {
+                return $this->jsonError('Data driver atau gudang tidak lengkap.', 422);
+            }
+
+            $filters = [
+                'kd_pegawai' => $driver['kdPegawai'],
+                'gudang_id'  => $driver['gudangId'],
+                'start_date' => $periodeStart,
+                'end_date'   => $periodeEnd,
+            ];
+
+            $upah = $this->pengirimanModel->getDataUpahPengiriman($filters);
+
+            if (empty($upah)) {
+                return $this->jsonError('Upah tidak ditemukan untuk driver: ' . $driver['kdDriver'], 404);
+            }
+
+            $resultUpah[] = $upah;
+        }
+
+        $upahPerjalananDriver = !empty($resultUpah) ? array_merge(...$resultUpah) : [];
+
+        $roundMoney = function ($n) {
+            return (int) round((float)$n, 0, PHP_ROUND_HALF_UP);
+        };
+
+        foreach ($upahPerjalananDriver as &$row) {
+            $row->gudang_id          = (int)($row->gudang_id ?? 0);
+            $row->upah_perjalanan    = $roundMoney($row->upah_perjalanan ?? 0);
+            $row->bonus_total        = $roundMoney($row->bonus_total ?? 0);
+            $row->total_gaji_bersih  = $roundMoney($row->total_gaji_bersih ?? 0);
+        }
+        unset($row);
+
+        $saved = $this->gajiDriverModel->prosesGajiDriver(
+                    $upahPerjalananDriver,
+                    $user->email ?? null,
+                    $periodeStart,
+                    $periodeEnd
+                );
+
+        if ($saved === false) {
+            $errors = $this->gajiDriverModel->errors() ?: 'Gagal menyimpan data';
+            return $this->jsonError($errors, 500);
+        }
+
+        // 201 Created
+        return $this->jsonSuccess([
+            'message' => 'Gaji Driver Berhasil diproses.',
         ], 201);
     }
 

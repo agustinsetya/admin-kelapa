@@ -35,7 +35,7 @@ class SupplyChainController extends AuthRequiredController
 	public function showDataPembelian()
     {
         $roleScope = session()->get('role_scope');
-
+        
         $data = [
             'title_meta' => view('partials/title-meta', ['title' => 'Data_Pembelian']),
             'page_title' => view('partials/page-title', [
@@ -45,6 +45,7 @@ class SupplyChainController extends AuthRequiredController
             ]),
             'gudang'    => $this->gudangModel->getDataGudang(),
             'roleScope' => $roleScope,
+            'penempatan' => $user->penempatan_id ?? '',
         ];
 
         return view('supply-data-pembelian', $data);
@@ -53,9 +54,10 @@ class SupplyChainController extends AuthRequiredController
     public function showDataPengolahan()
     {
         $roleScope = session()->get('role_scope');
-        $filters = [
-            'gudang_id' => session()->get('user')->penempatan_id,
-        ];
+        $filters = array_merge(
+            $this->filtersFromUser(),
+            ['role_id_not' => 6]
+        );
 
         $data = [
             'title_meta' => view('partials/title-meta', ['title' => 'Data_Pengolahan']),
@@ -75,9 +77,10 @@ class SupplyChainController extends AuthRequiredController
     public function showDataPengiriman()
     {
         $roleScope = session()->get('role_scope');
-        $filters = [
-            'gudang_id' => session()->get('user')->penempatan_id,
-        ];
+        $filters = array_merge(
+            $this->filtersFromUser(),
+            ['role_id' => 6]
+        );
 
         $data = [
             'title_meta' => view('partials/title-meta', ['title' => 'Data_Pengiriman']),

@@ -37,74 +37,6 @@ $((function () {
 
         applyFilterGajiDriver();
     });
-
-    $("body").on("click", "#btn-proses-gaji-driver", function () {
-        let selectedData = [];
-        const buttonId = this.id;
-    
-        $(".proses-gaji-driver:checked").each(function () {
-            const dataPeg = String($(this).data("id") || '');
-            const [kdDriver, gudangId] = dataPeg.split("#");
-            if (kdDriver && gudangId) {
-                selectedData.push({ kdDriver, gudangId });
-            }
-        });
-    
-        if (!selectedData.length) {
-            alert("Tidak ada data karyawan yang dipilih!");
-            return;
-        }
-
-        let { start_date, end_date } = _activeFilter;
-        if (!start_date || !end_date) {
-            const r = getIsoRange('tg_periode_filter');
-            start_date = r.start;
-            end_date   = r.end;
-        }
-
-        showBtnLoading(buttonId, { text: "Proses Gaji Driver..." });
-
-        $.ajax({
-            url: base_url + '/finance/gaji-driver/add',
-            method: 'POST',
-            dataType: 'json',
-            contentType: 'application/json; charset=utf-8',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            data: JSON.stringify({ data: selectedData, start_date, end_date })
-        })
-        .done(function (response) {
-            if (response?.csrf?.name && response?.csrf?.hash) {
-                $('meta[name="csrf-token-name"]').attr('content', response.csrf.name);
-                $('meta[name="csrf-token"]').attr('content', response.csrf.hash);
-            }
-
-            if (response?.success) {
-                alert('Proses Gaji Driver Berhasil!');
-                applyFilterGajiDriver(_activeFilter.gudang, _activeFilter.start_date, _activeFilter.end_date);
-            } else {
-                alert(response?.message || 'Proses Gaji Driver Gagal!');
-            }
-        })
-        .fail(function (jqXHR) {
-            try {
-                const res = jqXHR.responseJSON;
-                if (res?.csrf?.name && res?.csrf?.hash) {
-                    $('meta[name="csrf-token-name"]').attr('content', res.csrf.name);
-                    $('meta[name="csrf-token"]').attr('content', res.csrf.hash);
-                }
-                const msg = res?.message || res?.error || 'Terjadi kesalahan saat menyimpan';
-                alert(msg);
-            } catch (e) {
-                alert('Terjadi kesalahan. Cek konsol.');
-                console.error('Save error:', jqXHR.status, jqXHR.responseText);
-            }
-        })
-        .always(function () {
-            resetButton(buttonId,"Proses Gaji","btn btn-warning waves-effect waves-light");
-        });
-    });
 }));
 
 function applyFilterGajiDriver(gudang = null, start = '', end = '') {
@@ -114,7 +46,7 @@ function applyFilterGajiDriver(gudang = null, start = '', end = '') {
 
     getDataGajiDriver(_activeFilter.gudang, _activeFilter.start_date, _activeFilter.end_date).done(function(response) {
         const rows = Array.isArray(response?.data) ? response.data : [];
-        initializeFinanceGajiDriverTable(rows);
+        initializeReportGajiDriverTable(rows);
     }).fail(function(jqXHR, textStatus, errorThrown) {
         console.error("Request failed: " + textStatus + ", " + errorThrown);
     });
@@ -122,7 +54,7 @@ function applyFilterGajiDriver(gudang = null, start = '', end = '') {
 
 function getDataGajiDriver(gudang = null, start = '', end = '') {
     return $.ajax({
-        url: base_url + '/finance/gaji-driver/data',
+        url: base_url + 'report/gaji-driver/data',
         method: 'GET',
         data: {
             gudang_id: gudang,
@@ -133,28 +65,27 @@ function getDataGajiDriver(gudang = null, start = '', end = '') {
     });
 }
 
-function initializeFinanceGajiDriverTable(data) {
-    const $dgp = $(".dt-gajiDriverTable").first();
+function initializeReportGajiDriverTable(data) {
+    const $drd = $(".dt-reportGajiDriverTable").first();
     const list = Array.isArray(data) ? data : [];
 
-    if ($.fn.dataTable.isDataTable($dgp)) {
-        const dt = $dgp.DataTable();
+    if ($.fn.dataTable.isDataTable($drd)) {
+        const dt = $drd.DataTable();
         dt.clear();
         if (list.length) dt.rows.add(list);
         dt.draw(false);
         return;
     }
 
-    $dgp.DataTable({
+    $drd.DataTable({
         data: list,
         columns: [
             { data: null, defaultContent: "" },
             { data: null, defaultContent: "-" },
             { data: 'nama_driver', defaultContent: "-" },
             { data: 'upah_perjalanan', defaultContent: "-" },
-            { data: 'bonus_total', defaultContent: "-" },
-            { data: 'total_gaji_bersih', defaultContent: "-" },
-            { data: null, defaultContent: "" }             
+            { data: 'bonus', defaultContent: "-" },
+            { data: 'total_gaji_bersih', defaultContent: "-" },         
         ],
         columnDefs: [
             // Additional column
@@ -189,26 +120,11 @@ function initializeFinanceGajiDriverTable(data) {
                 }
             },
             {
-                targets: [3,4,5,6],
+                targets: [3,4,5],
                 render: function(data, type, row, meta) {
                     return formatRupiah(data);
                 }
             },
-            {
-                targets: 7,
-                className: 'no-export',
-                title: 'Action',
-                orderable: false,
-                searchable: false,
-                className: 'align-middle dt-actions text-nowrap',
-                width: '72px',
-                render: function (data, type, row, meta) {
-                    return (
-                        '<div class="d-flex flex-column align-items-center"><input type="checkbox" class="form-check-input proses-gaji-driver" data-id="' +
-                        row.kd_driver + '#' + row.gudang_id + '"/></div>'
-                    );
-                }
-            }
         ],
         lengthChange: false,
         buttons: ['excel'],

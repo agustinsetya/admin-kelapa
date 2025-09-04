@@ -30,6 +30,7 @@ class GajiDriverModel extends Model
                     mt_gaji_driver.tg_proses_gaji,
                     mt_gaji_driver.gudang_id,
                     mt_gaji_driver.kd_pegawai,
+                    mt_gaji_driver.upah_perjalanan,
                     mt_gaji_driver.bonus,
                     mt_gaji_driver.total_gaji_bersih,
                     m_gudang.nama AS nama_gudang,
@@ -60,10 +61,10 @@ class GajiDriverModel extends Model
     }
 
     public function prosesGajiDriver(
-        array $upahDriver = [],
         string $createdBy,
         ?string $periodeStart,
-        ?string $periodeEnd
+        ?string $periodeEnd,
+        array $upahDriver = [],
     ): bool
     {
         $this->db->transBegin();

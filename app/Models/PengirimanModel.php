@@ -69,7 +69,7 @@ class PengirimanModel extends Model
         return $pengiriman->findAll();
     }
     
-    public function getDataUpahDriver(array $filters = []): array
+    public function getDataUpahPengiriman(array $filters = []): array
     {
         $start = $filters['start_date'] ?? null;
         $end   = $filters['end_date'] ?? null;
@@ -83,7 +83,7 @@ class PengirimanModel extends Model
                         (
                             COALESCE(SUM( (COALESCE(p.berat_daging,0) / NULLIF(g.takaran_daging,0)) * COALESCE(g.upah_takaran_daging,0) ), 0) +
                             COALESCE(SUM( (COALESCE(p.berat_kopra,0) / NULLIF(g.takaran_kopra,0)) * COALESCE(g.upah_takaran_kopra,0) ), 0)
-                        ) AS upah_produksi,
+                        ) AS upah_perjalanan,
                         COALESCE(SUM(COALESCE(p.bonus,0)), 0) AS bonus_total,
                         (
                             (

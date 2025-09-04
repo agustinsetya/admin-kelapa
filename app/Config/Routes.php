@@ -109,7 +109,8 @@ $routes->group('finance', ['filter' => 'auth'], function ($routes) {
     $routes->post('pengeluaran/add', 'FinanceController::addDetailPengeluaran', ['as' => 'finance-add-pengeluaran']);
     $routes->patch('pengeluaran/update', 'FinanceController::updateDetailPengeluaran', ['as' => 'finance-update-pengeluaran']);
     $routes->get('gaji-driver', 'FinanceController::showDataGajiDriver', ['as' => 'finance-gaji-driver']);
-    $routes->get('gaji-driver/data', 'FinanceController::getDataGajiDriver', ['as' => 'finance-data-gaji-driver']);
+    $routes->get('gaji-driver/data', 'FinanceController::getDataUpahDriver', ['as' => 'finance-data-gaji-driver']);
+    $routes->post('gaji-driver/add', 'FinanceController::addDetailGajiDriver', ['as' => 'finance-add-gaji-driver']);
     $routes->get('gaji-pegawai', 'FinanceController::showDataGajiPegawai', ['as' => 'finance-gaji-pegawai']);
     $routes->get('gaji-pegawai/data', 'FinanceController::getDataUpahPegawai', ['as' => 'finance-data-gaji-pegawai']);
     $routes->post('gaji-pegawai/add', 'FinanceController::addDetailGajiPegawai', ['as' => 'finance-add-gaji-pegawai']);
@@ -122,6 +123,7 @@ $routes->group('report', ['filter' => 'auth'], function ($routes) {
     $routes->get('komponen-gaji', 'ReportController::showReportKomponenGaji', ['as' => 'report-komponen-gaji']);
     $routes->get('komponen-gaji/data', 'ReportController::getReportKomponenGaji', ['as' => 'report-komponen-gaji-data']);
     $routes->get('gaji-driver', 'ReportController::showReportGajiDriver', ['as' => 'report-gaji-driver']);
+    $routes->get('gaji-driver/data', 'ReportController::getReportGajiDriver', ['as' => 'report-data-gaji-driver']);
     $routes->get('gaji-pegawai', 'ReportController::showReportGajiPegawai', ['as' => 'report-gaji-pegawai']);
     $routes->get('gaji-pegawai/data', 'ReportController::getReportGajiPegawai', ['as' => 'report-data-gaji-pegawai']);
 });

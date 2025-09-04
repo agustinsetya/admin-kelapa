@@ -47,6 +47,10 @@ class PegawaiModel extends Model
             $user->where('mt_pegawai.role_id', (int)$filters['role_id']);
         }
 
+        if (isset($filters['role_id_not']) && is_numeric($filters['role_id_not'])) {
+            $user->where('mt_pegawai.role_id !=' . (int)$filters['role_id_not']);
+        }        
+
         if (isset($filters['gudang_id']) && is_numeric($filters['gudang_id'])) {
             $user->where('mt_pegawai.penempatan_id', (int)$filters['gudang_id']);
         }

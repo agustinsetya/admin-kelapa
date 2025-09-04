@@ -64,10 +64,10 @@ class GajiPegawaiModel extends Model
     }
 
     public function prosesGajiPegawai(
-        array $upahPegawai = [],
         string $createdBy,
         ?string $periodeStart,
-        ?string $periodeEnd
+        ?string $periodeEnd,
+        array $upahPegawai = [],
     ): bool
     {
         $this->db->transBegin();

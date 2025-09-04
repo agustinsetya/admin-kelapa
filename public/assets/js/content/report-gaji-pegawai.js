@@ -46,7 +46,7 @@ function applyFilterGajiPegawai(gudang = null, start = '', end = '') {
     getDataGajiPegawai(_activeFilter.gudang, _activeFilter.start_date, _activeFilter.end_date)
         .done(function(response) {
             const rows = Array.isArray(response?.data) ? response.data : [];
-            initializeFinanceGajiPegawaiTable(rows);
+            initializeReportGajiPegawaiTable(rows);
         })
         .fail(function(jqXHR, textStatus, errorThrown) {
             console.error("Request failed: " + textStatus + ", " + errorThrown);
@@ -55,7 +55,7 @@ function applyFilterGajiPegawai(gudang = null, start = '', end = '') {
 
 function getDataGajiPegawai(gudang = null, start = '', end = '') {
     return $.ajax({
-        url: base_url + '/report/gaji-pegawai/data',
+        url: base_url + 'report/gaji-pegawai/data',
         method: 'GET',
         data: {
             gudang_id: gudang,
@@ -66,7 +66,7 @@ function getDataGajiPegawai(gudang = null, start = '', end = '') {
     });
 }
 
-function initializeFinanceGajiPegawaiTable(data) {
+function initializeReportGajiPegawaiTable(data) {
     const $dgp = $(".dt-reportGajiPegawaiTable").first();
     const list = Array.isArray(data) ? data : [];
 

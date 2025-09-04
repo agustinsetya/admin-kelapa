@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\PengolahanModel;
 use App\Models\GajiPegawaiModel;
+use App\Models\GajiDriverModel;
 use App\Models\KomponenGajiModel;
 use App\Models\GudangModel;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -15,6 +16,7 @@ class ReportController extends AuthRequiredController
 
     protected $pengolahanModel;
     protected $gajiPegawaiModel;
+    protected $gajiDriverModel;
     protected $komponenGajiModel;
     protected $gudangModel;
 
@@ -22,13 +24,14 @@ class ReportController extends AuthRequiredController
     {
         $this->pengolahanModel = new PengolahanModel();
         $this->gajiPegawaiModel = new GajiPegawaiModel();
+        $this->gajiDriverModel = new GajiDriverModel();
         $this->komponenGajiModel = new KomponenGajiModel();
         $this->gudangModel = new GudangModel();
     }
 
     public function showReportPengolahan()
     {
-        $gudang = $this->gudangModel->findAll();
+        $gudang = $this->gudangModel->getDataGudang();
 
         $data = [
 			'title_meta' => view('partials/title-meta', [
@@ -43,6 +46,23 @@ class ReportController extends AuthRequiredController
 		];
 
         return view('report-pengolahan', $data);
+    }
+    
+    public function showReportKomponenGaji()
+    {
+        $roleScope = session()->get('role_scope');
+
+        $data = [
+            'title_meta' => view('partials/title-meta', ['title' => 'Komponen_Gaji']),
+            'page_title' => view('partials/page-title', [
+                'title' => 'Komponen_Gaji',
+                'li_1'  => lang('Files.Report'),
+                'li_2'  => lang('Files.Komponen_Gaji'),
+            ]),
+            'roleScope' => $roleScope,
+        ];
+
+        return view('report-komponen-gaji', $data);
     }
 
     public function showReportGajiPegawai()
@@ -60,6 +80,23 @@ class ReportController extends AuthRequiredController
 		];
 		
 		return view('report-gaji-pegawai', $data);
+	}
+    
+    public function showReportGajiDriver()
+	{
+		$data = [
+			'title_meta' => view('partials/title-meta', [
+				'title' => 'Report_Gaji_Driver'
+			]),
+			'page_title' => view('partials/page-title', [
+				'title' => 'Report_Gaji_Driver',
+				'li_1'  => lang('Files.Report'),
+				'li_2'  => lang('Files.Report_Gaji_Driver')
+            ]),
+            'gudang'    => $this->gudangModel->getDataGudang(),
+		];
+		
+		return view('report-gaji-driver', $data);
 	}
 
     public function getReportPengolahan(): ResponseInterface
@@ -121,22 +158,28 @@ class ReportController extends AuthRequiredController
 
         return $this->jsonSuccess(['data' => $gajiPegawai]);
     }
-
-    public function showReportKomponenGaji()
+    
+    public function getReportGajiDriver()
     {
-        $roleScope = session()->get('role_scope');
+        $roleFilters	= $this->filtersFromUser();
 
-        $data = [
-            'title_meta' => view('partials/title-meta', ['title' => 'Komponen_Gaji']),
-            'page_title' => view('partials/page-title', [
-                'title' => 'Komponen_Gaji',
-                'li_1'  => lang('Files.Report'),
-                'li_2'  => lang('Files.Komponen_Gaji'),
-            ]),
-            'roleScope' => $roleScope,
-        ];
+		$gudangId 		= $this->request->getGet('gudang_id') ?? null;
+		$start			= $this->request->getGet('start_date') ?? null;
+		$end			= $this->request->getGet('end_date') ?? null;
 
-        return view('report-komponen-gaji', $data);
+		$queryFilters = [];
+		
+		if (($user->role_scope ?? null) !== 'gudang' && !empty($gudangId)) {
+			$queryFilters['gudang_id'] = $gudangId;
+		}
+		if (!empty($start)) $queryFilters['start_date'] = $start;
+		if (!empty($end))   $queryFilters['end_date']   = $end;
+
+		$filters = array_merge($queryFilters, $roleFilters);
+
+        $gajiDriver = $this->gajiDriverModel->getDataGajiDriver($filters);
+
+        return $this->jsonSuccess(['data' => $gajiDriver]);
     }
 
     public function getReportKomponenGaji()

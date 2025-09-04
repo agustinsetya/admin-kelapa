@@ -41,8 +41,8 @@ $((function () {
         const $bonus_produksi = $("#bonus_produksi");
         $bonus_produksi.val(unmaskRupiah($bonus_produksi.val()));
 
-        let url = '/supply-chain/pengolahan/add';
-        if (action === 'edit') url = '/supply-chain/pengolahan/update';
+        let url = 'supply-chain/pengolahan/add';
+        if (action === 'edit') url = 'supply-chain/pengolahan/update';
 
         let payload = $(form).serialize();
         if (action === 'edit' && id) payload += '&id=' + encodeURIComponent(id);
@@ -107,7 +107,7 @@ function applyFilterPengolahan() {
 
 function getDataSupplyPengolahan() {
     return $.ajax({
-        url: base_url + '/supply-chain/pengolahan/data',
+        url: base_url + 'supply-chain/pengolahan/data',
         method: 'GET',
         dataType: 'json'
     });
@@ -202,7 +202,7 @@ function getDetailSupplyPengolahan(button) {
     var id = $(button).data("id");
 
     $.ajax({
-        url: base_url + '/supply-chain/pengolahan/detail',
+        url: base_url + 'supply-chain/pengolahan/detail',
         method: "GET",
         data: {
             id: id,
