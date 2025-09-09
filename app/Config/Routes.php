@@ -54,7 +54,7 @@ $routes->get('dashboard', 'HomeController::index', [
 ]);
 
 // Data Utama / Master
-$routes->group('master', ['filter' => 'auth|role:1'], function ($routes) {
+$routes->group('master', ['filter' => 'auth', 'role:1'], function ($routes) {
     $routes->get('user-roles', 'DataUtamaController::showDataUserRoles', ['as' => 'master-user-roles']);
     $routes->get('user-roles/data', 'DataUtamaController::getDataUserRoles', ['as' => 'master-user-roles-data']);
     $routes->get('user-roles/detail', 'DataUtamaController::getDetailUserRoles', ['as' => 'master-detail-user-roles']);
