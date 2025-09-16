@@ -30,6 +30,9 @@ $((function () {
         const $upah_takaran_kopra = $("#upah_takaran_kopra");
         $upah_takaran_kopra.val(unmaskRupiah($upah_takaran_kopra.val()));
         
+        const $upah_takaran_kulit = $("#upah_takaran_kulit");
+        $upah_takaran_kulit.val(unmaskRupiah($upah_takaran_kulit.val()));
+        
         const $gaji_driver = $("#gaji_driver");
         $gaji_driver.val(unmaskRupiah($gaji_driver.val()));
 
@@ -126,6 +129,8 @@ function initializeMasterGudangTable(data) {
             { data: 'upah_takaran_daging', defaultContent: "-" },          
             { data: 'takaran_kopra', defaultContent: "-" },          
             { data: 'upah_takaran_kopra', defaultContent: "-" },     
+            { data: 'takaran_kulit', defaultContent: "-" },          
+            { data: 'upah_takaran_kulit', defaultContent: "-" },     
             { data: 'gaji_driver', defaultContent: "-" },     
             { data: null, defaultContent: "" }             
         ],
@@ -137,14 +142,15 @@ function initializeMasterGudangTable(data) {
                     return meta.row + meta.settings._iDisplayStart + 1;
                 }
             },
+            { targets: [2,4,6], render: (d) => d ? formatAngkaDecimal(d) : "-" },
             {
-                targets: [3,5,6],
+                targets: [3,5,7,8],
                 render: function(data, type, row, meta) {
                     return formatRupiah(data);
                 }
             },
             {
-                targets: 7,
+                targets: 9,
                 className: 'no-export',
                 title: 'Action',
                 orderable: false,
@@ -216,6 +222,8 @@ function openModalGudang(mode, data = null) {
         $("#upah_takaran_daging").val(formatRupiah(data.upah_takaran_daging));
         $("#takaran_kopra_kelapa").val(data.takaran_kopra_kelapa ?? 0);
         $("#upah_takaran_kopra").val(formatRupiah(data.upah_takaran_kopra));
+        $("#takaran_kulit_kelapa").val(data.takaran_kulit_kelapa ?? 0);
+        $("#upah_takaran_kulit").val(formatRupiah(data.upah_takaran_kulit));
         $("#gaji_driver").val(formatRupiah(data.gaji_driver));
         
         $("#master-gudang-form").data("action", "edit");

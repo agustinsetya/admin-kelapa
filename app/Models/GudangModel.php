@@ -15,6 +15,8 @@ class GudangModel extends Model
         'upah_takaran_daging',
         'takaran_kopra',
         'upah_takaran_kopra',
+        'takaran_kulit',
+        'upah_takaran_kulit',
         'gaji_driver',
         'created_by',
         'updated_by',
@@ -34,6 +36,8 @@ class GudangModel extends Model
                     m_gudang.upah_takaran_daging,
                     m_gudang.takaran_kopra,
                     m_gudang.upah_takaran_kopra,
+                    m_gudang.takaran_kulit,
+                    m_gudang.upah_takaran_kulit,
                     m_gudang.gaji_driver,
                 ');
 
@@ -67,6 +71,8 @@ class GudangModel extends Model
             'upah_takaran_daging'   => $data['upah_takaran_daging'] ?? 0,
             'takaran_kopra'         => $data['takaran_kopra_kelapa'] ?? 0,
             'upah_takaran_kopra'    => $data['upah_takaran_kopra'] ?? 0,
+            'takaran_kulit'         => $data['takaran_kulit_kelapa'] ?? 0,
+            'upah_takaran_kulit'    => $data['upah_takaran_kulit'] ?? 0,
             'gaji_driver'           => $data['gaji_driver'] ?? 0,
             'created_by'            => $data['created_by'] ?? $data['updated_by'],
         ];

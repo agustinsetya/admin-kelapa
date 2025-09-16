@@ -49,6 +49,8 @@ function initializeKomponenGajiTable(data) {
                 { data: 'upah_takaran_daging', defaultContent: "-" },          
                 { data: 'takaran_kopra', defaultContent: "-" },          
                 { data: 'upah_takaran_kopra', defaultContent: "-" },          
+                { data: 'takaran_kulit', defaultContent: "-" },          
+                { data: 'upah_takaran_kulit', defaultContent: "-" },          
                 { data: 'gaji_driver', defaultContent: "-" },          
             ],
             columnDefs: [
@@ -65,8 +67,9 @@ function initializeKomponenGajiTable(data) {
                         return formatTanggal(data);
                     }
                 },
+                { targets: [3,5,7], render: (d) => d ? formatAngkaDecimal(d) : "-" },
                 {
-                    targets: [4,6,7],
+                    targets: [4,6,8,9],
                     render: function(data, type, row, meta) {
                         return formatRupiah(data);
                     }

@@ -34,6 +34,8 @@
                                                     <th>Upah per Takaran Daging</th>
                                                     <th>Takaran Kopra (kg)</th>
                                                     <th>Upah per Takaran Kopra</th>
+                                                    <th>Takaran Kulit (kg)</th>
+                                                    <th>Upah per Takaran Kulit</th>
                                                     <th>Gaji Driver</th>
                                                 </tr>
                                             </thead>

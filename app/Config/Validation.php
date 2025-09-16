@@ -42,32 +42,6 @@ class Validation extends BaseConfig
     // Rules
     // --------------------------------------------------------------------
 
-    public $komponenGajiUpdate = [
-        'takaran_daging_kelapa' => 'required|numeric',
-        'upah_takaran_daging'   => 'required|numeric',
-        'takaran_kopra_kelapa'  => 'required|numeric',
-        'upah_takaran_kopra'    => 'required|numeric',
-    ];
-
-    public $komponenGajiUpdate_errors = [
-        'takaran_daging_kelapa' => [
-            'required' => 'Takaran daging kelapa wajib diisi.',
-            'numeric'  => 'Takaran daging kelapa harus angka.',
-        ],
-        'upah_takaran_daging' => [
-            'required' => 'Upah takaran daging wajib diisi.',
-            'numeric'  => 'Upah takaran daging harus angka.',
-        ],
-        'takaran_kopra_kelapa' => [
-            'required' => 'Takaran kopra kelapa wajib diisi.',
-            'numeric'  => 'Takaran kopra kelapa harus angka.',
-        ],
-        'upah_takaran_kopra' => [
-            'required' => 'Upah takaran kopra wajib diisi.',
-            'numeric'  => 'Upah takaran kopra harus angka.',
-        ],
-    ];
-
     public $supplyChainPembelian = [
         'tg_pembelian'          => 'required',
         'pem_gudang_id'         => 'required|numeric',
@@ -222,6 +196,8 @@ class Validation extends BaseConfig
         'upah_takaran_daging'   => 'required|numeric',
         'takaran_kopra_kelapa'  => 'required|numeric',
         'upah_takaran_kopra'    => 'required|numeric',
+        'takaran_kulit_kelapa'  => 'required|numeric',
+        'upah_takaran_kulit'    => 'required|numeric',
     ];
 
     public $masterGudang_errors = [
@@ -243,6 +219,14 @@ class Validation extends BaseConfig
         'upah_takaran_kopra' => [
             'required' => 'Upah takaran kopra wajib diisi.',
             'numeric'  => 'Upah takaran kopra harus angka.',
+        ],
+        'takaran_kulit_kelapa' => [
+            'required' => 'Takaran kulit kelapa wajib diisi.',
+            'numeric'  => 'Takaran kulit kelapa harus angka.',
+        ],
+        'upah_takaran_kulit' => [
+            'required' => 'Upah takaran kulit wajib diisi.',
+            'numeric'  => 'Upah takaran kulit harus angka.',
         ],
     ];
 

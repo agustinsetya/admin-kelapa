@@ -31,7 +31,7 @@
                                                             id="btn-tambah-gudang"
                                                             class="btn btn-success text-nowrap w-100 w-md-auto"
                                                             data-bs-toggle="modal"
-                                                            data-bs-target="#addGudangModal">
+                                                            data-bs-target="#masterGudangModal">
                                                         <i class="bx bx-plus me-1"></i>Tambah
                                                     </button>
                                                 </div>
@@ -48,6 +48,8 @@
                                                     <th>Upah per Takaran Daging</th>
                                                     <th>Takaran Kopra (kg)</th>
                                                     <th>Upah per Takaran Kopra</th>
+                                                    <th>Takaran Kulit (kg)</th>
+                                                    <th>Upah per Takaran Kulit</th>
                                                     <th>Gaji Driver</th>
                                                     <th>Action</th>
                                                 </tr>

@@ -15,6 +15,7 @@ class PengolahanModel extends Model
         'kd_pegawai',
         'berat_daging',
         'berat_kopra',
+        'berat_kulit',
         'bonus',
         'tg_proses_gaji',
         'is_stat_gaji',
@@ -34,6 +35,7 @@ class PengolahanModel extends Model
                     mt_pengolahan.kd_pegawai,
                     mt_pengolahan.berat_daging,
                     mt_pengolahan.berat_kopra,
+                    mt_pengolahan.berat_kulit,
                     mt_pengolahan.bonus,
                     mt_pengolahan.tg_proses_gaji,
                     mt_pengolahan.is_stat_gaji,
@@ -77,14 +79,17 @@ class PengolahanModel extends Model
             p.kd_pegawai, pg.nama AS nama_pegawai, p.gudang_id, g.nama AS nama_gudang,
             SUM(ROUND((COALESCE(p.berat_daging, 0) / NULLIF(g.takaran_daging, 0)) * COALESCE(g.upah_takaran_daging, 0), 0)) AS total_upah_daging,
             SUM(ROUND((COALESCE(p.berat_kopra, 0) / NULLIF(g.takaran_kopra, 0)) * COALESCE(g.upah_takaran_kopra, 0), 0)) AS total_upah_kopra,
+            SUM(ROUND((COALESCE(p.berat_kulit, 0) / NULLIF(g.takaran_kulit, 0)) * COALESCE(g.upah_takaran_kulit, 0), 0)) AS total_upah_kulit,
             (
                 SUM(ROUND((COALESCE(p.berat_daging, 0) / NULLIF(g.takaran_daging, 0)) * COALESCE(g.upah_takaran_daging, 0), 0)) +
-                SUM(ROUND((COALESCE(p.berat_kopra, 0) / NULLIF(g.takaran_kopra, 0)) * COALESCE(g.upah_takaran_kopra, 0), 0))
+                SUM(ROUND((COALESCE(p.berat_kopra, 0) / NULLIF(g.takaran_kopra, 0)) * COALESCE(g.upah_takaran_kopra, 0), 0)) +
+                SUM(ROUND((COALESCE(p.berat_kulit, 0) / NULLIF(g.takaran_kulit, 0)) * COALESCE(g.upah_takaran_kulit, 0), 0))
             ) AS total_upah_produksi,
             SUM(COALESCE(p.bonus, 0)) AS total_bonus,
             (
                 SUM(ROUND((COALESCE(p.berat_daging, 0) / NULLIF(g.takaran_daging, 0)) * COALESCE(g.upah_takaran_daging, 0), 0)) +
                 SUM(ROUND((COALESCE(p.berat_kopra, 0) / NULLIF(g.takaran_kopra, 0)) * COALESCE(g.upah_takaran_kopra, 0), 0)) +
+                SUM(ROUND((COALESCE(p.berat_kulit, 0) / NULLIF(g.takaran_kulit, 0)) * COALESCE(g.upah_takaran_kulit, 0), 0)) +
                 SUM(COALESCE(p.bonus, 0))
             ) AS total_gaji_bersih
         ", false);

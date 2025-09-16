@@ -20,7 +20,7 @@
                             <div class="mb-3">
                                 <label for="takaran_daging_kelapa" class="form-label"><?= lang('Files.Takaran_Daging') ?></label>
                                 <div class="input-group">
-                                    <input class="form-control" type="number" name="takaran_daging_kelapa" id="takaran_daging_kelapa" placeholder="<?= lang('Files.Input_Berat') ?>">
+                                    <input class="form-control" type="number" name="takaran_daging_kelapa" id="takaran_daging_kelapa" min="0.1" step="0.001" data-pristine-min-message="Takaran Daging min. 0.1 Kg" required placeholder="<?= lang('Files.Input_Berat') ?>">
                                     <span class="input-group-text">Kg</span>
                                 </div>
                             </div>
@@ -39,7 +39,7 @@
                             <div class="mb-3">
                                 <label for="takaran_kopra_kelapa" class="form-label"><?= lang('Files.Takaran_Kopra') ?></label>
                                 <div class="input-group">
-                                    <input class="form-control" type="number" name="takaran_kopra_kelapa" id="takaran_kopra_kelapa" placeholder="<?= lang('Files.Input_Berat') ?>">
+                                    <input class="form-control" type="number" name="takaran_kopra_kelapa" id="takaran_kopra_kelapa" min="0.1" step="0.001" data-pristine-min-message="Takaran Kopra min. 0.1 Kg" required placeholder="<?= lang('Files.Input_Berat') ?>">
                                     <span class="input-group-text">Kg</span>
                                 </div>
                             </div>
@@ -50,6 +50,25 @@
                             <div class="mb-3">
                                 <label for="upah_takaran_kopra" class="form-label"><?= lang('Files.Upah_Kopra') ?></label>
                                 <input type="text" class="form-control currency-rupiah-mask" name="upah_takaran_kopra" id="upah_takaran_kopra" placeholder="<?= lang('Files.Input_Upah') ?>">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="mb-3">
+                                <label for="takaran_kulit_kelapa" class="form-label"><?= lang('Files.Takaran_Kulit') ?></label>
+                                <div class="input-group">
+                                    <input class="form-control" type="number" name="takaran_kulit_kelapa" id="takaran_kulit_kelapa" min="0.1" step="0.001" data-pristine-min-message="Takaran Kulit min. 0.1 Kg" required placeholder="<?= lang('Files.Input_Berat') ?>">
+                                    <span class="input-group-text">Kg</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="mb-3">
+                                <label for="upah_takaran_kulit" class="form-label"><?= lang('Files.Upah_Kulit') ?></label>
+                                <input type="text" class="form-control currency-rupiah-mask" name="upah_takaran_kulit" id="upah_takaran_kulit" placeholder="<?= lang('Files.Input_Upah') ?>">
                             </div>
                         </div>
                     </div>

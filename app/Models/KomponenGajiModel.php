@@ -15,11 +15,14 @@ class KomponenGajiModel extends Model
         'upah_takaran_daging',
         'takaran_kopra',
         'upah_takaran_kopra',
+        'takaran_kulit',
+        'upah_takaran_kulit',
         'gaji_driver',
         'created_by',
     ];
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';
+	protected $updatedField  = '';
 
     public function getDataKomponenGaji(array $filters = []): array
     {
@@ -30,6 +33,8 @@ class KomponenGajiModel extends Model
                     mt_komponen_gaji.upah_takaran_daging,
                     mt_komponen_gaji.takaran_kopra,
                     mt_komponen_gaji.upah_takaran_kopra,
+                    mt_komponen_gaji.takaran_kulit,
+                    mt_komponen_gaji.upah_takaran_kulit,
                     mt_komponen_gaji.gaji_driver,
                     m_gudang.nama AS nama_gudang,
                     mt_komponen_gaji.created_at
@@ -40,7 +45,9 @@ class KomponenGajiModel extends Model
             $komponenGaji->where('mt_komponen_gaji.gudang_id', (int)$filters['gudang_id']);
         }
         
-		return $komponenGaji->findAll();
+		return $komponenGaji
+            ->orderBy('mt_komponen_gaji.created_at', 'DESC')    
+            ->findAll();
     }
 
     public function updateKomponenGaji(array $data, $gudangId): bool

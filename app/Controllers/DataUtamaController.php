@@ -442,10 +442,12 @@ class DataUtamaController extends AuthRequiredController
 
         $data = [
             'nama'                  => $input['nama_gudang'],
-            'takaran_daging_kelapa' => $input['takaran_daging_kelapa'],
+            'takaran_daging'        => $input['takaran_daging_kelapa'],
             'upah_takaran_daging'   => $input['upah_takaran_daging'],
-            'takaran_kopra_kelapa'  => $input['takaran_kopra_kelapa'],
+            'takaran_kopra'         => $input['takaran_kopra_kelapa'],
             'upah_takaran_kopra'    => $input['upah_takaran_kopra'],
+            'takaran_kulit'         => $input['takaran_kulit_kelapa'],
+            'upah_takaran_kulit'    => $input['upah_takaran_kulit'],
             'gaji_driver'           => $input['gaji_driver'],
             'created_by'	        => $user->email ?? null,
         ];
@@ -485,10 +487,12 @@ class DataUtamaController extends AuthRequiredController
 
         $data = [
             'nama'                  => $input['nama_gudang'],
-            'takaran_daging_kelapa' => $input['takaran_daging_kelapa'],
+            'takaran_daging'        => $input['takaran_daging_kelapa'],
             'upah_takaran_daging'   => $input['upah_takaran_daging'],
-            'takaran_kopra_kelapa'  => $input['takaran_kopra_kelapa'],
+            'takaran_kopra'         => $input['takaran_kopra_kelapa'],
             'upah_takaran_kopra'    => $input['upah_takaran_kopra'],
+            'takaran_kulit'         => $input['takaran_kulit_kelapa'],
+            'upah_takaran_kulit'    => $input['upah_takaran_kulit'],
             'gaji_driver'           => $input['gaji_driver'],
             'updated_by'	        => $user->email ?? null,
         ];
