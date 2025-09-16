@@ -129,20 +129,21 @@ function initializeSupplyPembelianTable(data) {
         columnDefs: [
             { targets: 0, render: (d,t,r,m) => m.row + m.settings._iDisplayStart + 1 },
             { targets: 1, render: (d) => d ? formatTanggal(d) : "-" },
+            { targets: 4, render: (d) => d ? formatAngkaDecimal(d) : "-" },
             {
                 targets: 5,
                 render: (data, type, row) => {
-                    const daging = row.hasil_olahan_daging ? `${row.hasil_olahan_daging} kg` : "-";
-                    const kopra  = row.hasil_olahan_kopra ? `${row.hasil_olahan_kopra} kg` : "-";
-                    const kulit  = row.hasil_olahan_kulit ? `${row.hasil_olahan_kulit} kg` : "-";
-
+                    const daging = row.hasil_olahan_daging ? `${formatAngkaDecimal(row.hasil_olahan_daging)} kg` : "-";
+                    const kopra  = row.hasil_olahan_kopra ? `${formatAngkaDecimal(row.hasil_olahan_kopra)} kg` : "-";
+                    const kulit  = row.hasil_olahan_kulit ? `${formatAngkaDecimal(row.hasil_olahan_kulit)} kg` : "-";
+            
                     return `
                         Daging Kelapa : ${daging}<br>
                         Kopra Kelapa  : ${kopra}<br>
                         Kulit Kelapa  : ${kulit}
                     `;
                 }
-            },
+            },            
             {
                 targets: 6,
                 title: 'Action',

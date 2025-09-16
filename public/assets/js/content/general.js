@@ -8,6 +8,13 @@ function formatTanggal(tanggal) {
     return `${day} ${month} ${year}`;
 }
 
+function formatAngkaDecimal(value) {
+    if (value == null || value === "") return "-";
+    const num = parseFloat(value);
+    if (isNaN(num)) return "-";
+    return num.toLocaleString("en-US"); 
+}
+
 function formatRupiah(angka) {
     if (angka == null || isNaN(angka)) return "";
     let n = Number(angka) || 0;

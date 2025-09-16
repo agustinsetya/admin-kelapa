@@ -41,7 +41,7 @@
                             <div class="mb-3">
                                 <label for="berat_kelapa" class="form-label"><?= lang('Files.Berat_Kelapa') ?></label>
                                 <div class="input-group">
-                                    <input type="number" name="berat_kelapa" id="berat_kelapa" min="1" data-pristine-min-message="Berat Kelapa min. 1 Kg" required class="form-control" placeholder="<?= lang('Files.Input_Berat') ?>"/>
+                                    <input type="number" name="berat_kelapa" id="berat_kelapa" min="0.1" step="0.001" data-pristine-min-message="Berat Kelapa min. 0.1 Kg" required class="form-control" placeholder="<?= lang('Files.Input_Berat') ?>"/>
                                     <span class="input-group-text">Kg</span>
                                 </div>
                             </div>
