@@ -133,6 +133,10 @@ function initializeSupplyPembelianTable(data) {
             {
                 targets: 5,
                 render: (data, type, row) => {
+                    if (row.is_proses != 1) {
+                        return "-";
+                    }
+            
                     const daging = row.hasil_olahan_daging ? `${formatAngkaDecimal(row.hasil_olahan_daging)} kg` : "-";
                     const kopra  = row.hasil_olahan_kopra ? `${formatAngkaDecimal(row.hasil_olahan_kopra)} kg` : "-";
                     const kulit  = row.hasil_olahan_kulit ? `${formatAngkaDecimal(row.hasil_olahan_kulit)} kg` : "-";
@@ -143,7 +147,7 @@ function initializeSupplyPembelianTable(data) {
                         Kulit Kelapa  : ${kulit}
                     `;
                 }
-            },            
+            }, 
             {
                 targets: 6,
                 title: 'Action',
