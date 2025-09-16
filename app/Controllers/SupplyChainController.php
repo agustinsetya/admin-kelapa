@@ -136,10 +136,11 @@ class SupplyChainController extends AuthRequiredController
         $input = $this->request->getPost();
 
         $data = [
-            'tg_pembelian'	=> $input['tg_pembelian'],
-            'gudang_id'	    => $input['pem_gudang_id'],
-            'berat_kelapa'  => $input['berat_kelapa'],
-            'created_by'	=> $user->email ?? null,
+            'tg_pembelian'      => $input['tg_pembelian'],
+            'gudang_id'         => $input['pem_gudang_id'],
+            'kode_container'    => $input['kode_container'],
+            'berat_kelapa'      => $input['berat_kelapa'],
+            'created_by'	    => $user->email ?? null,
         ];
 
         $saved = $this->pembelianModel->saveDataPembelian($data);
@@ -177,10 +178,11 @@ class SupplyChainController extends AuthRequiredController
         }
 
         $data = [
-            'tg_pembelian'	=> $input['tg_pembelian'],
-            'gudang_id'	    => $input['pem_gudang_id'],
-            'berat_kelapa'  => $input['berat_kelapa'],
-            'updated_by'	=> $user->email ?? null,
+            'tg_pembelian'	    => $input['tg_pembelian'],
+            'gudang_id'	        => $input['pem_gudang_id'],
+            'kode_container'    => $input['kode_container'],
+            'berat_kelapa'      => $input['berat_kelapa'],
+            'updated_by'	    => $user->email ?? null,
         ];
 
         $saved = $this->pembelianModel->saveDataPembelian($data, $id);

@@ -12,7 +12,11 @@ class PembelianModel extends Model
     protected $allowedFields = [
         'tg_pembelian',
         'gudang_id',
+        'kode_container',
         'berat_kelapa',
+        'hasil_olahan_daging',
+        'hasil_olahan_kopra',
+        'hasil_olahan_kulit',
         'created_at',
         'updated_by',
     ];
@@ -26,7 +30,11 @@ class PembelianModel extends Model
                     mt_pembelian.mt_pembelian_id,
                     mt_pembelian.tg_pembelian,
                     mt_pembelian.gudang_id,
+                    mt_pembelian.kode_container,
                     mt_pembelian.berat_kelapa,
+                    mt_pembelian.hasil_olahan_daging,
+                    mt_pembelian.hasil_olahan_kopra,
+                    mt_pembelian.hasil_olahan_kulit,
                     m_gudang.nama AS nama_gudang,
                     mt_pembelian.created_at,
                 ')

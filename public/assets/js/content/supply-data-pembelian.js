@@ -121,27 +121,49 @@ function initializeSupplyPembelianTable(data) {
             { data: null, defaultContent: "" },
             { data: 'tg_pembelian', defaultContent: "-" },
             { data: 'nama_gudang', defaultContent: "-" },
+            { data: 'kode_container', defaultContent: "-" },
             { data: 'berat_kelapa', defaultContent: "-" },
+            { data: null, defaultContent: "-" },
             { data: null, defaultContent: "-" },
         ],
         columnDefs: [
             { targets: 0, render: (d,t,r,m) => m.row + m.settings._iDisplayStart + 1 },
             { targets: 1, render: (d) => d ? formatTanggal(d) : "-" },
             {
-                targets: 4,
+                targets: 5,
+                render: (data, type, row) => {
+                    const daging = row.hasil_olahan_daging ? `${row.hasil_olahan_daging} kg` : "-";
+                    const kopra  = row.hasil_olahan_kopra ? `${row.hasil_olahan_kopra} kg` : "-";
+                    const kulit  = row.hasil_olahan_kulit ? `${row.hasil_olahan_kulit} kg` : "-";
+
+                    return `
+                        Daging Kelapa : ${daging}<br>
+                        Kopra Kelapa  : ${kopra}<br>
+                        Kulit Kelapa  : ${kulit}
+                    `;
+                }
+            },
+            {
+                targets: 6,
                 title: 'Action',
                 orderable: false,
                 searchable: false,
                 className: 'align-middle dt-actions text-nowrap',
                 width: '72px',
-                render: (data, type, row) => `
-                <div class="d-flex align-items-center gap-1">
-                    <button type="button" class="btn btn-icon btn-edit-pembelian"
-                    data-bs-toggle="tooltip" data-bs-placement="top"
-                    title="Detail Pembelian" data-id="${row.mt_pembelian_id}">
-                    <i class="text-primary bx bx-pencil fs-5"></i>
-                    </button>
-                </div>`
+                render: (data, type, row) => {
+                    const isDisabled = row.is_proses == 1 ? 'disabled' : '';
+                    const tooltip = row.is_proses == 1 ? 'Sudah diproses' : 'Detail Pengiriman';
+            
+                    return `
+                        <div class="d-flex align-items-center">
+                            <button type="button" class="btn btn-icon btn-edit-pembelian"
+                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="${tooltip}" data-id="${row.mt_pembelian_id}" ${isDisabled}>
+                                <i class="text-primary bx bx-pencil fs-5"></i>
+                            </button>
+                        </div>
+                    `;
+                }
             },
         ],
         lengthChange: false,
@@ -154,7 +176,6 @@ function initializeSupplyPembelianTable(data) {
             't<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
     });
 }
-
 
 function getDetailSupplyPembelian(button) {
     var id = $(button).data("id");
@@ -190,6 +211,7 @@ function openModalPembelian(mode, data = null) {
     
         $("#tg_pembelian").val(data.tg_pembelian.split("T")[0]);
         $("#pem_gudang_id").val(data.gudang_id).trigger("change");
+        $("#kode_container").val(data.kode_container);
         $("#berat_kelapa").val(data.berat_kelapa);
     
         $("#supply-pembelian-form").data("action", "edit");

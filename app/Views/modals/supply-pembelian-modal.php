@@ -31,6 +31,14 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="mb-3">
+                                <label for="kode_container" class="form-label"><?= lang('Files.Kode_Container') ?></label>
+                                <input type="text" name="kode_container" id="kode_container" maxlength="100" required class="form-control" placeholder="<?= lang('Files.Input_Kode_Container') ?>"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="mb-3">
                                 <label for="berat_kelapa" class="form-label"><?= lang('Files.Berat_Kelapa') ?></label>
                                 <div class="input-group">
                                     <input type="number" name="berat_kelapa" id="berat_kelapa" min="1" data-pristine-min-message="Berat Kelapa min. 1 Kg" required class="form-control" placeholder="<?= lang('Files.Input_Berat') ?>"/>

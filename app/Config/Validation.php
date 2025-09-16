@@ -70,7 +70,8 @@ class Validation extends BaseConfig
 
     public $supplyChainPembelian = [
         'tg_pembelian'          => 'required',
-        'pem_gudang_id'             => 'required|numeric',
+        'pem_gudang_id'         => 'required|numeric',
+        'kode_container'        => 'required',
         'berat_kelapa'          => 'required|numeric',
     ];
 
@@ -81,6 +82,9 @@ class Validation extends BaseConfig
         'pem_gudang_id' => [
             'required' => 'Gudang wajib diisi.',
             'numeric'  => 'Gudang harus angka.',
+        ],
+        'kode_container' => [
+            'required' => 'Kode Container wajib diisi.',
         ],
         'berat_kelapa' => [
             'required' => 'Berat Kelapa wajib diisi.',

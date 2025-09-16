@@ -83,6 +83,8 @@ return [
     "Bonus_Pengiriman" => "Bonus Pengiriman",
     "Kode_Pegawai" => "Kode Pegawai",
     "Input_Kode_Pegawai" => "Masukkan Kode Pegawai",
+    "Kode_Container" => "Kode Container",
+    "Input_Kode_Container" => "Masukkan Kode Container",
     "Kode_Pegawai" => "Nama Pegawai",
     "Input_Nama_Pegawai" => "Masukkan Nama Pegawai",
 ];

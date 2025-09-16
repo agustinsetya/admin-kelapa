@@ -82,6 +82,8 @@ return [
     "Bonus_Pengiriman" => "Distribution Bonus",
     "Kode_Pegawai" => "Employee Code",
     "Input_Kode_Pegawai" => "Input Employee Code",
+    "Kode_Container" => "Container Code",
+    "Input_Kode_Container" => "Input Container Code",
     "Nama_Pegawai" => "Employee Name",
     "Input_Nama_Pegawai" => "Input Employee Name",
 ];

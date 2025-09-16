@@ -44,7 +44,9 @@
                                                     <th>#</th>
                                                     <th>Tanggal Pembelian</th>
                                                     <th>Nama Gudang</th>
+                                                    <th>Kode Container</th>
                                                     <th>Berat Kelapa (Kg)</th>
+                                                    <th>Hasil Olahan</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
