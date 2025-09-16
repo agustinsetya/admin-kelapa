@@ -46,7 +46,6 @@
                                                     <th>Nama Gudang</th>
                                                     <th>Nama Pegawai</th>
                                                     <th>Berat Daging (Kg)</th>
-                                                    <th>Berat Kopra (Kg)</th>
                                                     <th>Bonus</th>
                                                     <th>Action</th>
                                                 </tr>

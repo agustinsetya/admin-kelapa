@@ -55,17 +55,6 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="mb-3">
-                                <label for="berat_kopra" class="form-label"><?= lang('Files.Berat_Kopra') ?></label>
-                                <div class="input-group">
-                                    <input type="number" name="berat_kopra" id="berat_kopra" min="1" data-pristine-min-message="Berat Kopra Kelapa min. 1 Kg" required class="form-control" placeholder="<?= lang('Files.Input_Berat') ?>"/>
-                                    <span class="input-group-text">Kg</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="mb-3">
                                 <label for="bonus_pengiriman" class="form-label"><?= lang('Files.Bonus_Pengiriman') ?></label>
                                 <input type="text" class="form-control currency-rupiah-mask" name="bonus_pengiriman" id="bonus_pengiriman" placeholder="<?= lang('Files.Input_Upah') ?>">
                             </div>

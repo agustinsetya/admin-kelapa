@@ -237,6 +237,7 @@ class SupplyChainController extends AuthRequiredController
             'kd_pegawai'	=> $input['peng_pegawai_id'],
             'berat_daging'  => $input['berat_daging'],
             'berat_kopra'   => $input['berat_kopra'],
+            'berat_kulit'   => $input['berat_kulit'],
             'bonus'         => $input['bonus_produksi'],
             'created_by'	=> $user->email ?? null,
         ];
@@ -281,6 +282,7 @@ class SupplyChainController extends AuthRequiredController
             'kd_pegawai'	=> $input['peng_pegawai_id'],
             'berat_daging'  => $input['berat_daging'],
             'berat_kopra'   => $input['berat_kopra'],
+            'berat_kulit'   => $input['berat_kulit'],
             'bonus'         => $input['bonus_produksi'],
             'updated_by'	=> $user->email ?? null,
         ];
@@ -336,7 +338,6 @@ class SupplyChainController extends AuthRequiredController
             'gudang_id'		=> $input['peng_gudang_id'],
             'kd_pegawai'	=> $input['peng_pegawai_id'],
             'berat_daging'  => $input['berat_daging'],
-            'berat_kopra'   => $input['berat_kopra'],
             'bonus'         => $input['bonus_pengiriman'],
             'created_by'	=> $user->email ?? null,
         ];
@@ -380,7 +381,6 @@ class SupplyChainController extends AuthRequiredController
             'gudang_id'		=> $input['peng_gudang_id'],
             'kd_pegawai'	=> $input['peng_pegawai_id'],
             'berat_daging'  => $input['berat_daging'],
-            'berat_kopra'   => $input['berat_kopra'],
             'bonus'         => $input['bonus_pengiriman'],
             'updated_by'	=> $user->email ?? null,
         ];

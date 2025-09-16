@@ -133,7 +133,6 @@ function initializeSupplyPengirimanTable(data) {
             { data: 'nama_gudang', defaultContent: "-" },
             { data: 'nama_pegawai', defaultContent: "-" },
             { data: 'berat_daging', defaultContent: "-" },
-            { data: 'berat_kopra', defaultContent: "-" },
             { data: 'bonus', defaultContent: "-" },
             { data: null, defaultContent: "-" },
         ],
@@ -158,13 +157,13 @@ function initializeSupplyPengirimanTable(data) {
                 }
             },
             {
-                targets: 6,
+                targets: 5,
                 render: function(data, type, row, meta) {
                     return formatRupiah(data);
                 }
             },
             {
-                targets: 7,
+                targets: 6,
                 title: 'Action',
                 orderable: false,
                 searchable: false,
@@ -234,7 +233,6 @@ function openModalPengiriman(mode, data = null) {
         $("#peng_gudang_id").val(data.gudang_id).trigger("change");
         $("#peng_pegawai_id").val(data.kd_pegawai).trigger("change");
         $("#berat_daging").val(data.berat_daging);
-        $("#berat_kopra").val(data.berat_kopra);
         $("#bonus_pengiriman").val(formatRupiah(data.bonus) ?? 0);
     
         $("#supply-pengiriman-form").data("action", "edit");

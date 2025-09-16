@@ -101,7 +101,6 @@ class Validation extends BaseConfig
         'peng_gudang_id'  => 'required|numeric',
         'peng_pegawai_id' => 'required|numeric',
         'berat_daging'    => 'required|numeric',
-        'berat_kopra'     => 'required|numeric',
     ];
 
     public $supplyChainPengiriman_errors = [
@@ -119,10 +118,6 @@ class Validation extends BaseConfig
         'berat_daging' => [
             'required' => 'Berat Daging wajib diisi.',
             'numeric'  => 'Berat Daging harus angka.',
-        ],
-        'berat_kopra' => [
-            'required' => 'Berat Kopra wajib diisi.',
-            'numeric'  => 'Berat Kopra harus angka.',
         ],
     ];
     
