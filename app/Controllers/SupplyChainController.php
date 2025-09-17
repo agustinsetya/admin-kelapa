@@ -336,6 +336,8 @@ class SupplyChainController extends AuthRequiredController
         $data = [
             'tg_pengiriman'	=> $input['tg_pengiriman'],
             'gudang_id'		=> $input['peng_gudang_id'],
+            'jenis_kirim'	=> $input['jenis_kirim'],
+            'armada'	    => $input['armada'],
             'kd_pegawai'	=> $input['peng_pegawai_id'],
             'berat_daging'  => $input['berat_daging'],
             'bonus'         => $input['bonus_pengiriman'],
@@ -379,6 +381,8 @@ class SupplyChainController extends AuthRequiredController
         $data = [
             'tg_pengiriman'	=> $input['tg_pengiriman'],
             'gudang_id'		=> $input['peng_gudang_id'],
+            'jenis_kirim'	=> $input['jenis_kirim'],
+            'armada'	    => $input['armada'],
             'kd_pegawai'	=> $input['peng_pegawai_id'],
             'berat_daging'  => $input['berat_daging'],
             'bonus'         => $input['bonus_pengiriman'],

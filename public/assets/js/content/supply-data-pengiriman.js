@@ -25,6 +25,20 @@ $((function () {
             $("#peng_gudang_id").removeClass("is-invalid").addClass("is-valid");
         }
         
+        const jenisKirimValue = $("#jenis_kirim").val();
+        if (!jenisKirimValue) {
+            $("#jenis_kirim").addClass("is-invalid");
+        } else {
+            $("#jenis_kirim").removeClass("is-invalid").addClass("is-valid");
+        }
+        
+        const armadaValue = $("#armada").val();
+        if (!armadaValue) {
+            $("#armada").addClass("is-invalid");
+        } else {
+            $("#armada").removeClass("is-invalid").addClass("is-valid");
+        }
+        
         const pegawaiValue = $("#peng_pegawai_id").val();
         if (!pegawaiValue) {
             $("#peng_pegawai_id").addClass("is-invalid");
@@ -156,6 +170,22 @@ function initializeSupplyPengirimanTable(data) {
                     return html;
                 }
             },
+            { 
+                targets: 2, 
+                render: function (data, type, row) {
+                    let html = data ? `<div>${data}</div>` : '<div>-</div>';
+                    let jenis_kirim = row.jenis_kirim === 'bongkar_container' ? 'Ngepok dari Container' : 'Distribusi';
+            
+                    html += `
+                        <div>
+                            <span class="badge bg-success mt-1">${jenis_kirim}</span><br/>
+                            <small class="fst-italic text-muted">Armada: ${row.armada}</small>
+                        </div>
+                    `;
+            
+                    return html;
+                }
+            },
             {
                 targets: 5,
                 render: function(data, type, row, meta) {
@@ -222,7 +252,7 @@ function getDetailSupplyPengiriman(button) {
 function openModalPengiriman(mode, data = null) {
     $("#supply-pengiriman-form")[0].reset();
     $("#supply-pengiriman-form").removeClass("was-validated");
-    $("#peng_gudang_id, #peng_pegawai_id").val(null).trigger("change").removeClass("is-invalid is-valid");
+    $("#peng_gudang_id, #jenis_kirim, #armada, #peng_pegawai_id").val(null).trigger("change").removeClass("is-invalid is-valid");
 
     $("#supply-pengiriman-form input[name='_method']").remove();
 
@@ -231,6 +261,8 @@ function openModalPengiriman(mode, data = null) {
     
         $("#tg_pengiriman").val(data.tg_pengiriman.split("T")[0]);
         $("#peng_gudang_id").val(data.gudang_id).trigger("change");
+        $("#jenis_kirim").val(data.jenis_kirim).trigger("change");
+        $("#armada").val(data.armada).trigger("change");
         $("#peng_pegawai_id").val(data.kd_pegawai).trigger("change");
         $("#berat_daging").val(data.berat_daging);
         $("#bonus_pengiriman").val(formatRupiah(data.bonus) ?? 0);

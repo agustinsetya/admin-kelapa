@@ -31,6 +31,30 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="mb-3">
+                                <label for="jenis_kirim" class="form-label">Jenis Pengiriman</label>
+                                <select name="jenis_kirim" id="jenis_kirim" class="form-select" required>
+                                    <option value="" disabled selected>Pilih Jenis Pengiriman</option>
+                                    <option value="distribusi">Distribusi</option>
+                                    <option value="bongkar_container">Ngepok</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="mb-3">
+                                <label for="armada" class="form-label">Armada</label>
+                                <select name="armada" id="armada" class="form-select" required>
+                                    <option value="" disabled selected>Pilih Armada</option>
+                                    <option value="truk">Truk</option>
+                                    <option value="pickup">Pick Up</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="mb-3">
                                 <label class="form-label mb-1">Pegawai</label>
                                 <select name="peng_pegawai_id" id="peng_pegawai_id" class="form-select">
                                     <option value="" disabled selected>Pilih Pegawai</option>

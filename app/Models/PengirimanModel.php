@@ -12,6 +12,8 @@ class PengirimanModel extends Model
     protected $allowedFields = [
         'tg_pengiriman',
         'gudang_id',
+        'jenis_kirim',
+        'armada',
         'kd_pegawai',
         'berat_daging',
         'jumlah_perjalanan',
@@ -31,6 +33,8 @@ class PengirimanModel extends Model
                     mt_log_pengiriman.mt_log_pengiriman_id,
                     mt_log_pengiriman.tg_pengiriman,
                     mt_log_pengiriman.gudang_id,
+                    mt_log_pengiriman.jenis_kirim,
+                    mt_log_pengiriman.armada,
                     mt_log_pengiriman.kd_pegawai,
                     mt_log_pengiriman.berat_daging,
                     mt_log_pengiriman.jumlah_perjalanan,
