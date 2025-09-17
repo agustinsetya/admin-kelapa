@@ -87,6 +87,7 @@ function initializeReportGajiPegawaiTable(data) {
             { data: 'nama_gudang', defaultContent: "-" },
             { data: 'total_upah_daging', defaultContent: "-" },
             { data: 'total_upah_kopra', defaultContent: "-" },
+            { data: 'total_upah_kulit', defaultContent: "-" },
             { data: 'total_bonus', defaultContent: "-" },
             { data: 'total_gaji_bersih', defaultContent: "-" },     
         ],
@@ -100,7 +101,7 @@ function initializeReportGajiPegawaiTable(data) {
             },
             { targets: 1, render: (d) => d ? formatTanggal(d) : "-" },
             {
-                targets: [4,5,6,7],
+                targets: [4,5,6,7,8],
                 render: function(data, type, row, meta) {
                     return formatRupiah(data);
                 }
