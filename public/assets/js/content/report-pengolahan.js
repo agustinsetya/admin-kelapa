@@ -1,7 +1,6 @@
 // public/assets/js/content/report.js
 (function () {
   'use strict';
-
   
   const STACKED = false;       
   const PX_PER_CAT = 80;      
@@ -9,7 +8,6 @@
   const MANY_CATS_THRESHOLD = 15;
 
   let chart = null;
-
   
   const $ = window.jQuery;
   const hasDRP = () => !!($ && $.fn && $.fn.daterangepicker);
@@ -26,7 +24,6 @@
     }
     return true;
   }
-
   
   function initRangePicker() {
     const el = byId('tanggal_pengolahan');
@@ -131,7 +128,8 @@
           categories: [],
           series: [
             { name: 'Daging (kg)', data: [] },
-            { name: 'Kopra (kg)',  data: [] }
+            { name: 'Kopra (kg)',  data: [] },
+            { name: 'Kulit (kg)',  data: [] },
           ]
         });
         return;

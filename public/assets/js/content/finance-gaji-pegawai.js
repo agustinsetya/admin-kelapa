@@ -113,6 +113,7 @@ function initializeFinanceGajiPegawaiTable(data) {
             { data: 'nama_pegawai', defaultContent: "-" },
             { data: 'total_upah_daging', defaultContent: "-" },
             { data: 'total_upah_kopra', defaultContent: "-" },
+            { data: 'total_upah_kulit', defaultContent: "-" },
             { data: 'total_bonus', defaultContent: "-" },
             { data: 'total_gaji_bersih', defaultContent: "-" },
             { data: null, defaultContent: "" }             
@@ -150,13 +151,13 @@ function initializeFinanceGajiPegawaiTable(data) {
                 }
             },
             {
-                targets: [3,4,5,6],
+                targets: [3,4,5,6,7],
                 render: function(data, type, row, meta) {
                     return formatRupiah(data ?? 0);
                 }
             },
             {
-                targets: 7,
+                targets: 8,
                 className: 'no-export',
                 title: 'Action',
                 orderable: false,
@@ -256,4 +257,4 @@ function prosesGajiPegawai(dataToSend, start_date, end_date, buttonId) {
     .always(function () {
         resetButton(buttonId, "Proses Gaji", "btn btn-warning waves-effect waves-light");
     });
-}    
+}
