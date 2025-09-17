@@ -17,7 +17,9 @@ class KomponenGajiModel extends Model
         'upah_takaran_kopra',
         'takaran_kulit',
         'upah_takaran_kulit',
-        'gaji_driver',
+        'gaji_driver_distribusi',
+        'gaji_driver_ngepok_truk',
+        'gaji_driver_ngepok_pickup',
         'created_by',
     ];
     protected $useTimestamps = true;
@@ -35,7 +37,9 @@ class KomponenGajiModel extends Model
                     mt_komponen_gaji.upah_takaran_kopra,
                     mt_komponen_gaji.takaran_kulit,
                     mt_komponen_gaji.upah_takaran_kulit,
-                    mt_komponen_gaji.gaji_driver,
+                    mt_komponen_gaji.gaji_driver_distribusi,
+                    mt_komponen_gaji.gaji_driver_ngepok_truk,
+                    mt_komponen_gaji.gaji_driver_ngepok_pickup,
                     m_gudang.nama AS nama_gudang,
                     mt_komponen_gaji.created_at
                 ')

@@ -441,15 +441,17 @@ class DataUtamaController extends AuthRequiredController
         $input = $this->request->getPost();
 
         $data = [
-            'nama'                  => $input['nama_gudang'],
-            'takaran_daging'        => $input['takaran_daging_kelapa'],
-            'upah_takaran_daging'   => $input['upah_takaran_daging'],
-            'takaran_kopra'         => $input['takaran_kopra_kelapa'],
-            'upah_takaran_kopra'    => $input['upah_takaran_kopra'],
-            'takaran_kulit'         => $input['takaran_kulit_kelapa'],
-            'upah_takaran_kulit'    => $input['upah_takaran_kulit'],
-            'gaji_driver'           => $input['gaji_driver'],
-            'created_by'	        => $user->email ?? null,
+            'nama'                      => $input['nama_gudang'],
+            'takaran_daging'            => $input['takaran_daging_kelapa'],
+            'upah_takaran_daging'       => $input['upah_takaran_daging'],
+            'takaran_kopra'             => $input['takaran_kopra_kelapa'],
+            'upah_takaran_kopra'        => $input['upah_takaran_kopra'],
+            'takaran_kulit'             => $input['takaran_kulit_kelapa'],
+            'upah_takaran_kulit'        => $input['upah_takaran_kulit'],
+            'gaji_driver_distribusi'    => $input['gaji_driver_distribusi'],
+            'gaji_driver_ngepok_truk'   => $input['gaji_driver_ngepok_truk'],
+            'gaji_driver_ngepok_pickup' => $input['gaji_driver_ngepok_pickup'],
+            'created_by'	            => $user->email ?? null,
         ];
 
         $saved = $this->gudangModel->saveDataGudang($data);
@@ -486,15 +488,17 @@ class DataUtamaController extends AuthRequiredController
         }
 
         $data = [
-            'nama'                  => $input['nama_gudang'],
-            'takaran_daging'        => $input['takaran_daging_kelapa'],
-            'upah_takaran_daging'   => $input['upah_takaran_daging'],
-            'takaran_kopra'         => $input['takaran_kopra_kelapa'],
-            'upah_takaran_kopra'    => $input['upah_takaran_kopra'],
-            'takaran_kulit'         => $input['takaran_kulit_kelapa'],
-            'upah_takaran_kulit'    => $input['upah_takaran_kulit'],
-            'gaji_driver'           => $input['gaji_driver'],
-            'updated_by'	        => $user->email ?? null,
+            'nama'                      => $input['nama_gudang'],
+            'takaran_daging'            => $input['takaran_daging_kelapa'],
+            'upah_takaran_daging'       => $input['upah_takaran_daging'],
+            'takaran_kopra'             => $input['takaran_kopra_kelapa'],
+            'upah_takaran_kopra'        => $input['upah_takaran_kopra'],
+            'takaran_kulit'             => $input['takaran_kulit_kelapa'],
+            'upah_takaran_kulit'        => $input['upah_takaran_kulit'],
+            'gaji_driver_distribusi'    => $input['gaji_driver_distribusi'],
+            'gaji_driver_ngepok_truk'   => $input['gaji_driver_ngepok_truk'],
+            'gaji_driver_ngepok_pickup' => $input['gaji_driver_ngepok_pickup'],
+            'updated_by'	            => $user->email ?? null,
         ];
 
         $saved = $this->gudangModel->saveDataGudang($data, $id);

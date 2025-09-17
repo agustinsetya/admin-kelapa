@@ -6,8 +6,8 @@ use CodeIgniter\Model;
 
 class PengirimanModel extends Model
 {
-    protected $table         = 'mt_pengiriman';
-    protected $primaryKey    = 'mt_pengiriman_id';
+    protected $table         = 'mt_log_pengiriman';
+    protected $primaryKey    = 'mt_log_pengiriman_id';
     protected $returnType    = 'object';
     protected $allowedFields = [
         'tg_pengiriman',
@@ -28,7 +28,7 @@ class PengirimanModel extends Model
     public function getDataPengiriman(array $filters = []): array
     {
         $pengiriman = $this->select('
-                    mt_pengiriman.mt_pengiriman_id,
+                    mt_pengiriman.mt_log_pengiriman_id,
                     mt_pengiriman.tg_pengiriman,
                     mt_pengiriman.gudang_id,
                     mt_pengiriman.kd_pegawai,
@@ -45,8 +45,8 @@ class PengirimanModel extends Model
             ->join('mt_pegawai', 'mt_pegawai.kd_pegawai = mt_pengiriman.kd_pegawai', 'left')
             ->orderby('mt_pengiriman.tg_pengiriman DESC');
 
-        if (isset($filters['mt_pengiriman_id']) && is_numeric($filters['mt_pengiriman_id'])) {
-            $pengiriman->where('mt_pengiriman.mt_pengiriman_id', (int)$filters['mt_pengiriman_id']);
+        if (isset($filters['mt_log_pengiriman_id']) && is_numeric($filters['mt_log_pengiriman_id'])) {
+            $pengiriman->where('mt_pengiriman.mt_log_pengiriman_id', (int)$filters['mt_log_pengiriman_id']);
         }
 
         if (isset($filters['gudang_id']) && is_numeric($filters['gudang_id'])) {
@@ -111,11 +111,11 @@ class PengirimanModel extends Model
 
     public function saveDataPengiriman(array $data, $pengirimanId = null): bool
     {
-        $data['mt_pengiriman_id'] = $pengirimanId;
+        $data['mt_log_pengiriman_id'] = $pengirimanId;
 
         $this->db->transStart();
 
-        $exists = $this->where('mt_pengiriman_id', $pengirimanId)->countAllResults() > 0;
+        $exists = $this->where('mt_log_pengiriman_id', $pengirimanId)->countAllResults() > 0;
 
         if ($exists) {
             $ok = $this->update($pengirimanId, $data);

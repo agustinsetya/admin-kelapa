@@ -75,8 +75,24 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="mb-3">
-                                <label for="gaji_driver" class="form-label"><?= lang('Files.Gaji_Driver') ?></label>
-                                <input type="text" class="form-control currency-rupiah-mask" name="gaji_driver" id="gaji_driver" placeholder="<?= lang('Files.Input_Upah') ?>">
+                                <label for="gaji_driver_distribusi" class="form-label"><?= lang('Files.Gaji_Driver_Distribusi') ?></label>
+                                <input type="text" class="form-control currency-rupiah-mask" name="gaji_driver_distribusi" id="gaji_driver_distribusi" placeholder="<?= lang('Files.Input_Upah') ?>">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="mb-3">
+                                <label for="gaji_driver_ngepok_truk" class="form-label"><?= lang('Files.Gaji_Driver_Ngepok_Truk') ?></label>
+                                <input type="text" class="form-control currency-rupiah-mask" name="gaji_driver_ngepok_truk" id="gaji_driver_ngepok_truk" placeholder="<?= lang('Files.Input_Upah') ?>">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="mb-3">
+                                <label for="gaji_driver_ngepok_pickup" class="form-label"><?= lang('Files.Gaji_Driver_Ngepok_Pickup') ?></label>
+                                <input type="text" class="form-control currency-rupiah-mask" name="gaji_driver_ngepok_pickup" id="gaji_driver_ngepok_pickup" placeholder="<?= lang('Files.Input_Upah') ?>">
                             </div>
                         </div>
                     </div>

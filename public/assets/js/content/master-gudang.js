@@ -33,8 +33,14 @@ $((function () {
         const $upah_takaran_kulit = $("#upah_takaran_kulit");
         $upah_takaran_kulit.val(unmaskRupiah($upah_takaran_kulit.val()));
         
-        const $gaji_driver = $("#gaji_driver");
-        $gaji_driver.val(unmaskRupiah($gaji_driver.val()));
+        const $gaji_driver_distribusi = $("#gaji_driver_distribusi");
+        $gaji_driver_distribusi.val(unmaskRupiah($gaji_driver_distribusi.val()));
+        
+        const $gaji_driver_ngepok_truk = $("#gaji_driver_ngepok_truk");
+        $gaji_driver_ngepok_truk.val(unmaskRupiah($gaji_driver_ngepok_truk.val()));
+        
+        const $gaji_driver_ngepok_pickup = $("#gaji_driver_ngepok_pickup");
+        $gaji_driver_ngepok_pickup.val(unmaskRupiah($gaji_driver_ngepok_pickup.val()));
 
         let url = 'master/gudang/add';
         if (action === 'edit') url = 'master/gudang/update';
@@ -131,7 +137,7 @@ function initializeMasterGudangTable(data) {
             { data: 'upah_takaran_kopra', defaultContent: "-" },     
             { data: 'takaran_kulit', defaultContent: "-" },          
             { data: 'upah_takaran_kulit', defaultContent: "-" },     
-            { data: 'gaji_driver', defaultContent: "-" },     
+            { data: null, defaultContent: "-" },     
             { data: null, defaultContent: "" }             
         ],
         columnDefs: [
@@ -144,9 +150,23 @@ function initializeMasterGudangTable(data) {
             },
             { targets: [2,4,6], render: (d) => d ? formatAngkaDecimal(d) : "-" },
             {
-                targets: [3,5,7,8],
+                targets: [3,5,7],
                 render: function(data, type, row, meta) {
                     return formatRupiah(data);
+                }
+            },
+            {
+                targets: 8,
+                render: (data, type, row) => {
+                    const distribusi = `${formatRupiah(row.gaji_driver_distribusi)}`;
+                    const truk  = `${formatRupiah(row.gaji_driver_ngepok_truk)}`;
+                    const pickup  = `${formatRupiah(row.gaji_driver_ngepok_pickup)}`;
+            
+                    return `
+                        Distribusi : ${distribusi}<br>
+                        Ngepok Truk  : ${truk}<br>
+                        Ngepok Pickup  : ${pickup}
+                    `;
                 }
             },
             {
@@ -218,13 +238,15 @@ function openModalGudang(mode, data = null) {
         $("#masterGudangModal .modal-title").text("Edit Data Gudang");
 
         $("#nama_gudang").val(data.nama);
-        $("#takaran_daging_kelapa").val(data.takaran_daging_kelapa ?? 0);
+        $("#takaran_daging_kelapa").val(data.takaran_daging ?? 0);
         $("#upah_takaran_daging").val(formatRupiah(data.upah_takaran_daging));
-        $("#takaran_kopra_kelapa").val(data.takaran_kopra_kelapa ?? 0);
+        $("#takaran_kopra_kelapa").val(data.takaran_kopra ?? 0);
         $("#upah_takaran_kopra").val(formatRupiah(data.upah_takaran_kopra));
-        $("#takaran_kulit_kelapa").val(data.takaran_kulit_kelapa ?? 0);
+        $("#takaran_kulit_kelapa").val(data.takaran_kulit ?? 0);
         $("#upah_takaran_kulit").val(formatRupiah(data.upah_takaran_kulit));
-        $("#gaji_driver").val(formatRupiah(data.gaji_driver));
+        $("#gaji_driver_distribusi").val(formatRupiah(data.gaji_driver_distribusi));
+        $("#gaji_driver_ngepok_truk").val(formatRupiah(data.gaji_driver_ngepok_truk));
+        $("#gaji_driver_ngepok_pickup").val(formatRupiah(data.gaji_driver_ngepok_pickup));
         
         $("#master-gudang-form").data("action", "edit");
         $("#master-gudang-form").data("id", data.m_gudang_id );

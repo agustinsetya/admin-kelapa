@@ -51,7 +51,7 @@ function initializeKomponenGajiTable(data) {
                 { data: 'upah_takaran_kopra', defaultContent: "-" },          
                 { data: 'takaran_kulit', defaultContent: "-" },          
                 { data: 'upah_takaran_kulit', defaultContent: "-" },          
-                { data: 'gaji_driver', defaultContent: "-" },          
+                { data: null, defaultContent: "-" },          
             ],
             columnDefs: [
                 // Additional column
@@ -69,9 +69,23 @@ function initializeKomponenGajiTable(data) {
                 },
                 { targets: [3,5,7], render: (d) => d ? formatAngkaDecimal(d) : "-" },
                 {
-                    targets: [4,6,8,9],
+                    targets: [4,6,8],
                     render: function(data, type, row, meta) {
                         return formatRupiah(data);
+                    }
+                },
+                {
+                    targets: 9,
+                    render: (data, type, row) => {
+                        const distribusi = `${formatRupiah(row.gaji_driver_distribusi)}`;
+                        const truk  = `${formatRupiah(row.gaji_driver_ngepok_truk)}`;
+                        const pickup  = `${formatRupiah(row.gaji_driver_ngepok_pickup)}`;
+                
+                        return `
+                            Distribusi : ${distribusi}<br>
+                            Ngepok Truk  : ${truk}<br>
+                            Ngepok Pickup  : ${pickup}
+                        `;
                     }
                 },
             ],

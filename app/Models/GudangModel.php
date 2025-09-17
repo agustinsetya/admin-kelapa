@@ -17,7 +17,9 @@ class GudangModel extends Model
         'upah_takaran_kopra',
         'takaran_kulit',
         'upah_takaran_kulit',
-        'gaji_driver',
+        'gaji_driver_distribusi',
+        'gaji_driver_ngepok_truk',
+        'gaji_driver_ngepok_pickup',
         'created_by',
         'updated_by',
     ];
@@ -38,7 +40,9 @@ class GudangModel extends Model
                     m_gudang.upah_takaran_kopra,
                     m_gudang.takaran_kulit,
                     m_gudang.upah_takaran_kulit,
-                    m_gudang.gaji_driver,
+                    m_gudang.gaji_driver_distribusi,
+                    m_gudang.gaji_driver_ngepok_truk,
+                    m_gudang.gaji_driver_ngepok_pickup,
                 ');
 
         if (isset($filters['m_gudang_id']) && is_numeric($filters['m_gudang_id'])) {
@@ -66,15 +70,17 @@ class GudangModel extends Model
         }
 
         $komponenData = [
-            'gudang_id'             => $finalGudangId,
-            'takaran_daging'        => $data['takaran_daging_kelapa'] ?? 0,
-            'upah_takaran_daging'   => $data['upah_takaran_daging'] ?? 0,
-            'takaran_kopra'         => $data['takaran_kopra_kelapa'] ?? 0,
-            'upah_takaran_kopra'    => $data['upah_takaran_kopra'] ?? 0,
-            'takaran_kulit'         => $data['takaran_kulit_kelapa'] ?? 0,
-            'upah_takaran_kulit'    => $data['upah_takaran_kulit'] ?? 0,
-            'gaji_driver'           => $data['gaji_driver'] ?? 0,
-            'created_by'            => $data['created_by'] ?? $data['updated_by'],
+            'gudang_id'                 => $finalGudangId,
+            'takaran_daging'            => $data['takaran_daging'] ?? 0,
+            'upah_takaran_daging'       => $data['upah_takaran_daging'] ?? 0,
+            'takaran_kopra'             => $data['takaran_kopra'] ?? 0,
+            'upah_takaran_kopra'        => $data['upah_takaran_kopra'] ?? 0,
+            'takaran_kulit'             => $data['takaran_kulit'] ?? 0,
+            'upah_takaran_kulit'        => $data['upah_takaran_kulit'] ?? 0,
+            'gaji_driver_distribusi'    => $data['gaji_driver_distribusi'] ?? 0,
+            'gaji_driver_ngepok_truk'   => $data['gaji_driver_ngepok_truk'] ?? 0,
+            'gaji_driver_ngepok_pickup' => $data['gaji_driver_ngepok_pickup'] ?? 0,
+            'created_by'                => $data['created_by'] ?? $data['updated_by'],
         ];
 
         $komponenModel = new \App\Models\KomponenGajiModel();
