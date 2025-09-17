@@ -302,6 +302,7 @@ class FinanceController extends AuthRequiredController
         foreach ($upahProduksiPegawai as &$row) {
             $row['total_upah_daging']   = $row['total_upah_daging'] ?? 0;
             $row['total_upah_kopra']    = $row['total_upah_kopra'] ?? 0;
+            $row['total_upah_kulit']    = $row['total_upah_kulit'] ?? 0;
             $row['total_upah_produksi'] = $row['total_upah_produksi'] ?? 0;
             $row['total_bonus']         = $row['total_bonus'] ?? 0;
             $row['total_gaji_bersih']   = $row['total_gaji_bersih'] ?? 0;

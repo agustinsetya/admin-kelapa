@@ -73,6 +73,7 @@
                                                     <th>Nama</th>
                                                     <th>Total Upah Daging</th>
                                                     <th>Total Upah Kopra</th>
+                                                    <th>Total Upah Kulit</th>
                                                     <th>Bonus</th>
                                                     <th>Gaji Bersih</th>
                                                     <th>Action</th>

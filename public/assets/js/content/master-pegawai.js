@@ -166,9 +166,9 @@ function initializeMasterPegawaiTable(data) {
                 }
             },
             {
-                targets: [3, 4],
+                targets: 4,
                 render: function (data) {
-                    return (data === null || data === undefined || data === "") ? '-' : data;
+                    return (data === null || data === undefined || data === "") ? 'All' : data;
                 }
             },
             {

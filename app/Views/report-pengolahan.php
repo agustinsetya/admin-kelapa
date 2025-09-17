@@ -31,7 +31,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="row align-items-end g-2">
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <form id="filter-Report-form" class="row g-2 align-items-end mb-0">
                                             <div class="col-md-4">
                                                 <label class="form-label mb-1">Gudang</label>
@@ -62,9 +62,9 @@
                             <div class="card-header">
                                 <div class="row align-items-end g-2">
                                     <div class="col-md-6">
-                                        <div class="col-md-6 mt-2 mt-md-0">
+                                        <div class="col-md-12 mt-2 mt-md-0">
                                             <div class="col-12 col-md-auto">
-                                                <h4 class="card-title mb-0">Laporan Hasil Olahan Daging dan Kopra</h4>
+                                                <h4 class="card-title mb-0">Laporan Hasil Olahan Daging, Kopra, dan Kulit</h4>
                                             </div>
                                         </div>
                                     </div>

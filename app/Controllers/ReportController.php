@@ -116,15 +116,17 @@ class ReportController extends AuthRequiredController
         $agg = []; // ['nama_gudang' => ['daging'=>..., 'kopra'=>...]]
         foreach ($rows as $r) {
             $g = $r->nama_gudang ?? 'Tanpa Nama';
-            if (!isset($agg[$g])) $agg[$g] = ['daging' => 0.0, 'kopra' => 0.0];
+            if (!isset($agg[$g])) $agg[$g] = ['daging' => 0.0, 'kopra' => 0.0, 'kulit' => 0.0];
             $agg[$g]['daging'] += (float) ($r->berat_daging ?? 0);
             $agg[$g]['kopra']  += (float) ($r->berat_kopra  ?? 0);
+            $agg[$g]['kulit']  += (float) ($r->berat_kulit  ?? 0);
         }
 
         // Susun payload ApexCharts
         $categories = array_keys($agg);
         $daging     = array_map(fn($g) => $agg[$g]['daging'], $categories);
         $kopra      = array_map(fn($g) => $agg[$g]['kopra'],  $categories);
+        $kulit      = array_map(fn($g) => $agg[$g]['kulit'],  $categories);
 
         return $this->response->setJSON([
             'ok'         => true,
@@ -132,6 +134,7 @@ class ReportController extends AuthRequiredController
             'series'     => [
                 ['name' => 'Daging (kg)', 'data' => $daging],
                 ['name' => 'Kopra (kg)',  'data' => $kopra],
+                ['name' => 'Kulit (kg)',  'data' => $kulit],
             ],
         ]);
     }
