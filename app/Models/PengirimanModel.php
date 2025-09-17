@@ -79,10 +79,36 @@ class PengirimanModel extends Model
         $upah = $this->db->table('mt_log_pengiriman p');
         $upah->select("
             p.kd_pegawai, pg.nama AS nama_driver, p.gudang_id, g.nama AS nama_gudang,
-            SUM(ROUND((COALESCE(p.jumlah_perjalanan, 0) * NULLIF(g.gaji_driver, 0)), 0)) AS total_upah_perjalanan,
+            SUM(
+                ROUND(
+                    (COALESCE(p.jumlah_perjalanan, 0) *
+                        NULLIF(
+                            CASE
+                                WHEN p.jenis_kirim = 'distribusi' THEN g.gaji_driver_distribusi
+                                WHEN p.jenis_kirim = 'bongkar_container' AND p.armada = 'truk' THEN g.gaji_driver_ngepok_truk
+                                WHEN p.jenis_kirim = 'bongkar_container' AND p.armada = 'pickup' THEN g.gaji_driver_ngepok_pickup
+                                ELSE 0
+                            END
+                        , 0)
+                    ), 0
+                )
+            ) AS total_upah_perjalanan,
             SUM(COALESCE(p.bonus, 0)) AS total_bonus,
             (
-                SUM(ROUND((COALESCE(p.jumlah_perjalanan, 0) * NULLIF(g.gaji_driver, 0)), 0)) +
+                SUM(
+                    ROUND(
+                        (COALESCE(p.jumlah_perjalanan, 0) *
+                            NULLIF(
+                                CASE
+                                    WHEN p.jenis_kirim = 'distribusi' THEN g.gaji_driver_distribusi
+                                    WHEN p.jenis_kirim = 'bongkar_container' AND p.armada = 'truk' THEN g.gaji_driver_ngepok_truk
+                                    WHEN p.jenis_kirim = 'bongkar_container' AND p.armada = 'pickup' THEN g.gaji_driver_ngepok_pickup
+                                    ELSE 0
+                                END
+                            , 0)
+                        ), 0
+                    )
+                ) +
                 SUM(COALESCE(p.bonus, 0))
             ) AS total_gaji_bersih
         ", false);

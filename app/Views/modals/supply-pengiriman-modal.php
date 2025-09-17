@@ -55,6 +55,17 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="mb-3">
+                                <label for="jumlah_perjalanan" class="form-label"><?= lang('Files.Jumlah_Perjalanan') ?></label>
+                                <div class="input-group">
+                                <input type="number" name="jumlah_perjalanan" id="jumlah_perjalanan" min="1" data-pristine-min-message="Jumlah Perjalanan min. 1 kali" required class="form-control" placeholder="<?= lang('Files.Input_Jumlah') ?>"/>
+                                    <span class="input-group-text">Kali</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="mb-3">
                                 <label class="form-label mb-1">Pegawai</label>
                                 <select name="peng_pegawai_id" id="peng_pegawai_id" class="form-select">
                                     <option value="" disabled selected>Pilih Pegawai</option>

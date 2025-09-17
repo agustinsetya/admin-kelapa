@@ -314,7 +314,7 @@ class SupplyChainController extends AuthRequiredController
             return $this->jsonError('ID pengiriman tidak ditemukan', 400);
         }
 
-        $detail = $this->pengirimanModel->getDataPengiriman(['mt_pengiriman_id' => $id]);
+        $detail = $this->pengirimanModel->getDataPengiriman(['mt_log_pengiriman_id' => $id]);
         return $this->jsonSuccess(['data' => $detail]);
     }
 
@@ -334,14 +334,15 @@ class SupplyChainController extends AuthRequiredController
         $input = $this->request->getPost();
 
         $data = [
-            'tg_pengiriman'	=> $input['tg_pengiriman'],
-            'gudang_id'		=> $input['peng_gudang_id'],
-            'jenis_kirim'	=> $input['jenis_kirim'],
-            'armada'	    => $input['armada'],
-            'kd_pegawai'	=> $input['peng_pegawai_id'],
-            'berat_daging'  => $input['berat_daging'],
-            'bonus'         => $input['bonus_pengiriman'],
-            'created_by'	=> $user->email ?? null,
+            'tg_pengiriman'	    => $input['tg_pengiriman'],
+            'gudang_id'		    => $input['peng_gudang_id'],
+            'jenis_kirim'	    => $input['jenis_kirim'],
+            'armada'	        => $input['armada'],
+            'kd_pegawai'	    => $input['peng_pegawai_id'],
+            'jumlah_perjalanan' => $input['jumlah_perjalanan'],
+            'berat_daging'      => $input['berat_daging'],
+            'bonus'             => $input['bonus_pengiriman'],
+            'created_by'	    => $user->email ?? null,
         ];
 
         $saved = $this->pengirimanModel->saveDataPengiriman($data);
@@ -379,14 +380,15 @@ class SupplyChainController extends AuthRequiredController
         }
 
         $data = [
-            'tg_pengiriman'	=> $input['tg_pengiriman'],
-            'gudang_id'		=> $input['peng_gudang_id'],
-            'jenis_kirim'	=> $input['jenis_kirim'],
-            'armada'	    => $input['armada'],
-            'kd_pegawai'	=> $input['peng_pegawai_id'],
-            'berat_daging'  => $input['berat_daging'],
-            'bonus'         => $input['bonus_pengiriman'],
-            'updated_by'	=> $user->email ?? null,
+            'tg_pengiriman'	    => $input['tg_pengiriman'],
+            'gudang_id'		    => $input['peng_gudang_id'],
+            'jenis_kirim'	    => $input['jenis_kirim'],
+            'armada'	        => $input['armada'],
+            'kd_pegawai'	    => $input['peng_pegawai_id'],
+            'jumlah_perjalanan' => $input['jumlah_perjalanan'],
+            'berat_daging'      => $input['berat_daging'],
+            'bonus'             => $input['bonus_pengiriman'],
+            'updated_by'	    => $user->email ?? null,
         ];
 
         $saved = $this->pengirimanModel->saveDataPengiriman($data, $id);

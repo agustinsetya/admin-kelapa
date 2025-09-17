@@ -87,6 +87,7 @@ return [
     "Input_Nama" => "Masukkan Nama",
     "Bonus_Produksi" => "Bonus Produksi",
     "Bonus_Pengiriman" => "Bonus Pengiriman",
+    "Jumlah_Perjalanan" => "Jumlah Perjalanan",
     "Kode_Pegawai" => "Kode Pegawai",
     "Input_Kode_Pegawai" => "Masukkan Kode Pegawai",
     "Kode_Container" => "Kode Container",

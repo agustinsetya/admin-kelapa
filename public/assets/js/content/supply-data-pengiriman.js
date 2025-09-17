@@ -174,12 +174,13 @@ function initializeSupplyPengirimanTable(data) {
                 targets: 2, 
                 render: function (data, type, row) {
                     let html = data ? `<div>${data}</div>` : '<div>-</div>';
-                    let jenis_kirim = row.jenis_kirim === 'bongkar_container' ? 'Ngepok dari Container' : 'Distribusi';
+                    let jenis_kirim = row.jenis_kirim === 'bongkar_container' ? 'Ngepok Container' : 'Distribusi';
             
                     html += `
                         <div>
                             <span class="badge bg-success mt-1">${jenis_kirim}</span><br/>
-                            <small class="fst-italic text-muted">Armada: ${row.armada}</small>
+                            <small class="fst-italic text-muted">Armada: ${row.armada}</small><br/>
+                            <small class="fst-italic text-muted">${row.jumlah_perjalanan} Kali Jalan</small>
                         </div>
                     `;
             
@@ -264,6 +265,7 @@ function openModalPengiriman(mode, data = null) {
         $("#jenis_kirim").val(data.jenis_kirim).trigger("change");
         $("#armada").val(data.armada).trigger("change");
         $("#peng_pegawai_id").val(data.kd_pegawai).trigger("change");
+        $("#jumlah_perjalanan").val(data.jumlah_perjalanan);
         $("#berat_daging").val(data.berat_daging);
         $("#bonus_pengiriman").val(formatRupiah(data.bonus) ?? 0);
     

@@ -101,7 +101,7 @@ class GajiDriverModel extends Model
         }
     
         foreach ($upahDriver as $row) {
-            $tb = $this->db->table('mt_pengiriman')
+            $tb = $this->db->table('mt_log_pengiriman')
                 ->where('kd_pegawai', (int)$row['kd_pegawai'])
                 ->where('gudang_id',  (int)$row['gudang_id'])
                 ->where('is_stat_gaji', 0);
@@ -119,7 +119,7 @@ class GajiDriverModel extends Model
     
             if ($ok === false) {
                 $lastQuery = $this->db->getLastQuery();
-                log_message('error', '[UPDATE pengiriman FAIL] ' . ($lastQuery ? $lastQuery->getQuery() : 'No query'));
+                log_message('error', '[UPDATE log pengiriman FAIL] ' . ($lastQuery ? $lastQuery->getQuery() : 'No query'));
                 $this->db->transRollback();
                 return false;
             }
