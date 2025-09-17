@@ -177,7 +177,7 @@ function initializeSupplyPengirimanTable(data) {
                         <div class="d-flex align-items-center">
                             <button type="button" class="btn btn-icon btn-edit-pengiriman"
                                 data-bs-toggle="tooltip" data-bs-placement="top"
-                                title="${tooltip}" data-id="${row.mt_pengiriman_id}" ${isDisabled}>
+                                title="${tooltip}" data-id="${row.mt_log_pengiriman_id}" ${isDisabled}>
                                 <i class="text-primary bx bx-pencil fs-5"></i>
                             </button>
                         </div>
@@ -236,7 +236,7 @@ function openModalPengiriman(mode, data = null) {
         $("#bonus_pengiriman").val(formatRupiah(data.bonus) ?? 0);
     
         $("#supply-pengiriman-form").data("action", "edit");
-        $("#supply-pengiriman-form").data("id", data.mt_pengiriman_id);
+        $("#supply-pengiriman-form").data("id", data.mt_log_pengiriman_id);
 
         $("#supply-pengiriman-form").append(
             '<input type="hidden" name="_method" value="PATCH">'

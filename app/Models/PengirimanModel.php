@@ -28,40 +28,40 @@ class PengirimanModel extends Model
     public function getDataPengiriman(array $filters = []): array
     {
         $pengiriman = $this->select('
-                    mt_pengiriman.mt_log_pengiriman_id,
-                    mt_pengiriman.tg_pengiriman,
-                    mt_pengiriman.gudang_id,
-                    mt_pengiriman.kd_pegawai,
-                    mt_pengiriman.berat_daging,
-                    mt_pengiriman.jumlah_perjalanan,
-                    mt_pengiriman.bonus,
-                    mt_pengiriman.tg_proses_gaji,
-                    mt_pengiriman.is_stat_gaji,
+                    mt_log_pengiriman.mt_log_pengiriman_id,
+                    mt_log_pengiriman.tg_pengiriman,
+                    mt_log_pengiriman.gudang_id,
+                    mt_log_pengiriman.kd_pegawai,
+                    mt_log_pengiriman.berat_daging,
+                    mt_log_pengiriman.jumlah_perjalanan,
+                    mt_log_pengiriman.bonus,
+                    mt_log_pengiriman.tg_proses_gaji,
+                    mt_log_pengiriman.is_stat_gaji,
                     m_gudang.nama AS nama_gudang,
                     mt_pegawai.nama AS nama_pegawai,
-                    mt_pengiriman.created_at,
+                    mt_log_pengiriman.created_at,
                 ')
-            ->join('m_gudang', 'm_gudang.m_gudang_id = mt_pengiriman.gudang_id', 'left')
-            ->join('mt_pegawai', 'mt_pegawai.kd_pegawai = mt_pengiriman.kd_pegawai', 'left')
-            ->orderby('mt_pengiriman.tg_pengiriman DESC');
+            ->join('m_gudang', 'm_gudang.m_gudang_id = mt_log_pengiriman.gudang_id', 'left')
+            ->join('mt_pegawai', 'mt_pegawai.kd_pegawai = mt_log_pengiriman.kd_pegawai', 'left')
+            ->orderby('mt_log_pengiriman.tg_pengiriman DESC');
 
         if (isset($filters['mt_log_pengiriman_id']) && is_numeric($filters['mt_log_pengiriman_id'])) {
-            $pengiriman->where('mt_pengiriman.mt_log_pengiriman_id', (int)$filters['mt_log_pengiriman_id']);
+            $pengiriman->where('mt_log_pengiriman.mt_log_pengiriman_id', (int)$filters['mt_log_pengiriman_id']);
         }
 
         if (isset($filters['gudang_id']) && is_numeric($filters['gudang_id'])) {
-            $pengiriman->where('mt_pengiriman.gudang_id', (int)$filters['gudang_id']);
+            $pengiriman->where('mt_log_pengiriman.gudang_id', (int)$filters['gudang_id']);
         }
 
         if (isset($filters['kd_pegawai']) && is_numeric($filters['kd_pegawai'])) {
-            $pengiriman->where('mt_pengiriman.kd_pegawai', (int)$filters['kd_pegawai']);
+            $pengiriman->where('mt_log_pengiriman.kd_pegawai', (int)$filters['kd_pegawai']);
         }
 
         if (!empty($filters['start_date'])) {
-            $pengiriman->where('mt_pengiriman.tg_pengiriman >=', $filters['start_date']);
+            $pengiriman->where('mt_log_pengiriman.tg_pengiriman >=', $filters['start_date']);
         }
         if (!empty($filters['end_date'])) {
-            $pengiriman->where('mt_pengiriman.tg_pengiriman <=', $filters['end_date']);
+            $pengiriman->where('mt_log_pengiriman.tg_pengiriman <=', $filters['end_date']);
         }
 
         return $pengiriman->findAll();
@@ -72,7 +72,7 @@ class PengirimanModel extends Model
         $start = $filters['start_date'] ?? null;
         $end   = $filters['end_date'] ?? null;
 
-        $upah = $this->db->table('mt_pengiriman p');
+        $upah = $this->db->table('mt_log_pengiriman p');
         $upah->select("
             p.kd_pegawai, pg.nama AS nama_driver, p.gudang_id, g.nama AS nama_gudang,
             SUM(ROUND((COALESCE(p.jumlah_perjalanan, 0) * NULLIF(g.gaji_driver, 0)), 0)) AS total_upah_perjalanan,
