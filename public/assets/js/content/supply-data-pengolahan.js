@@ -158,6 +158,20 @@ function initializeSupplyPengolahanTable(data) {
                     return html;
                 }
             },
+            { 
+                targets: 2, 
+                render: function (data, type, row) {
+                    let html = data ? `<div>${data}</div>` : '<div>-</div>';
+            
+                    html += `
+                        <div>
+                            <small class="fst-italic text-muted">Kode Container: ${row.kode_container || '-'}</small>
+                        </div>
+                    `;
+            
+                    return html;
+                }
+            },
             { targets: [4,5,6], render: (d) => d ? formatAngkaDecimal(d) : "-" },
             {
                 targets: 7,

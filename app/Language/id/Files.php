@@ -94,4 +94,5 @@ return [
     "Input_Kode_Container" => "Masukkan Kode Container",
     "Kode_Pegawai" => "Nama Pegawai",
     "Input_Nama_Pegawai" => "Masukkan Nama Pegawai",
+    "Kasbon" => "Pinjaman Pegawai",
 ];

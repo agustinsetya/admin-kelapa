@@ -12,6 +12,7 @@ class PengolahanModel extends Model
     protected $allowedFields = [
         'tg_pengolahan',
         'gudang_id',
+        'kode_container',
         'kd_pegawai',
         'berat_daging',
         'berat_kopra',
@@ -32,6 +33,7 @@ class PengolahanModel extends Model
                     mt_pengolahan.mt_pengolahan_id,
                     mt_pengolahan.tg_pengolahan,
                     mt_pengolahan.gudang_id,
+                    mt_pengolahan.kode_container,
                     mt_pengolahan.kd_pegawai,
                     mt_pengolahan.berat_daging,
                     mt_pengolahan.berat_kopra,
@@ -122,21 +124,72 @@ class PengolahanModel extends Model
 
     public function saveDataPengolahan(array $data, $pengolahanId = null): bool
     {
+        $this->db->transStart();
+
+        $pembelianModel = new \App\Models\PembelianModel();
+
+        // Ambil data lama
+        $oldData = null;
         if ($pengolahanId !== null) {
+            $oldData = $this->where('mt_pengolahan_id', $pengolahanId)->first();
+            if (!$oldData) {
+                $this->db->transRollback();
+                return false;
+            }
             $data['mt_pengolahan_id'] = $pengolahanId;
         }
 
-        $this->db->transStart();
-
-        $exists = $pengolahanId !== null && $this->where('mt_pengolahan_id', $pengolahanId)->countAllResults() > 0;
-
-        if ($exists) {
+        if ($pengolahanId !== null) {
             $ok = $this->update($pengolahanId, $data);
         } else {
             $ok = $this->insert($data, false) !== false;
         }
 
         if (!$ok) {
+            $this->db->transRollback();
+            return false;
+        }
+
+        // Cari pembelian berdasarkan kode_container + gudang_id
+        $pembelian = $pembelianModel
+            ->where('kode_container', $data['kode_container'])
+            ->where('gudang_id', $data['gudang_id'])
+            ->first();
+
+        if (!$pembelian) {
+            $this->db->transRollback();
+            return false;
+        }
+
+        // Hitung nilai baru untuk mt_pembelian
+        $hasilDaging = (float)$pembelian['hasil_olahan_daging'];
+        $hasilKopra  = (float)$pembelian['hasil_olahan_kopra'];
+        $hasilKulit  = (float)$pembelian['hasil_olahan_kulit'];
+
+        if ($oldData) {
+            // update → rollback nilai lama lalu tambah nilai baru
+            $hasilDaging = ($hasilDaging - (float)$oldData['berat_daging']) + (float)$data['berat_daging'];
+            $hasilKopra  = ($hasilKopra  - (float)$oldData['berat_kopra'])  + (float)$data['berat_kopra'];
+            $hasilKulit  = ($hasilKulit  - (float)$oldData['berat_kulit'])  + (float)$data['berat_kulit'];
+        } else {
+            // insert baru → langsung tambahkan nilai baru
+            $hasilDaging += (float)$data['berat_daging'];
+            $hasilKopra  += (float)$data['berat_kopra'];
+            $hasilKulit  += (float)$data['berat_kulit'];
+        }
+
+        // Update mt_pembelian
+        $updatePembelian = $pembelianModel
+            ->where('kode_container', $data['kode_container'])
+            ->where('gudang_id', $data['gudang_id'])
+            ->set([
+                'hasil_olahan_daging' => $hasilDaging,
+                'hasil_olahan_kopra'  => $hasilKopra,
+                'hasil_olahan_kulit'  => $hasilKulit,
+            ])
+            ->update();
+
+        if (!$updatePembelian) {
             $this->db->transRollback();
             return false;
         }

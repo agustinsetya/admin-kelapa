@@ -277,6 +277,35 @@ class Validation extends BaseConfig
             'numeric'  => 'Biaya harus angka.',
         ],
     ];
+    
+    public $financeKasbon = [
+        'tg_kasbon'          => 'required',
+        'kb_gudang_id'       => 'required|numeric',
+        'kb_pegawai_id'      => 'required|numeric',
+        'kb_status'          => 'required',
+        'jumlah'             => 'required|numeric',
+    ];
+
+    public $financeKasbon_errors = [
+        'tg_kasbon' => [
+            'required' => 'Tanggal Kasbon wajib diisi.',
+        ],
+        'kb_gudang_id' => [
+            'required' => 'Gudang wajib diisi.',
+            'numeric'  => 'Gudang harus angka.',
+        ],
+        'kb_pegawai_id' => [
+            'required' => 'Pegawai wajib diisi.',
+            'numeric'  => 'Pegawai harus angka.',
+        ],
+        'kb_status' => [
+            'required' => 'Status wajib diisi.',
+        ],
+        'jumlah' => [
+            'required' => 'Jumlah wajib diisi.',
+            'numeric'  => 'Jumlah harus angka.',
+        ],
+    ];
 
     public $financeGajiPegawai = [
         'data'             => 'required',

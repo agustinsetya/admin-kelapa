@@ -94,4 +94,5 @@ return [
     "Input_Kode_Container" => "Input Container Code",
     "Nama_Pegawai" => "Employee Name",
     "Input_Nama_Pegawai" => "Input Employee Name",
+    "Kasbon" => "Employee Loans",
 ];

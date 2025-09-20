@@ -83,6 +83,11 @@
                             </a>
                         </li>
                         <li>
+                            <a href="<?= url_to('finance-kasbon') ?>">
+                                <span data-key="t-kasbon"><?= lang('Files.Kasbon') ?></span>
+                            </a>
+                        </li>
+                        <li>
                             <a href="<?= url_to('finance-gaji-driver') ?>">
                                 <span data-key="t-gaji-driver"><?= lang('Files.Gaji_Driver') ?></span>
                             </a>
