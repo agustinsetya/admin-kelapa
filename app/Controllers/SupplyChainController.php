@@ -269,12 +269,6 @@ class SupplyChainController extends AuthRequiredController
             return $this->jsonError('Tidak terautentik', 401);
         }
 
-        if (!$this->validate('supplyChainPengolahan')) {
-            return $this->jsonError('Validasi gagal', 422, [
-                'errors' => $this->validator->getErrors(),
-            ]);
-        }
-
         $input = $this->request->getPost();
         $id = $input['id'] ?? null;
 

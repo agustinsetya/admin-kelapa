@@ -142,6 +142,11 @@ class PengolahanModel extends Model
             $data['mt_pengolahan_id'] = $pengolahanId;
         }
 
+        // Normalisasi input agar selalu int
+        $data['berat_daging'] = isset($data['berat_daging']) ? (int) $data['berat_daging'] : 0;
+        $data['berat_kopra']  = isset($data['berat_kopra'])  ? (int) $data['berat_kopra']  : 0;
+        $data['berat_kulit']  = isset($data['berat_kulit'])  ? (int) $data['berat_kulit']  : 0;
+
         // Insert / Update data pengolahan
         if ($pengolahanId !== null) {
             $ok = $this->update($pengolahanId, $data);
@@ -166,21 +171,26 @@ class PengolahanModel extends Model
         }
 
         // Hitung nilai baru untuk mt_pembelian
-        $hasilDaging = (float) $pembelian['hasil_olahan_daging'];
-        $hasilKopra  = (float) $pembelian['hasil_olahan_kopra'];
-        $hasilKulit  = (float) $pembelian['hasil_olahan_kulit'];
+        $hasilDaging = (int) $pembelian['hasil_olahan_daging'];
+        $hasilKopra  = (int) $pembelian['hasil_olahan_kopra'];
+        $hasilKulit  = (int) $pembelian['hasil_olahan_kulit'];
 
         if ($oldData) {
             // Update → rollback nilai lama lalu tambah nilai baru
-            $hasilDaging = ($hasilDaging - (float) $oldData['berat_daging']) + (float) $data['berat_daging'];
-            $hasilKopra  = ($hasilKopra  - (float) $oldData['berat_kopra'])  + (float) $data['berat_kopra'];
-            $hasilKulit  = ($hasilKulit  - (float) $oldData['berat_kulit'])  + (float) $data['berat_kulit'];
+            $hasilDaging = ($hasilDaging - (int) $oldData['berat_daging']) + $data['berat_daging'];
+            $hasilKopra  = ($hasilKopra  - (int) $oldData['berat_kopra'])  + $data['berat_kopra'];
+            $hasilKulit  = ($hasilKulit  - (int) $oldData['berat_kulit'])  + $data['berat_kulit'];
         } else {
             // Insert baru → langsung tambahkan nilai baru
-            $hasilDaging += (float) $data['berat_daging'];
-            $hasilKopra  += (float) $data['berat_kopra'];
-            $hasilKulit  += (float) $data['berat_kulit'];
+            $hasilDaging += $data['berat_daging'];
+            $hasilKopra  += $data['berat_kopra'];
+            $hasilKulit  += $data['berat_kulit'];
         }
+
+        log_message('debug', 'Pembelian sebelum update: ' . json_encode($pembelian));
+        log_message('debug', 'Data pengolahan lama: ' . json_encode($oldData));
+        log_message('debug', 'Data pengolahan baru: ' . json_encode($data));
+        log_message('debug', "Hasil olahan daging: {$hasilDaging}, kopra: {$hasilKopra}, kulit: {$hasilKulit}");
 
         // Update mt_pembelian
         $updatePembelian = $pembelianModel
@@ -190,6 +200,7 @@ class PengolahanModel extends Model
                 'hasil_olahan_daging' => $hasilDaging,
                 'hasil_olahan_kopra'  => $hasilKopra,
                 'hasil_olahan_kulit'  => $hasilKulit,
+                'is_proses'           => 1,
             ])
             ->update();
 

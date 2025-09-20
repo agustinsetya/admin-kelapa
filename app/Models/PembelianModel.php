@@ -17,6 +17,7 @@ class PembelianModel extends Model
         'hasil_olahan_daging',
         'hasil_olahan_kopra',
         'hasil_olahan_kulit',
+        'is_proses',
         'created_at',
         'updated_by',
     ];
@@ -35,6 +36,7 @@ class PembelianModel extends Model
                     mt_pembelian.hasil_olahan_daging,
                     mt_pembelian.hasil_olahan_kopra,
                     mt_pembelian.hasil_olahan_kulit,
+                    mt_pembelian.is_proses,
                     m_gudang.nama AS nama_gudang,
                     mt_pembelian.created_at,
                 ')

@@ -252,35 +252,68 @@ function getDetailSupplyPengolahan(button) {
 }
 
 function openModalPengolahan(mode, data = null) {
-    $("#supply-pengolahan-form")[0].reset();
-    $("#supply-pengolahan-form").removeClass("was-validated");
-    $("#peng_gudang_id, #peng_pegawai_id, #peng_kode_container").val(null).trigger("change").removeClass("is-invalid is-valid");
+    const $form = $("#supply-pengolahan-form");
 
-    $("#supply-pengolahan-form input[name='_method']").remove();
+    $form[0].reset();
+    $form.removeClass("was-validated");
+    $form.find(".is-invalid, .is-valid").removeClass("is-invalid is-valid");
+
+    $(".fake-input").remove(); 
+    $("#peng_gudang_id, #peng_pegawai_id, #peng_kode_container").show();
+
+    $form.find("input[name='_method']").remove();
 
     if (mode === "edit" && data) {
         $("#supplyPengolahanModal .modal-title").text("Edit Data Pengolahan");
-    
-        $("#tg_pengolahan").val(data.tg_pengolahan.split("T")[0]);
-        $("#peng_gudang_id").val(data.gudang_id).trigger("change");
-        $("#peng_pegawai_id").val(data.kd_pegawai).trigger("change");
-        $("#peng_kode_container").val(data.kode_container).trigger("change");
+
+        $("#tg_pengolahan")
+            .val(data.tg_pengolahan.split("T")[0])
+            .prop("readonly", true);
+
+        $("#peng_gudang_id")
+            .val(data.gudang_id)
+            .hide()
+            .after(`
+                <input type="text" readonly class="form-control fake-input" 
+                       value="${data.nama_gudang}">
+            `);
+
+        $("#peng_pegawai_id")
+        .hide()
+        .after(`
+            <input type="text" readonly class="form-control fake-input" 
+                value="${data.nama_pegawai}">
+            <input type="hidden" name="peng_pegawai_id" value="${data.kd_pegawai}">
+        `);
+
+        $("#peng_kode_container")
+        .hide()
+        .after(`
+            <input type="text" readonly class="form-control fake-input" 
+                value="${data.kode_container}">
+            <input type="hidden" name="peng_kode_container" value="${data.kode_container}">
+        `);
+
         $("#berat_daging").val(data.berat_daging);
         $("#berat_kopra").val(data.berat_kopra);
         $("#berat_kulit").val(data.berat_kulit);
-        $("#bonus").val(formatRupiah(data.bonus) ?? 0);
-    
-        $("#supply-pengolahan-form").data("action", "edit");
-        $("#supply-pengolahan-form").data("id", data.mt_pengolahan_id);
+        $("#bonus_produksi").val(formatRupiah(data.bonus) ?? 0);
 
-        $("#supply-pengolahan-form").append(
-            '<input type="hidden" name="_method" value="PATCH">'
-        );
+        $form.data("action", "edit");
+        $form.data("id", data.mt_pengolahan_id);
+        $form.append('<input type="hidden" name="_method" value="PATCH">');
     } else {
         $("#supplyPengolahanModal .modal-title").text("Tambah Data Pengolahan");
-    
-        $("#supply-pengolahan-form").data("action", "add");
-        $("#supply-pengolahan-form").removeData("id");
+
+        $("#tg_pengolahan").prop("readonly", false);
+        $("#peng_gudang_id, #peng_pegawai_id, #peng_kode_container")
+            .val("")
+            .trigger("change");
+
+        reloadDropdownGudang("#peng_gudang_id");
+
+        $form.data("action", "add");
+        $form.removeData("id");
     }
 
     $("#supplyPengolahanModal").modal("show");
