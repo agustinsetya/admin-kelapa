@@ -210,7 +210,7 @@ function reloadDropdownPegawai() {
             const $dropdown = $("#us_pegawai_id");
             $dropdown.empty();
 
-            $dropdown.append('<option value="">Pilih Pegawai</option>');
+            $dropdown.append('<option value="" disabled selected>Pilih Pegawai</option>');
 
             if (Array.isArray(response.data)) {
                 response.data.forEach(function(pegawai) {

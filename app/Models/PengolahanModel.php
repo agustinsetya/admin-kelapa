@@ -128,10 +128,13 @@ class PengolahanModel extends Model
 
         $pembelianModel = new \App\Models\PembelianModel();
 
-        // Ambil data lama
+        // Ambil data lama (pengolahan)
         $oldData = null;
         if ($pengolahanId !== null) {
-            $oldData = $this->where('mt_pengolahan_id', $pengolahanId)->first();
+            $oldData = $this->asArray()
+                ->where('mt_pengolahan_id', $pengolahanId)
+                ->first();
+
             if (!$oldData) {
                 $this->db->transRollback();
                 return false;
@@ -139,6 +142,7 @@ class PengolahanModel extends Model
             $data['mt_pengolahan_id'] = $pengolahanId;
         }
 
+        // Insert / Update data pengolahan
         if ($pengolahanId !== null) {
             $ok = $this->update($pengolahanId, $data);
         } else {
@@ -151,7 +155,7 @@ class PengolahanModel extends Model
         }
 
         // Cari pembelian berdasarkan kode_container + gudang_id
-        $pembelian = $pembelianModel
+        $pembelian = $pembelianModel->asArray()
             ->where('kode_container', $data['kode_container'])
             ->where('gudang_id', $data['gudang_id'])
             ->first();
@@ -162,20 +166,20 @@ class PengolahanModel extends Model
         }
 
         // Hitung nilai baru untuk mt_pembelian
-        $hasilDaging = (float)$pembelian['hasil_olahan_daging'];
-        $hasilKopra  = (float)$pembelian['hasil_olahan_kopra'];
-        $hasilKulit  = (float)$pembelian['hasil_olahan_kulit'];
+        $hasilDaging = (float) $pembelian['hasil_olahan_daging'];
+        $hasilKopra  = (float) $pembelian['hasil_olahan_kopra'];
+        $hasilKulit  = (float) $pembelian['hasil_olahan_kulit'];
 
         if ($oldData) {
-            // update → rollback nilai lama lalu tambah nilai baru
-            $hasilDaging = ($hasilDaging - (float)$oldData['berat_daging']) + (float)$data['berat_daging'];
-            $hasilKopra  = ($hasilKopra  - (float)$oldData['berat_kopra'])  + (float)$data['berat_kopra'];
-            $hasilKulit  = ($hasilKulit  - (float)$oldData['berat_kulit'])  + (float)$data['berat_kulit'];
+            // Update → rollback nilai lama lalu tambah nilai baru
+            $hasilDaging = ($hasilDaging - (float) $oldData['berat_daging']) + (float) $data['berat_daging'];
+            $hasilKopra  = ($hasilKopra  - (float) $oldData['berat_kopra'])  + (float) $data['berat_kopra'];
+            $hasilKulit  = ($hasilKulit  - (float) $oldData['berat_kulit'])  + (float) $data['berat_kulit'];
         } else {
-            // insert baru → langsung tambahkan nilai baru
-            $hasilDaging += (float)$data['berat_daging'];
-            $hasilKopra  += (float)$data['berat_kopra'];
-            $hasilKulit  += (float)$data['berat_kulit'];
+            // Insert baru → langsung tambahkan nilai baru
+            $hasilDaging += (float) $data['berat_daging'];
+            $hasilKopra  += (float) $data['berat_kopra'];
+            $hasilKulit  += (float) $data['berat_kulit'];
         }
 
         // Update mt_pembelian

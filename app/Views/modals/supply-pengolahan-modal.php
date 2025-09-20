@@ -21,9 +21,6 @@
                                 <label class="form-label mb-1">Gudang</label>
                                 <select name="peng_gudang_id" id="peng_gudang_id" class="form-select" <?= $roleScope == 'gudang' ? 'disabled' : '' ?>>
                                     <option value="" disabled selected>Pilih Gudang</option>
-                                    <?php foreach ($gudang as $g): ?>
-                                        <option value="<?= esc($g->m_gudang_id) ?>"><?= esc($g->nama) ?></option>
-                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>
@@ -34,9 +31,16 @@
                                 <label class="form-label mb-1">Pegawai</label>
                                 <select name="peng_pegawai_id" id="peng_pegawai_id" class="form-select">
                                     <option value="" disabled selected>Pilih Pegawai</option>
-                                    <?php foreach ($pegawai as $p): ?>
-                                        <option value="<?= esc($p->kd_pegawai) ?>"><?= esc($p->nama_pegawai) ?></option>
-                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="mb-3">
+                                <label class="form-label mb-1">Kode Container</label>
+                                <select name="peng_kode_container" id="peng_kode_container" class="form-select">
+                                    <option value="" disabled selected>Pilih Kode Container</option>
                                 </select>
                             </div>
                         </div>

@@ -103,7 +103,13 @@ class SupplyChainController extends AuthRequiredController
 
 	public function getDataPembelian()
     {
-        $filters   = $this->filtersFromUser();
+        $filters = $this->filtersFromUser();
+
+        $gudangId = $this->request->getGet('gudang');
+        if (!empty($gudangId)) {
+            $filters['gudang_id'] = $gudangId;
+        }
+        
         $pembelian = $this->pembelianModel->getDataPembelian($filters);
 
         return $this->jsonSuccess(['data' => $pembelian]);
@@ -234,7 +240,7 @@ class SupplyChainController extends AuthRequiredController
         $data = [
             'tg_pengolahan'	    => $input['tg_pengolahan'],
             'gudang_id'		    => $input['peng_gudang_id'],
-            'kode_container'    => $input['kode_container'],
+            'kode_container'    => $input['peng_kode_container'],
             'kd_pegawai'	    => $input['peng_pegawai_id'],
             'berat_daging'      => $input['berat_daging'],
             'berat_kopra'       => $input['berat_kopra'],
@@ -279,7 +285,7 @@ class SupplyChainController extends AuthRequiredController
         $data = [
             'tg_pengolahan'	    => $input['tg_pengolahan'],
             'gudang_id'		    => $input['peng_gudang_id'],
-            'kode_container'    => $input['kode_container'],
+            'kode_container'    => $input['peng_kode_container'],
             'kd_pegawai'	    => $input['peng_pegawai_id'],
             'berat_daging'      => $input['berat_daging'],
             'berat_kopra'       => $input['berat_kopra'],

@@ -3,6 +3,13 @@
 $((function () {
     applyFilterPengolahan();
 
+    $("#peng_gudang_id").on("change", function () {
+        let gudangId = $(this).val();
+
+        reloadDropdownPegawaiByGudang('#peng_pegawai_id', gudangId);
+        reloadDropdownContainerPembelianByGudang('#peng_kode_container', gudangId);
+    });
+
     $("#btn-tambah-pengolahan").on("click", function () {
         openModalPengolahan("add");
     });
@@ -30,6 +37,13 @@ $((function () {
             $("#peng_pegawai_id").addClass("is-invalid");
         } else {
             $("#peng_pegawai_id").removeClass("is-invalid").addClass("is-valid");
+        }
+        
+        const containerValue = $("#peng_kode_container").val();
+        if (!containerValue) {
+            $("#peng_kode_container").addClass("is-invalid");
+        } else {
+            $("#peng_kode_container").removeClass("is-invalid").addClass("is-valid");
         }
     
         if (form.checkValidity() === false) {
@@ -100,6 +114,7 @@ function applyFilterPengolahan() {
     getDataSupplyPengolahan().done(function(response) {
         const rows = Array.isArray(response?.data) ? response.data : [];
         initializeSupplyPengolahanTable(rows);
+        reloadDropdownGudang("#peng_gudang_id");
     }).fail(function(jqXHR, textStatus, errorThrown) {
         console.error("Request failed:", textStatus, errorThrown, jqXHR.responseText);
     });
@@ -239,7 +254,7 @@ function getDetailSupplyPengolahan(button) {
 function openModalPengolahan(mode, data = null) {
     $("#supply-pengolahan-form")[0].reset();
     $("#supply-pengolahan-form").removeClass("was-validated");
-    $("#peng_gudang_id, #peng_pegawai_id").val(null).trigger("change").removeClass("is-invalid is-valid");
+    $("#peng_gudang_id, #peng_pegawai_id, #peng_kode_container").val(null).trigger("change").removeClass("is-invalid is-valid");
 
     $("#supply-pengolahan-form input[name='_method']").remove();
 
@@ -249,6 +264,7 @@ function openModalPengolahan(mode, data = null) {
         $("#tg_pengolahan").val(data.tg_pengolahan.split("T")[0]);
         $("#peng_gudang_id").val(data.gudang_id).trigger("change");
         $("#peng_pegawai_id").val(data.kd_pegawai).trigger("change");
+        $("#peng_kode_container").val(data.kode_container).trigger("change");
         $("#berat_daging").val(data.berat_daging);
         $("#berat_kopra").val(data.berat_kopra);
         $("#berat_kulit").val(data.berat_kulit);

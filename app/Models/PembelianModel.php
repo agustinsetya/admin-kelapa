@@ -48,6 +48,10 @@ class PembelianModel extends Model
             $pembelian->where('mt_pembelian.gudang_id', (int)$filters['gudang_id']);
         }
         
+        if (isset($filters['kode_container'])) {
+            $pembelian->where('mt_pembelian.kode_container', $filters['kode_container']);
+        }
+        
 		return $pembelian->findAll();
     }
 

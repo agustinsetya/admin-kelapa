@@ -198,3 +198,105 @@ function getIsoRange(id) {
         };
     }
 }
+
+function reloadDropdownGudang(targetId) {
+    $.ajax({
+        url: base_url + 'master/gudang/data',
+        method: "GET",
+        dataType: "json",
+        success: function (response) {
+            const $target = $(targetId);
+            $target.empty();
+
+            $target.append('<option value="" disabled selected>Pilih Gudang</option>');
+
+            if (Array.isArray(response.data)) {
+                response.data.forEach(function(gudang) {
+                    $target.append(
+                        $('<option>', {
+                            value: gudang.m_gudang_id,
+                            text: gudang.nama
+                        })
+                    );
+                });
+            }
+
+            $target.trigger("change");
+        },
+        error: function () {
+            console.error("Gagal memuat data gudang:", xhr.responseText);
+        }
+    });
+}
+
+function reloadDropdownPegawaiByGudang(targetId, gudangId) {
+    const $target = $(targetId);
+
+    $target
+        .empty()
+        .append('<option value="" disabled selected>Pilih Pegawai</option>')
+        .prop("disabled", true);
+
+    if (!gudangId) return;
+
+    $.ajax({
+        url: base_url + "master/pegawai/data",
+        method: "GET",
+        data: {
+            gudang: gudangId,
+        },
+        dataType: "json",
+        success: function (response) {
+            if (Array.isArray(response.data)) {
+                response.data.forEach(function(pegawai) {
+                    $target.append(
+                        $('<option>', {
+                            value: pegawai.kd_pegawai,
+                            text: pegawai.nama_pegawai
+                        })
+                    );
+                });
+
+                $target.prop("disabled", false);
+            }
+
+            $target.trigger("change");
+        },
+    });
+}
+
+function reloadDropdownContainerPembelianByGudang(targetId, gudangId) {
+    const $target = $(targetId);
+
+    $target
+        .empty()
+        .append('<option value="" disabled selected>Pilih Kode Container</option>')
+        .prop("disabled", true);
+
+    if (!gudangId) return;
+
+    $.ajax({
+        url: base_url + "supply-chain/pembelian/data",
+        method: "GET",
+        data: {
+            gudang: gudangId,
+        },
+        dataType: "json",
+        success: function (response) {
+            if (Array.isArray(response.data)) {
+                response.data.forEach(function(pembelian) {
+                    $target.append(
+                        $('<option>', {
+                            value: pembelian.kode_container,
+                            text: pembelian.kode_container
+                        })
+                    );
+                });
+
+                $target.prop("disabled", false);
+            }
+
+            $target.trigger("change");
+        },
+    });
+}
