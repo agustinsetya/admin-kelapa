@@ -48,7 +48,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row pg_gudang" style="display: none;">
                         <div class="col-lg-12">
                             <div class="mb-3">
                                 <label class="form-label mb-1">Penempatan</label>
