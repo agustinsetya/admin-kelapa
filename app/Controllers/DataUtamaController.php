@@ -306,22 +306,26 @@ class DataUtamaController extends AuthRequiredController
             return $this->jsonError('Tidak terautentik', 401);
         }
 
-        if (!$this->validate('masterPegawai')) {
-            return $this->response->setJSON([
-                'status' => 'error',
-                'message' => 'Validasi gagal',
-                'errors' => $this->validator->getErrors()
-            ])->setStatusCode(422);
-        }
-
         $input = $this->request->getPost();
+
+        if (!$this->validate('masterPegawai')) {
+            return $this->jsonError('Validasi gagal', 422, [
+                'errors' => $this->validator->getErrors(),
+            ]);
+        }
+    
+        if ($input['peg_role_id'] != 1 && empty($input['pg_gudang_id'])) {
+            return $this->jsonError('Validasi gagal', 422, [
+                'errors' => ['pg_gudang_id' => 'Penempatan wajib diisi.'],
+            ]);
+        }
 
         $data = [
             'kd_pegawai'    => $input['kd_pegawai'],
             'nama'          => $input['nama_pegawai'],
             'jenis_kelamin' => $input['jenis_kelamin'],
             'role_id'       => $input['peg_role_id'],
-            'penempatan_id' => $input['pg_gudang_id'],
+            'penempatan_id' => $input['peg_role_id'] == 1 ? null : $input['pg_gudang_id'],
             'created_by'	=> $user->email ?? null,
         ];
 
@@ -345,14 +349,20 @@ class DataUtamaController extends AuthRequiredController
             return $this->jsonError('Tidak terautentik', 401);
         }
 
+        $input = $this->request->getPost();
+        $id = $input['id'] ?? null;
+
         if (!$this->validate('masterPegawai')) {
             return $this->jsonError('Validasi gagal', 422, [
                 'errors' => $this->validator->getErrors(),
             ]);
         }
-
-        $input = $this->request->getPost();
-        $id = $input['id'] ?? null;
+    
+        if ($input['peg_role_id'] != 1 && empty($input['pg_gudang_id'])) {
+            return $this->jsonError('Validasi gagal', 422, [
+                'errors' => ['pg_gudang_id' => 'Penempatan wajib diisi.'],
+            ]);
+        }
 
         if (!$id) {
             return $this->jsonError('User ID tidak ditemukan', 400);
@@ -363,7 +373,7 @@ class DataUtamaController extends AuthRequiredController
             'nama'          => $input['nama_pegawai'],
             'jenis_kelamin' => $input['jenis_kelamin'],
             'role_id'       => $input['peg_role_id'],
-            'penempatan_id' => $input['pg_gudang_id'],
+            'penempatan_id' => $input['peg_role_id'] == 1 ? null : $input['pg_gudang_id'],
             'updated_by'	=> $user->email ?? null,
         ];
 

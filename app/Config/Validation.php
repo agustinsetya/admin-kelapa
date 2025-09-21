@@ -185,7 +185,7 @@ class Validation extends BaseConfig
         'nama_pegawai'      => 'required',
         'jenis_kelamin' => 'required|in_list[P,L]',
         'peg_role_id'   => 'required|numeric',
-        'pg_gudang_id'   => 'required|numeric',
+        'pg_gudang_id'   => 'permit_empty|numeric',
     ];
 
     public $masterPegawai_errors = [
@@ -205,7 +205,6 @@ class Validation extends BaseConfig
             'numeric'  => 'Peran harus angka.',
         ],
         'pg_gudang_id' => [
-            'required'  => 'Penempatan tidak boleh kosong.',
             'numeric'  => 'Penempatan harus angka.',
         ],
     ];
