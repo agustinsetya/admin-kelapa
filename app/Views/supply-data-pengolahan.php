@@ -38,7 +38,7 @@
                                         </div>
                                     </div>
                                     <div class="card-body">
-                                        <table class="table table-bordered dt-responsive nowrap w-100 dt-pengolahanTable">
+                                        <table class="table table-bordered dt-responsive nowrap w-100 dt-logPengolahanTable">
                                             <thead>
                                                 <tr>
                                                     <th>#</th>

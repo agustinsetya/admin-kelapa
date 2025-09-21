@@ -1,4 +1,3 @@
-// public/assets/js/content/report.js
 (function () {
   'use strict';
   
@@ -24,55 +23,15 @@
     }
     return true;
   }
-  
-  function initRangePicker() {
-    const el = byId('tanggal_pengolahan');
-    if (!el || !hasDRP()) return;
 
-    $(el).daterangepicker({
-      autoUpdateInput: false,     
-      autoApply: true,
-      locale: {
-        format: 'DD MMM YYYY',
-        separator: ' – ',
-        applyLabel: 'Terapkan',
-        cancelLabel: 'Bersihkan'
-      },
-      opens: 'right',
-      showDropdowns: true,
-      alwaysShowCalendars: true
-    });
+  initRangePicker('tanggal_pengolahan');
+  getIsoRange('tanggal_pengolahan');
 
-    $(el).on('apply.daterangepicker', function (ev, picker) {
-      this.value = picker.startDate.format('DD MMM YYYY') + ' – ' + picker.endDate.format('DD MMM YYYY');
-    });
-
-    $(el).on('cancel.daterangepicker', function () {
-      this.value = '';
-    });
-  }
-
-  
-  function getIsoRange() {
-    const el = byId('tanggal_pengolahan');
-    if (!el || !el.value || !hasDRP()) return { start: '', end: '' };
-    const drp = $('#tanggal_pengolahan').data('daterangepicker');
-    if (!drp) return { start: '', end: '' };
-    return {
-      start: drp.startDate ? drp.startDate.format('YYYY-MM-DD') : '',
-      end:   drp.endDate   ? drp.endDate.format('YYYY-MM-DD')   : ''
-    };
-  }
-
-  async function fetchChartData() {
-    const gudangEl = byId('gudang_id');
-    const gudang_id = gudangEl && gudangEl.value ? gudangEl.value : '';
-    const { start, end } = getIsoRange();
-
+  async function fetchChartData(gudang = null, start = '', end = '') {
     const params = new URLSearchParams();
-    if (gudang_id) params.append('gudang_id', gudang_id); // kosong = semua gudang
-    if (start)     params.append('start_date', start);
-    if (end)       params.append('end_date', end);
+    if (gudang) params.append('gudang_id', gudang);
+    if (start)  params.append('start_date', start);
+    if (end)    params.append('end_date', end);
 
     const url = `${base_url}/report/pengolahan/data${params.toString() ? '?' + params.toString() : ''}`;
     const resp = await fetch(url, { headers: { Accept: 'application/json' } });
@@ -82,14 +41,13 @@
     return json;
   }
 
-  
   function setChartWidth(categories) {
     const el = byId('column_chart');
     const wrap = byId('chart-scroll');
     const count = Array.isArray(categories) ? categories.length : 0;
     const width = Math.max(MIN_WIDTH, count * PX_PER_CAT);
     if (el) el.style.width = width + 'px';
-    if (wrap) wrap.scrollLeft = 0; // reset posisi scroll
+    if (wrap) wrap.scrollLeft = 0; 
   }
 
   function renderChart({ categories, series }) {
@@ -120,54 +78,142 @@
     chart.render();
   }
 
-  async function loadChart() {
+  async function loadChart(gudang = null, start = '', end = '') {
     try {
-      const data = await fetchChartData();
-      if (!data.categories || data.categories.length === 0) {
+        const data = await fetchChartData(gudang, start, end);
         renderChart({
-          categories: [],
-          series: [
-            { name: 'Daging (kg)', data: [] },
-            { name: 'Kopra (kg)',  data: [] },
-            { name: 'Kulit (kg)',  data: [] },
-          ]
+            categories: data.categories || [],
+            series: data.series || [
+                { name: 'Daging (kg)', data: [] },
+                { name: 'Kopra (kg)', data: [] },
+                { name: 'Kulit (kg)', data: [] },
+            ]
         });
-        return;
-      }
-      renderChart({ categories: data.categories, series: data.series });
     } catch (err) {
-      console.error('[report] Gagal memuat data chart:', err);
-      renderChart({ categories: [], series: [] });
+        console.error('[report] Gagal memuat data chart:', err);
+        renderChart({ categories: [], series: [] });
     }
   }
 
-  function bindUI() {
-    const applyBtn = byId('applyReportFilter');
-    if (applyBtn) applyBtn.addEventListener('click', loadChart);
+  function applyFilterReportRendumenPengolahan(gudang = null, start = '', end = '') {
+    loadChart(gudang, start, end);
 
-    const resetBtn = byId('resetReportFilter');
-    if (resetBtn) {
-      resetBtn.addEventListener('click', function () {
-        const gudangEl = byId('gudang_id');
-        const rangeEl  = byId('tanggal_pengolahan');
-        if (gudangEl) gudangEl.selectedIndex = 0; // "Semua Gudang"
-        if (rangeEl)  rangeEl.value = '';
+    getDataReportRendumenPengolahan(gudang, start, end).done(function(response) {
+        const rows = Array.isArray(response?.data) ? response.data : [];
+        initializeReportRendumenPengolahanTable(rows);
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        console.error("Request failed:", textStatus, errorThrown, jqXHR.responseText);
+    });
+  }
 
-        // reset internal state DRP ke hari ini (opsional)
-        if (hasDRP()) {
-          const drp = $('#tanggal_pengolahan').data('daterangepicker');
-          if (drp) { drp.setStartDate(moment()); drp.setEndDate(moment()); }
-        }
+  function getDataReportRendumenPengolahan(gudang = null, start = '', end = '') {
+    return $.ajax({
+        url: base_url + '/report/rendumen-pengolahan/data',
+        method: 'GET',
+        data: {
+          gudang_id: gudang,
+          start_date: start,
+          end_date: end
+        },
+        dataType: 'json'
+    });
+  }
 
-        loadChart();
+  function initializeReportRendumenPengolahanTable(data) {
+    const $dpm = $(".dt-pengolahanTable").first();
+    const list = Array.isArray(data) ? data : [];
+
+    if ($.fn.dataTable.isDataTable($dpm)) {
+        const dt = $dpm.DataTable();
+        dt.clear();
+        if (list.length) dt.rows.add(list);
+        dt.draw(false);
+        return;
+    }
+
+    $dpm.DataTable({
+        data: list,
+        columns: [
+            { data: null, defaultContent: "" },
+            { data: 'tg_pengolahan', defaultContent: "-" },
+            { data: 'nama_gudang', defaultContent: "-" },
+            { data: null, defaultContent: "-" },
+            { data: null, defaultContent: "-" },
+        ],
+        columnDefs: [
+            { targets: 0, render: (d,t,r,m) => m.row + m.settings._iDisplayStart + 1 },
+            { targets: 1, render: (d) => d ? formatTanggal(d) : "-" },
+            {
+                targets: 3,
+                render: (data, type, row) => {
+                    const daging = row.hasil_olahan_daging ? `${formatAngkaDecimal(row.hasil_olahan_daging)} kg` : "-";
+                    const kopra  = row.hasil_olahan_kopra ? `${formatAngkaDecimal(row.hasil_olahan_kopra)} kg` : "-";
+                    const kulit  = row.hasil_olahan_kulit ? `${formatAngkaDecimal(row.hasil_olahan_kulit)} kg` : "-";
+            
+                    return `
+                        Daging Kelapa : ${daging}<br>
+                        Kopra Kelapa  : ${kopra}<br>
+                        Kulit Kelapa  : ${kulit}
+                    `;
+                }
+            },
+            {
+              targets: 4,
+              render: function (data, type, row) {
+                  const rendemen = row.rendemen ? Number(row.rendemen) : 0;
+
+                  const statusRendemen = {
+                      normal: { title: "Normal", class: "badge-soft-success" },
+                      tinggi: { title: "Tinggi", class: "badge-soft-warning" },
+                      warning: { title: "⚠ Warning", class: "badge-soft-danger" },
+                  };
+          
+                  let metaRendemen;
+                  if (rendemen <= 10) metaRendemen = statusRendemen.normal;
+                  else if (rendemen <= 20) metaRendemen = statusRendemen.tinggi;
+                  else metaRendemen = statusRendemen.warning;
+
+                  return `
+                      <div class="d-flex flex-column align-items-start">
+                        <span class="badge ${metaRendemen.class} font-size-12">${metaRendemen.title}</span>
+                        <small class="fst-italic text-muted">Rendumen : ${rendemen.toFixed(2)}%</small>
+                      </div>
+                  `;
+              }
+            },
+        ],
+        lengthChange: false,
+        buttons: ['excel'],
+        dom:
+            '<"row align-items-center mb-2"' +
+                '<"col-sm-12 col-md-6 d-flex justify-content-start"B>' +
+                '<"col-sm-12 col-md-6 d-flex justify-content-md-end"f>' +
+            '>' +
+            't<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+    });
+  }
+
+  $(document).ready(function() {
+      $('#applyReportPengolahanFilter').click(function() {
+          const { start, end } = getIsoRange('tanggal_pengolahan');
+          const gudang = $('#gudang_id').val() || null;
+          applyFilterReportRendumenPengolahan(gudang, start, end);
       });
-    }
-  }
 
-  document.addEventListener('DOMContentLoaded', function () {
-    if (!ensureDeps()) return;
-    bindUI();
-    initRangePicker(); 
-    loadChart();       
+      $('#resetReportPengolahanFilter').click(function() {
+          $('#gudang_id').val('').trigger('change');
+          $('#tanggal_pengolahan').val('');
+          if (hasDRP()) {
+              const drp = $('#tanggal_pengolahan').data('daterangepicker');
+              if (drp) {
+                  drp.setStartDate(moment());
+                  drp.setEndDate(moment());
+              }
+          }
+          applyFilterReportRendumenPengolahan();
+      });
+
+      loadChart();
+      applyFilterReportRendumenPengolahan();
   });
 })();

@@ -129,7 +129,7 @@ function getDataSupplyPengolahan() {
 }
 
 function initializeSupplyPengolahanTable(data) {
-    const $dpg = $(".dt-pengolahanTable").first();
+    const $dpg = $(".dt-logPengolahanTable").first();
     const list = Array.isArray(data) ? data : [];
 
     if ($.fn.dataTable.isDataTable($dpg)) {

@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\LogPengolahanModel;
+use App\Models\PengolahanModel;
 use App\Models\GajiPegawaiModel;
 use App\Models\GajiDriverModel;
 use App\Models\KomponenGajiModel;
@@ -15,6 +16,7 @@ class ReportController extends AuthRequiredController
     use ApiResponse;
 
     protected $logPengolahanModel;
+    protected $pengolahanModel;
     protected $gajiPegawaiModel;
     protected $gajiDriverModel;
     protected $komponenGajiModel;
@@ -23,6 +25,7 @@ class ReportController extends AuthRequiredController
     public function __construct()
     {
         $this->logPengolahanModel = new LogPengolahanModel();
+        $this->pengolahanModel = new PengolahanModel();
         $this->gajiPegawaiModel = new GajiPegawaiModel();
         $this->gajiDriverModel = new GajiDriverModel();
         $this->komponenGajiModel = new KomponenGajiModel();
@@ -137,6 +140,25 @@ class ReportController extends AuthRequiredController
                 ['name' => 'Kulit (kg)',  'data' => $kulit],
             ],
         ]);
+    }
+
+    public function getReportRendumenPengolahan()
+    {
+        $gudangId 		= $this->request->getGet('gudang_id') ?? null;
+		$start			= $this->request->getGet('start_date') ?? null;
+		$end			= $this->request->getGet('end_date') ?? null;
+
+		$filters = [];
+		
+		if (($user->role_scope ?? null) !== 'gudang' && !empty($gudangId)) {
+			$filters['gudang_id'] = $gudangId;
+		}
+		if (!empty($start)) $filters['tg_pengeluaran_start'] = $start;
+		if (!empty($end))   $filters['tg_pengeluaran_end']   = $end;
+        
+        $pengolahan = $this->pengolahanModel->getDataPengolahan($filters);
+
+        return $this->jsonSuccess(['data' => $pengolahan]);
     }
 
     public function getReportGajiPegawai()

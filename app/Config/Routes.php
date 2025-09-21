@@ -125,6 +125,7 @@ $routes->group('finance', ['filter' => 'auth'], function ($routes) {
 $routes->group('report', ['filter' => 'auth'], function ($routes) {
     $routes->get('pengolahan', 'ReportController::showReportPengolahan', ['as' => 'report-pengolahan']);
     $routes->get('pengolahan/data', 'ReportController::getReportPengolahan', ['as' => 'report-data-pengolahan']);
+    $routes->get('rendumen-pengolahan/data', 'ReportController::getReportRendumenPengolahan', ['as' => 'report-data-rendumen-pengolahan']);
     $routes->get('komponen-gaji', 'ReportController::showReportKomponenGaji', ['as' => 'report-komponen-gaji']);
     $routes->get('komponen-gaji/data', 'ReportController::getReportKomponenGaji', ['as' => 'report-komponen-gaji-data']);
     $routes->get('gaji-driver', 'ReportController::showReportGajiDriver', ['as' => 'report-gaji-driver']);
