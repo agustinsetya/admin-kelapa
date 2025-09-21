@@ -2,6 +2,13 @@
 
 $((function () {
     initRangePicker('tg_kasbon_filter');
+
+    $("#kb_gudang_id").on("change", function () {
+        let gudangId = $(this).val();
+
+        reloadDropdownPegawaiByGudang('#kb_pegawai_id', gudangId);
+    });
+
     applyFilterKasbon();
 
     $("#btn-tambah-kasbon").on("click", function () {
@@ -135,6 +142,7 @@ function applyFilterKasbon(gudang = null, start = '', end = '') {
     getDataKasbon(gudang, start, end).done(function(response) {
         const rows = Array.isArray(response?.data) ? response.data : [];
         initializeFinanceKasbonTable(rows);
+        reloadDropdownGudang("#kb_gudang_id");
     }).fail(function(jqXHR, textStatus, errorThrown) {
         console.error("Request failed: " + textStatus + ", " + errorThrown);
     });
@@ -286,19 +294,36 @@ function openModalKasbon(mode, data = null) {
     $("#finance-kasbon-form").removeClass("was-validated");
     $("#kb_gudang_id, #kb_pegawai_id, #kb_status").val(null).trigger("change").removeClass("is-invalid is-valid");
 
+    $(".fake-input").remove(); 
+    $("#kb_gudang_id, #kb_pegawai_id").show();
+
     $("#finance-kasbon-form input[name='_method']").remove();
 
     if (mode === "edit" && data) {
         $("#financeKasbonModal .modal-title").text("Edit Data Kasbon");
     
-        $("#tg_kasbon").val(data.tg_kasbon.split("T")[0]);
-        $("#kb_gudang_id").val(data.gudang_id).trigger("change");
-        $("#kb_pegawai_id").val(data.kd_pegawai).trigger("change");
-        $("#jumlah").val(formatRupiah(data.jumlah));
+        $("#tg_kasbon")
+            .val(data.tg_kasbon.split("T")[0])
+            .prop("readonly", true);
+        
+        $("#kb_gudang_id")
+            .val(data.gudang_id)
+            .hide()
+            .after(`
+                <input type="text" readonly class="form-control fake-input" 
+                       value="${data.nama_gudang}">
+            `);
+
+        $("#kb_pegawai_id")
+            .hide()
+            .after(`
+                <input type="text" readonly class="form-control fake-input" 
+                    value="${data.nama_pegawai}">
+                <input type="hidden" name="kb_pegawai_id" value="${data.kd_pegawai}">
+            `);
+        $("#jumlah").val(formatRupiah(data.jumlah)).prop("readonly", true);
         $("#kb_status").val(data.status).trigger("change");
 
-        $("#tg_kasbon, #kb_gudang_id, #kb_pegawai_id, #jumlah").prop("readonly", true).prop("disabled", true);
-    
         $("#finance-kasbon-form").data("action", "edit");
         $("#finance-kasbon-form").data("id", data.mt_kasbon_id);
 
@@ -307,6 +332,13 @@ function openModalKasbon(mode, data = null) {
         );
     } else {
         $("#financeKasbonModal .modal-title").text("Tambah Data Kasbon");
+
+        $("#tg_pengeluaran, #jumlah").prop("readonly", false);
+        $("#kb_gudang_id, #kb_pegawai_id")
+            .val("")
+            .trigger("change");
+
+        reloadDropdownGudang("#kb_gudang_id");
     
         $("#finance-kasbon-form").data("action", "add");
         $("#finance-kasbon-form").removeData("id");

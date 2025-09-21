@@ -2,6 +2,13 @@
 
 $((function () {
     initRangePicker('tg_pengeluaran_filter');
+
+    $("#peng_gudang_id").on("change", function () {
+        let gudangId = $(this).val();
+
+        reloadDropdownPegawaiByGudang('#peng_pegawai_id', gudangId);
+    });
+
     applyFilterPengeluaran();
 
     $("#btn-tambah-pengeluaran").on("click", function () {
@@ -142,6 +149,7 @@ function applyFilterPengeluaran(gudang = null, start = '', end = '') {
     getDataPengeluaran(gudang, start, end).done(function(response) {
         const rows = Array.isArray(response?.data) ? response.data : [];
         initializeFinancePengeluaranTable(rows);
+        reloadDropdownGudang("#peng_gudang_id");
     }).fail(function(jqXHR, textStatus, errorThrown) {
         console.error("Request failed: " + textStatus + ", " + errorThrown);
     });
@@ -282,15 +290,33 @@ function openModalPengeluaran(mode, data = null) {
     $("#finance-pengeluaran-form").removeClass("was-validated");
     $("#peng_ktg_pengeluaran_id, #peng_gudang_id, #peng_pegawai_id, #peng_status").val(null).trigger("change").removeClass("is-invalid is-valid");
 
+    $(".fake-input").remove(); 
+    $("#peng_gudang_id, #peng_pegawai_id").show();
+
     $("#finance-pengeluaran-form input[name='_method']").remove();
 
     if (mode === "edit" && data) {
         $("#financePengeluaranModal .modal-title").text("Edit Data Pengeluaran");
     
-        $("#tg_pengeluaran").val(data.tg_pengeluaran.split("T")[0]);
+        $("#tg_pengeluaran")
+            .val(data.tg_pengeluaran.split("T")[0])
+            .prop("readonly", true);
         $("#peng_ktg_pengeluaran_id").val(data.ktg_pengeluaran_id).trigger("change");
-        $("#peng_gudang_id").val(data.gudang_id).trigger("change");
-        $("#peng_pegawai_id").val(data.kd_pegawai).trigger("change");
+        $("#peng_gudang_id")
+            .val(data.gudang_id)
+            .hide()
+            .after(`
+                <input type="text" readonly class="form-control fake-input" 
+                       value="${data.nama_gudang}">
+            `);
+
+        $("#peng_pegawai_id")
+            .hide()
+            .after(`
+                <input type="text" readonly class="form-control fake-input" 
+                    value="${data.nama_pegawai}">
+                <input type="hidden" name="peng_pegawai_id" value="${data.kd_pegawai}">
+            `);
         $("#jumlah").val(data.jumlah);
         $("#biaya").val(formatRupiah(data.biaya));
         $("#peng_status").val(data.status).trigger("change");
@@ -303,6 +329,13 @@ function openModalPengeluaran(mode, data = null) {
         );
     } else {
         $("#financePengeluaranModal .modal-title").text("Tambah Data Pengeluaran");
+
+        $("#tg_pengeluaran").prop("readonly", false);
+        $("#peng_gudang_id, #peng_pegawai_id")
+            .val("")
+            .trigger("change");
+
+        reloadDropdownGudang("#peng_gudang_id");
     
         $("#finance-pengeluaran-form").data("action", "add");
         $("#finance-pengeluaran-form").removeData("id");
