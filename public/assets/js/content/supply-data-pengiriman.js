@@ -179,6 +179,7 @@ function initializeSupplyPengirimanTable(data) {
                     html += `
                         <div>
                             <span class="badge bg-success mt-1">${jenis_kirim}</span><br/>
+                            <small class="fst-italic text-muted">Nomor Resi: ${row.nomor_resi}</small><br/>
                             <small class="fst-italic text-muted">Armada: ${row.armada}</small><br/>
                             <small class="fst-italic text-muted">${row.jumlah_perjalanan} Kali Jalan</small>
                         </div>
@@ -264,6 +265,7 @@ function openModalPengiriman(mode, data = null) {
         $("#peng_gudang_id").val(data.gudang_id).trigger("change");
         $("#jenis_kirim").val(data.jenis_kirim).trigger("change");
         $("#armada").val(data.armada).trigger("change");
+        $("#nomor_resi").val(data.nomor_resi).trigger("change");
         $("#peng_pegawai_id").val(data.kd_pegawai).trigger("change");
         $("#jumlah_perjalanan").val(data.jumlah_perjalanan);
         $("#berat_daging").val(data.berat_daging);
