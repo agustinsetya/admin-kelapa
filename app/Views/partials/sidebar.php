@@ -1,3 +1,4 @@
+<?php $userRole = session()->get('role'); ?>
 <div class="vertical-menu">
     <div data-simplebar class="h-100">
         <div id="sidebar-menu">
@@ -17,31 +18,37 @@
                         <span data-key="t-master"><?= lang('Files.Data_Utama') ?></span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
+                        <?php if ($userRole == 1): ?>
                         <li>
                             <a href="<?= url_to('master-user-roles') ?>">
                                 <span data-key="t-master-user-roles"><?= lang('Files.User_Roles') ?></span>
                             </a>
                         </li>
+                        <?php endif; ?>
                         <li>
                             <a href="<?= url_to('master-pegawai') ?>">
                                 <span data-key="t-master-pegawai"><?= lang('Files.Pegawai') ?></span>
                             </a>
                         </li>
+                        <?php if ($userRole == 1): ?>
                         <li>
                             <a href="<?= url_to('master-user') ?>">
                                 <span data-key="t-master-user"><?= lang('Files.User') ?></span>
                             </a>
                         </li>
+                        <?php endif; ?>
                         <li>
                             <a href="<?= url_to('master-gudang') ?>">
                                 <span data-key="t-master-gudang"><?= lang('Files.Gudang') ?></span>
                             </a>
                         </li>
+                        <?php if ($userRole == 1): ?>
                         <li>
                             <a href="<?= url_to('master-kategori-pengeluaran') ?>">
                                 <span data-key="t-master-kategori-pengeluaran"><?= lang('Files.Kategori_Pengeluaran') ?></span>
                             </a>
                         </li>
+                        <?php endif; ?>
                     </ul>
                 </li>
 
@@ -105,6 +112,7 @@
                     </ul>
                 </li>
                 
+                <?php if ($userRole == 1): ?>
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
                         <i data-feather="pie-chart"></i>
@@ -133,6 +141,7 @@
                         </li>
                     </ul>
                 </li>
+                <?php endif; ?>
             </ul>
         </div>
     </div>

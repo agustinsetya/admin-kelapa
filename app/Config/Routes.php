@@ -54,17 +54,8 @@ $routes->get('dashboard', 'HomeController::index', [
 ]);
 
 // Data Utama / Master
-$routes->group('master', ['filter' => 'auth', 'role:1'], function ($routes) {
-    $routes->get('user-roles', 'DataUtamaController::showDataUserRoles', ['as' => 'master-user-roles']);
-    $routes->get('user-roles/data', 'DataUtamaController::getDataUserRoles', ['as' => 'master-user-roles-data']);
-    $routes->get('user-roles/detail', 'DataUtamaController::getDetailUserRoles', ['as' => 'master-detail-user-roles']);
-    $routes->post('user-roles/add', 'DataUtamaController::addDetailUserRoles', ['as' => 'master-add-user-roles']);
-    $routes->patch('user-roles/update', 'DataUtamaController::updateDetailUserRoles', ['as' => 'master-update-user-roles']);
-    $routes->get('user', 'DataUtamaController::showDataUser', ['as' => 'master-user']);
-    $routes->get('user/data', 'DataUtamaController::getDataUser', ['as' => 'master-user-data']);
-    $routes->get('user/detail', 'DataUtamaController::getDetailUser', ['as' => 'master-detail-user']);
-    $routes->post('user/add', 'DataUtamaController::addDetailUser', ['as' => 'master-add-user']);
-    $routes->patch('user/update', 'DataUtamaController::updateDetailUser', ['as' => 'master-update-user']);
+// $routes->group('master', ['filter' => ['auth', 'role:1']], function ($routes) {
+$routes->group('master', ['filter' => 'auth'], function ($routes) {
     $routes->get('pegawai', 'DataUtamaController::showDataPegawai', ['as' => 'master-pegawai']);
     $routes->get('pegawai/data', 'DataUtamaController::getDataPegawai', ['as' => 'master-pegawai-data']);
     $routes->get('pegawai/detail', 'DataUtamaController::getDetailPegawai', ['as' => 'master-detail-pegawai']);
@@ -75,11 +66,24 @@ $routes->group('master', ['filter' => 'auth', 'role:1'], function ($routes) {
     $routes->get('gudang/detail', 'DataUtamaController::getDetailGudang', ['as' => 'master-detail-gudang']);
     $routes->post('gudang/add', 'DataUtamaController::addDetailGudang', ['as' => 'master-add-gudang']);
     $routes->patch('gudang/update', 'DataUtamaController::updateDetailGudang', ['as' => 'master-update-gudang']);
-    $routes->get('kategori-pengeluaran', 'DataUtamaController::showDataKategoriPengeluaran', ['as' => 'master-kategori-pengeluaran']);
-    $routes->get('kategori-pengeluaran/data', 'DataUtamaController::getDataKategoriPengeluaran', ['as' => 'master-kategori-pengeluaran-data']);
-    $routes->get('kategori-pengeluaran/detail', 'DataUtamaController::getDetailKategoriPengeluaran', ['as' => 'master-detail-kategori-pengeluaran']);
-    $routes->post('kategori-pengeluaran/add', 'DataUtamaController::addDetailKategoriPengeluaran', ['as' => 'master-add-kategori-pengeluaran']);
-    $routes->patch('kategori-pengeluaran/update', 'DataUtamaController::updateDetailKategoriPengeluaran', ['as' => 'master-update-kategori-pengeluaran']);
+    
+    $routes->group('', ['filter' => 'role:1'], function ($routes) {
+        $routes->get('user-roles', 'DataUtamaController::showDataUserRoles', ['as' => 'master-user-roles']);
+        $routes->get('user-roles/data', 'DataUtamaController::getDataUserRoles', ['as' => 'master-user-roles-data']);
+        $routes->get('user-roles/detail', 'DataUtamaController::getDetailUserRoles', ['as' => 'master-detail-user-roles']);
+        $routes->post('user-roles/add', 'DataUtamaController::addDetailUserRoles', ['as' => 'master-add-user-roles']);
+        $routes->patch('user-roles/update', 'DataUtamaController::updateDetailUserRoles', ['as' => 'master-update-user-roles']);
+        $routes->get('user', 'DataUtamaController::showDataUser', ['as' => 'master-user']);
+        $routes->get('user/data', 'DataUtamaController::getDataUser', ['as' => 'master-user-data']);
+        $routes->get('user/detail', 'DataUtamaController::getDetailUser', ['as' => 'master-detail-user']);
+        $routes->post('user/add', 'DataUtamaController::addDetailUser', ['as' => 'master-add-user']);
+        $routes->patch('user/update', 'DataUtamaController::updateDetailUser', ['as' => 'master-update-user']);
+        $routes->get('kategori-pengeluaran', 'DataUtamaController::showDataKategoriPengeluaran', ['as' => 'master-kategori-pengeluaran']);
+        $routes->get('kategori-pengeluaran/data', 'DataUtamaController::getDataKategoriPengeluaran', ['as' => 'master-kategori-pengeluaran-data']);
+        $routes->get('kategori-pengeluaran/detail', 'DataUtamaController::getDetailKategoriPengeluaran', ['as' => 'master-detail-kategori-pengeluaran']);
+        $routes->post('kategori-pengeluaran/add', 'DataUtamaController::addDetailKategoriPengeluaran', ['as' => 'master-add-kategori-pengeluaran']);
+        $routes->patch('kategori-pengeluaran/update', 'DataUtamaController::updateDetailKategoriPengeluaran', ['as' => 'master-update-kategori-pengeluaran']);
+    });
 });
 
 // Supply Chain
@@ -127,7 +131,7 @@ $routes->group('finance', ['filter' => 'auth'], function ($routes) {
 });
 
 // Report
-$routes->group('report', ['filter' => 'auth'], function ($routes) {
+$routes->group('report', ['filter' => ['auth', 'role:1']], function ($routes) {
     $routes->get('pengolahan', 'ReportController::showReportPengolahan', ['as' => 'report-pengolahan']);
     $routes->get('pengolahan/data', 'ReportController::getReportPengolahan', ['as' => 'report-data-pengolahan']);
     $routes->get('rendumen-pengolahan/data', 'ReportController::getReportRendumenPengolahan', ['as' => 'report-data-rendumen-pengolahan']);
