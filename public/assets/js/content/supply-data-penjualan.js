@@ -103,7 +103,7 @@ function applyFilterPenjualan() {
     getDataSupplyPenjualan().done(function(response) {
         const rows = Array.isArray(response?.data) ? response.data : [];
         initializeSupplyPenjualanTable(rows);
-        reloadDropdownGudang("#penj_gudang_id");
+        reloadDropdownGudang("#penj_gudang_id", roleScope, penempatan);
     }).fail(function(jqXHR, textStatus, errorThrown) {
         console.error("Request failed:", textStatus, errorThrown, jqXHR.responseText);
     });
@@ -259,7 +259,7 @@ function getDetailSupplyPenjualan(button) {
 function openModalPenjualan(mode, data = null) {
     $("#supply-penjualan-form")[0].reset();
     $("#supply-penjualan-form").removeClass("was-validated");
-    $("#penj_status").val(null).trigger("change").removeClass("is-invalid is-valid");
+    $("#penj_gudang_id, #log_pengiriman_id, #penj_status").val(null).trigger("change").removeClass("is-invalid is-valid");
 
     $(".fake-input").remove(); 
     $("#penj_gudang_id, #log_pengiriman_id").show();
@@ -304,7 +304,7 @@ function openModalPenjualan(mode, data = null) {
             .val("")
             .trigger("change");
 
-        reloadDropdownGudang("#penj_gudang_id");
+        reloadDropdownGudang("#penj_gudang_id", roleScope, penempatan);
     
         $("#supply-penjualan-form").data("action", "add");
         $("#supply-penjualan-form").removeData("id");

@@ -49,15 +49,7 @@ class FinanceController extends AuthRequiredController
 		$user = session()->get('user');
 		$roleScope = session()->get('role_scope');
 
-        $filtersPegawai = [];
-		$filtersGudang  = [];
-
-		if ($roleScope === 'gudang' && !empty($user) && !empty($user->penempatan_id)) {
-			$filtersPegawai['penempatan_id'] = $user->penempatan_id;
-			$filtersGudang['id']             = $user->penempatan_id;
-		}
-
-		$data = [
+        $data = [
 			'title_meta' => view('partials/title-meta', [
 				'title' => 'Pengeluaran'
 			]),
@@ -66,10 +58,11 @@ class FinanceController extends AuthRequiredController
 				'li_1'  => lang('Files.Finance'),
 				'li_2'  => lang('Files.Pengeluaran')
 			]),
-			'gudang'    => $this->gudangModel->getDataGudang($filtersGudang ?: null),
-			'pegawai'   => $this->pegawaiModel->getDataPegawai($filtersPegawai ?: null),
+			'gudang'    => $this->gudangModel->getDataGudang(),
 			'kategori'  => $this->kategoriPengeluaranModel->getDataKategoriPengeluaran(),
 			'roleScope' => $roleScope,
+            'penempatan' => $user->penempatan_id ?? '',
+            'pegawaiId' => $user->kd_pegawai ?? '',
 		];
 
 		return view('finance-pengeluaran', $data);
@@ -80,15 +73,7 @@ class FinanceController extends AuthRequiredController
 		$user = session()->get('user');
 		$roleScope = session()->get('role_scope');
 
-        $filtersPegawai = [];
-		$filtersGudang  = [];
-
-		if ($roleScope === 'gudang' && !empty($user) && !empty($user->penempatan_id)) {
-			$filtersPegawai['penempatan_id'] = $user->penempatan_id;
-			$filtersGudang['id']             = $user->penempatan_id;
-		}
-
-		$data = [
+        $data = [
 			'title_meta' => view('partials/title-meta', [
 				'title' => 'Kasbon'
 			]),
@@ -97,9 +82,10 @@ class FinanceController extends AuthRequiredController
 				'li_1'  => lang('Files.Finance'),
 				'li_2'  => lang('Files.Kasbon')
 			]),
-			'gudang'    => $this->gudangModel->getDataGudang($filtersGudang ?: null),
-			'pegawai'   => $this->pegawaiModel->getDataPegawai($filtersPegawai ?: null),
+			'gudang'    => $this->gudangModel->getDataGudang(),
 			'roleScope' => $roleScope,
+            'penempatan' => $user->penempatan_id ?? '',
+            'pegawaiId' => $user->kd_pegawai ?? '',
 		];
 
 		return view('finance-kasbon', $data);

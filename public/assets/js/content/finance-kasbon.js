@@ -6,7 +6,7 @@ $((function () {
     $("#kb_gudang_id").on("change", function () {
         let gudangId = $(this).val();
 
-        reloadDropdownPegawaiByGudang('#kb_pegawai_id', gudangId);
+        reloadDropdownPegawaiByGudang('#kb_pegawai_id', gudangId, '6', pegawaiId, roleScope);
     });
 
     applyFilterKasbon();
@@ -142,7 +142,7 @@ function applyFilterKasbon(gudang = null, start = '', end = '') {
     getDataKasbon(gudang, start, end).done(function(response) {
         const rows = Array.isArray(response?.data) ? response.data : [];
         initializeFinanceKasbonTable(rows);
-        reloadDropdownGudang("#kb_gudang_id");
+        reloadDropdownGudang("#kb_gudang_id", roleScope, penempatan);
     }).fail(function(jqXHR, textStatus, errorThrown) {
         console.error("Request failed: " + textStatus + ", " + errorThrown);
     });
@@ -338,7 +338,7 @@ function openModalKasbon(mode, data = null) {
             .val("")
             .trigger("change");
 
-        reloadDropdownGudang("#kb_gudang_id");
+        reloadDropdownGudang("#kb_gudang_id", roleScope, penempatan);
     
         $("#finance-kasbon-form").data("action", "add");
         $("#finance-kasbon-form").removeData("id");

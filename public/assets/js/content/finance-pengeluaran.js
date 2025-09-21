@@ -6,7 +6,7 @@ $((function () {
     $("#peng_gudang_id").on("change", function () {
         let gudangId = $(this).val();
 
-        reloadDropdownPegawaiByGudang('#peng_pegawai_id', gudangId);
+        reloadDropdownPegawaiByGudang('#peng_pegawai_id', gudangId, '6', pegawaiId, roleScope);
     });
 
     applyFilterPengeluaran();
@@ -149,7 +149,7 @@ function applyFilterPengeluaran(gudang = null, start = '', end = '') {
     getDataPengeluaran(gudang, start, end).done(function(response) {
         const rows = Array.isArray(response?.data) ? response.data : [];
         initializeFinancePengeluaranTable(rows);
-        reloadDropdownGudang("#peng_gudang_id");
+        reloadDropdownGudang("#peng_gudang_id", roleScope, penempatan);
     }).fail(function(jqXHR, textStatus, errorThrown) {
         console.error("Request failed: " + textStatus + ", " + errorThrown);
     });
@@ -317,6 +317,7 @@ function openModalPengeluaran(mode, data = null) {
                     value="${data.nama_pegawai}">
                 <input type="hidden" name="peng_pegawai_id" value="${data.kd_pegawai}">
             `);
+            
         $("#jumlah").val(data.jumlah);
         $("#biaya").val(formatRupiah(data.biaya));
         $("#peng_status").val(data.status).trigger("change");
@@ -335,7 +336,7 @@ function openModalPengeluaran(mode, data = null) {
             .val("")
             .trigger("change");
 
-        reloadDropdownGudang("#peng_gudang_id");
+        reloadDropdownGudang("#peng_gudang_id", roleScope, penempatan);
     
         $("#finance-pengeluaran-form").data("action", "add");
         $("#finance-pengeluaran-form").removeData("id");

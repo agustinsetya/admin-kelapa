@@ -47,7 +47,11 @@ class DataUtamaController extends AuthRequiredController
     
 	public function getDataUserRoles()
     {
-		$userRoles = $this->userRolesModel->getDataUserRoles();
+        $filters = [
+            'role_scope_allowed'    => $this->request->getGet('user_roles_allowed'),
+        ];
+
+		$userRoles = $this->userRolesModel->getDataUserRoles($filters);
 
         return $this->response->setJSON([
             'data' => $userRoles
@@ -254,6 +258,8 @@ class DataUtamaController extends AuthRequiredController
     {
 		$gudang = $this->gudangModel->getDataGudang();
 		$userRole = $this->userRolesModel->getDataUserRoles();
+        $user = session()->get('user');
+		$roleScope = session()->get('role_scope');
 
 		$data = [
             'title_meta' => view('partials/title-meta', ['title' => 'Pegawai']),
@@ -264,6 +270,8 @@ class DataUtamaController extends AuthRequiredController
             ]),
 			'gudang' => $gudang,
 			'role' => $userRole,
+            'roleScope' => $roleScope,
+            'penempatan' => $user->penempatan_id ?? '',
         ];
 
         return view('master-pegawai', $data);
@@ -271,17 +279,26 @@ class DataUtamaController extends AuthRequiredController
     
 	public function getDataPegawai()
     {
-		$filters = [
-            'role_id'   => $this->request->getGet('role'),
-            'gudang_id' => $this->request->getGet('gudang'),
+        $filters = $this->filtersFromUser();
+
+        $requestFilters = [
+            'role_id'        => $this->request->getGet('role'),
+            'gudang_id'      => $this->request->getGet('gudang'),
+            'pegawai_id_not' => $this->request->getGet('pegawai_id_not'),
+            'role_id_not'    => $this->request->getGet('role_id_not'),
         ];
+
+        // Hapus filter yang null agar tidak mengganggu query
+        $requestFilters = array_filter($requestFilters, fn($v) => $v !== null && $v !== '');
+
+        $filters = array_merge($filters, $requestFilters);
 
         $excludeUser = $this->request->getGet('exclude_existing_user');
         if ($excludeUser !== null) {
             $filters['exclude_existing_user'] = filter_var($excludeUser, FILTER_VALIDATE_BOOLEAN);
         }
 
-		$pegawai = $this->pegawaiModel->getDataPegawai($filters);
+        $pegawai = $this->pegawaiModel->getDataPegawai($filters);
 
         return $this->response->setJSON([
             'data' => $pegawai
@@ -392,6 +409,9 @@ class DataUtamaController extends AuthRequiredController
 
     public function showDataGudang()
     {
+        $user = session()->get('user');
+        $roleScope = session()->get('role_scope');
+
 		$data = [
             'title_meta' => view('partials/title-meta', ['title' => 'Gudang']),
             'page_title' => view('partials/page-title', [
@@ -399,23 +419,22 @@ class DataUtamaController extends AuthRequiredController
                 'li_1'  => lang('Files.Data_Utama'),
                 'li_2'  => lang('Files.Gudang'),
             ]),
+            'roleScope' => $roleScope,
+            'penempatan' => $user->penempatan_id ?? '',
         ];
 
-        // if ($roleScope == 'all') {
-        //     return view('report-komponen-gaji', $data);
-        // } else if ($roleScope == 'gudang') {
-        //     return view('report-komponen-gaji-form', $data);
-        // } else {
-        //     session()->setFlashdata('error', 'Anda tidak mempunyai akses ke halaman ini');
-        //     return redirect()->to('/dashboard');
-        // }
-
-        return view('master-gudang', $data);
+        if ($roleScope == 'all') {
+            return view('master-gudang', $data);
+        } else if ($roleScope == 'gudang') {
+            return view('master-gudang-form', $data);
+        }
     }
 
     public function getDataGudang()
     {
-		$gudang = $this->gudangModel->getDataGudang();
+        $filters = $this->filtersFromUser();
+
+		$gudang = $this->gudangModel->getDataGudang($filters);
 
         return $this->response->setJSON([
             'data' => $gudang
@@ -631,5 +650,19 @@ class DataUtamaController extends AuthRequiredController
         return $this->jsonSuccess([
             'message' => 'Berhasil Update Data Kategori Pengeluaran',
         ], 200);
+    }
+
+    private function filtersFromUser(): array
+    {
+        $user = session()->get('user');
+        if (!$user) {
+            return [];
+        }
+
+        if (($user->role_scope ?? null) === 'gudang') {
+            return ['gudang_id' => $user->penempatan_id ?? ''];
+        }
+
+        return [];
     }
 }

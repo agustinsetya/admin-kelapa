@@ -199,7 +199,7 @@ function getIsoRange(id) {
     }
 }
 
-function reloadDropdownGudang(targetId) {
+function reloadDropdownGudang(targetId, roleScope = null, penempatan = null) {
     $.ajax({
         url: base_url + 'master/gudang/data',
         method: "GET",
@@ -221,7 +221,15 @@ function reloadDropdownGudang(targetId) {
                 });
             }
 
-            $target.trigger("change");
+            if (roleScope === 'gudang' && penempatan) {
+                $target.val(penempatan).trigger("change");
+                $target.css({
+                    'pointer-events': 'none',
+                    'background-color': '#e9ecef'
+                });
+            } else {
+                $target.trigger("change");
+            }
         },
         error: function () {
             console.error("Gagal memuat data gudang:", xhr.responseText);
@@ -229,7 +237,7 @@ function reloadDropdownGudang(targetId) {
     });
 }
 
-function reloadDropdownPegawaiByGudang(targetId, gudangId) {
+function reloadDropdownPegawaiByGudang(targetId, gudangId, role_id_not = null, pegawaiId = null, roleScope = null) { 
     const $target = $(targetId);
 
     $target
@@ -239,12 +247,20 @@ function reloadDropdownPegawaiByGudang(targetId, gudangId) {
 
     if (!gudangId) return;
 
+    let requestData = { gudang: gudangId };
+
+    if (role_id_not !== null) {
+        requestData.role_id_not = role_id_not;
+    } 
+
+    if (roleScope === 'gudang' && pegawaiId) {
+        requestData.pegawai_id_not = pegawaiId;
+    }
+
     $.ajax({
         url: base_url + "master/pegawai/data",
         method: "GET",
-        data: {
-            gudang: gudangId,
-        },
+        data: requestData,
         dataType: "json",
         success: function (response) {
             if (Array.isArray(response.data)) {
@@ -262,6 +278,9 @@ function reloadDropdownPegawaiByGudang(targetId, gudangId) {
 
             $target.trigger("change");
         },
+        error: function (xhr) {
+            console.error("Gagal memuat pegawai:", xhr.responseText);
+        }
     });
 }
 
@@ -334,8 +353,45 @@ function reloadDropdownResiPengirimanByGudang(targetId, gudangId) {
 
             $target.trigger("change");
         },
-        error: function () {
+        error: function (xhr) {
             console.error("Gagal memuat data pengiriman:", xhr.responseText);
+        }
+    });
+}
+
+function reloadDropdownRole(targetId, roleScope = null) {
+    let requestData = {};
+
+    if (roleScope === 'gudang') {
+        requestData.user_roles_allowed = 'gudang';
+    }
+
+    $.ajax({
+        url: base_url + 'master/user-roles/data',
+        method: "GET",
+        data: requestData,
+        dataType: "json",
+        success: function (response) {
+            const $target = $(targetId);
+            $target.empty();
+
+            $target.append('<option value="" disabled selected>Pilih Role</option>');
+
+            if (Array.isArray(response.data)) {
+                response.data.forEach(function(role) {
+                    $target.append(
+                        $('<option>', {
+                            value: role.m_role_id,
+                            text: role.nama
+                        })
+                    );
+                });
+            }
+
+            $target.trigger("change");
+        },
+        error: function (xhr) {
+            console.error("Gagal memuat data role:", xhr.responseText);
         }
     });
 }

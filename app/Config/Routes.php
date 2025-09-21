@@ -66,10 +66,10 @@ $routes->group('master', ['filter' => 'auth'], function ($routes) {
     $routes->get('gudang/detail', 'DataUtamaController::getDetailGudang', ['as' => 'master-detail-gudang']);
     $routes->post('gudang/add', 'DataUtamaController::addDetailGudang', ['as' => 'master-add-gudang']);
     $routes->patch('gudang/update', 'DataUtamaController::updateDetailGudang', ['as' => 'master-update-gudang']);
+    $routes->get('user-roles/data', 'DataUtamaController::getDataUserRoles', ['as' => 'master-user-roles-data']);
     
     $routes->group('', ['filter' => 'role:1'], function ($routes) {
         $routes->get('user-roles', 'DataUtamaController::showDataUserRoles', ['as' => 'master-user-roles']);
-        $routes->get('user-roles/data', 'DataUtamaController::getDataUserRoles', ['as' => 'master-user-roles-data']);
         $routes->get('user-roles/detail', 'DataUtamaController::getDetailUserRoles', ['as' => 'master-detail-user-roles']);
         $routes->post('user-roles/add', 'DataUtamaController::addDetailUserRoles', ['as' => 'master-add-user-roles']);
         $routes->patch('user-roles/update', 'DataUtamaController::updateDetailUserRoles', ['as' => 'master-update-user-roles']);

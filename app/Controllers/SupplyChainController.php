@@ -40,6 +40,7 @@ class SupplyChainController extends AuthRequiredController
 
 	public function showDataPembelian()
     {
+        $user = session()->get('user');
         $roleScope = session()->get('role_scope');
         
         $data = [
@@ -49,7 +50,6 @@ class SupplyChainController extends AuthRequiredController
                 'li_1'  => lang('Files.Supply_Chain'),
                 'li_2'  => lang('Files.Data_Pembelian'),
             ]),
-            'gudang'    => $this->gudangModel->getDataGudang(),
             'roleScope' => $roleScope,
             'penempatan' => $user->penempatan_id ?? '',
         ];
@@ -59,11 +59,8 @@ class SupplyChainController extends AuthRequiredController
 
     public function showDataLogPengolahan()
     {
+        $user = session()->get('user');
         $roleScope = session()->get('role_scope');
-        $filters = array_merge(
-            $this->filtersFromUser(),
-            ['role_id_not' => 6]
-        );
 
         $data = [
             'title_meta' => view('partials/title-meta', ['title' => 'Data_Pengolahan']),
@@ -72,9 +69,9 @@ class SupplyChainController extends AuthRequiredController
                 'li_1'  => lang('Files.Supply_Chain'),
                 'li_2'  => lang('Files.Data_Pengolahan'),
             ]),
-            'gudang'    => $this->gudangModel->getDataGudang(),
-            'pegawai'   => $this->pegawaiModel->getDataPegawai($filters),
             'roleScope' => $roleScope,
+            'penempatan' => $user->penempatan_id ?? '',
+            'pegawaiId' => $user->kd_pegawai ?? '',
         ];
 
         return view('supply-data-pengolahan', $data);
@@ -82,11 +79,8 @@ class SupplyChainController extends AuthRequiredController
     
     public function showDataPengiriman()
     {
+        $user = session()->get('user');
         $roleScope = session()->get('role_scope');
-        $filters = array_merge(
-            $this->filtersFromUser(),
-            ['role_id' => 6]
-        );
 
         $data = [
             'title_meta' => view('partials/title-meta', ['title' => 'Data_Pengiriman']),
@@ -95,9 +89,9 @@ class SupplyChainController extends AuthRequiredController
                 'li_1'  => lang('Files.Supply_Chain'),
                 'li_2'  => lang('Files.Data_Pengiriman'),
             ]),
-            'gudang'    => $this->gudangModel->getDataGudang(),
-            'pegawai'   => $this->pegawaiModel->getDataPegawai($filters),
             'roleScope' => $roleScope,
+            'penempatan' => $user->penempatan_id ?? '',
+            'pegawaiId' => $user->kd_pegawai ?? '',
         ];
 
         return view('supply-data-pengiriman', $data);
@@ -105,6 +99,7 @@ class SupplyChainController extends AuthRequiredController
     
     public function showDataPenjualan()
     {
+        $user = session()->get('user');
         $roleScope = session()->get('role_scope');
 
         $data = [
@@ -115,6 +110,7 @@ class SupplyChainController extends AuthRequiredController
                 'li_2'  => lang('Files.Data_Penjualan'),
             ]),
             'roleScope' => $roleScope,
+            'penempatan' => $user->penempatan_id ?? '',
         ];
 
         return view('supply-data-penjualan', $data);

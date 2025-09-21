@@ -123,6 +123,9 @@
         <!-- custom js -->
         <script type="text/javascript">
             var base_url = '<?= base_url() ?>';
+            var roleScope = '<?= isset($roleScope) ? $roleScope : '' ?>';
+            var penempatan = '<?= isset($penempatan) ? $penempatan : '' ?>';
+            var pegawaiId = '<?= isset($pegawaiId) ? $pegawaiId : '' ?>';
         </script>
         <script src="<?= base_url('assets/js/content/general.js') ?>"></script>
         <script src="<?= base_url('assets/js/content/finance-kasbon.js') ?>"></script>

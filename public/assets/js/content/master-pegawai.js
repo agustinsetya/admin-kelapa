@@ -132,6 +132,8 @@ function applyFilterPegawai(gudang = null, role = null) {
     getDataMasterPegawai(gudang, role).done(function(response) {
         const rows = Array.isArray(response?.data) ? response.data : [];
         initializeMasterPegawaiTable(rows);
+        reloadDropdownRole("#peg_role_id", roleScope);
+        reloadDropdownGudang("#pg_gudang_id", roleScope, penempatan);
     }).fail(function(jqXHR, textStatus, errorThrown) {
         console.error("Request failed: " + textStatus + ", " + errorThrown);
     });
@@ -168,7 +170,7 @@ function initializeMasterPegawaiTable(data) {
             { data: 'kd_pegawai', defaultContent: "-" },
             { data: 'nama_pegawai', defaultContent: "-" },
             { data: 'role_name', defaultContent: "-" },
-            { data: 'gudang_name', defaultContent: "-" },
+            { data: 'nama_gudang', defaultContent: "-" },
             { data: 'jenis_kelamin', defaultContent: "-" },
             { data: null, defaultContent: "" }             
         ],
@@ -276,6 +278,9 @@ function openModalPegawai(mode, data = null) {
     } else {
         $("#masterPegawaiModal .modal-title").text("Tambah Data Pegawai");
     	$("#kd_pegawai").prop("readonly", false);
+        
+        reloadDropdownRole("#peg_role_id", roleScope);
+        reloadDropdownGudang("#pg_gudang_id", roleScope, penempatan);
     
         $("#master-pegawai-form").data("action", "add");
         $("#master-pegawai-form").removeData("id");

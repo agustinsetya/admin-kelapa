@@ -6,7 +6,7 @@ $((function () {
     $("#peng_gudang_id").on("change", function () {
         let gudangId = $(this).val();
 
-        reloadDropdownPegawaiByGudang('#peng_pegawai_id', gudangId);
+        reloadDropdownPegawaiByGudang('#peng_pegawai_id', gudangId, '6', pegawaiId, roleScope);
         reloadDropdownContainerPembelianByGudang('#peng_kode_container', gudangId);
     });
 
@@ -114,7 +114,7 @@ function applyFilterPengolahan() {
     getDataSupplyPengolahan().done(function(response) {
         const rows = Array.isArray(response?.data) ? response.data : [];
         initializeSupplyPengolahanTable(rows);
-        reloadDropdownGudang("#peng_gudang_id");
+        reloadDropdownGudang("#peng_gudang_id", roleScope, penempatan);
     }).fail(function(jqXHR, textStatus, errorThrown) {
         console.error("Request failed:", textStatus, errorThrown, jqXHR.responseText);
     });
@@ -258,6 +258,8 @@ function openModalPengolahan(mode, data = null) {
     $form.removeClass("was-validated");
     $form.find(".is-invalid, .is-valid").removeClass("is-invalid is-valid");
 
+    $("#peng_gudang_id, #peng_pegawai_id, #peng_kode_container").val(null).trigger("change").removeClass("is-invalid is-valid");
+
     $(".fake-input").remove(); 
     $("#peng_gudang_id, #peng_pegawai_id, #peng_kode_container").show();
 
@@ -310,7 +312,7 @@ function openModalPengolahan(mode, data = null) {
             .val("")
             .trigger("change");
 
-        reloadDropdownGudang("#peng_gudang_id");
+        reloadDropdownGudang("#peng_gudang_id", roleScope, penempatan);
 
         $form.data("action", "add");
         $form.removeData("id");

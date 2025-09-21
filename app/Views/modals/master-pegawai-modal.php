@@ -41,9 +41,6 @@
                                 <label class="form-label mb-1">Role</label>
                                 <select name="peg_role_id" id="peg_role_id" class="form-select">
                                     <option value="" disabled selected>Pilih Role</option>
-                                    <?php foreach ($role as $r): ?>
-                                        <option value="<?= esc($r->m_role_id) ?>"><?= esc($r->nama) ?></option>
-                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>
@@ -54,9 +51,6 @@
                                 <label class="form-label mb-1">Penempatan</label>
                                 <select name="pg_gudang_id" id="pg_gudang_id" class="form-select">
                                     <option value="" disabled selected>Pilih Gudang</option>
-                                    <?php foreach ($gudang as $g): ?>
-                                        <option value="<?= esc($g->m_gudang_id) ?>"><?= esc($g->nama) ?></option>
-                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>

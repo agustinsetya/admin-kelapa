@@ -25,6 +25,10 @@ class UserRolesModel extends Model
         if (isset($filters['m_role_id']) && is_numeric($filters['m_role_id'])) {
             $role->where('m_role.m_role_id', (int)$filters['m_role_id']);
         }
+
+        if (!empty($filters['role_scope_allowed'])) {
+            $role->where('m_role.role_scope', $filters['role_scope_allowed']);
+        }
         
 		return $role->findAll();
     }

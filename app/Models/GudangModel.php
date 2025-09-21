@@ -48,6 +48,10 @@ class GudangModel extends Model
         if (isset($filters['m_gudang_id']) && is_numeric($filters['m_gudang_id'])) {
             $gudang->where('m_gudang.m_gudang_id', (int)$filters['m_gudang_id']);
         }
+
+        if (isset($filters['gudang_id']) && is_numeric($filters['gudang_id'])) {
+            $gudang->where('m_gudang.m_gudang_id', (int)$filters['gudang_id']);
+        }
         
 		return $gudang->findAll();
     }

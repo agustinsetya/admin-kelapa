@@ -3,6 +3,12 @@
 $((function () {
     applyFilterPengiriman();
 
+    $("#peng_gudang_id").on("change", function () {
+        let gudangId = $(this).val();
+
+        reloadDropdownPegawaiByGudang('#peng_pegawai_id', gudangId, '6', pegawaiId, roleScope);
+    });
+
     $("#btn-tambah-pengiriman").on("click", function () {
         openModalPengiriman("add");
     });
@@ -114,6 +120,7 @@ function applyFilterPengiriman() {
     getDataSupplyPengiriman().done(function(response) {
         const rows = Array.isArray(response?.data) ? response.data : [];
         initializeSupplyPengirimanTable(rows);
+        reloadDropdownGudang("#peng_gudang_id", roleScope, penempatan);
     }).fail(function(jqXHR, textStatus, errorThrown) {
         console.error("Request failed:", textStatus, errorThrown, jqXHR.responseText);
     });
@@ -256,12 +263,34 @@ function openModalPengiriman(mode, data = null) {
     $("#supply-pengiriman-form").removeClass("was-validated");
     $("#peng_gudang_id, #jenis_kirim, #armada, #peng_pegawai_id").val(null).trigger("change").removeClass("is-invalid is-valid");
 
+    $(".fake-input").remove(); 
+    $("#peng_gudang_id, #peng_pegawai_id").show();
+
     $("#supply-pengiriman-form input[name='_method']").remove();
 
     if (mode === "edit" && data) {
         $("#supplyPengirimanModal .modal-title").text("Edit Data Pengiriman");
     
-        $("#tg_pengiriman").val(data.tg_pengiriman.split("T")[0]);
+        $("#tg_pengiriman")
+            .val(data.tg_pengiriman.split("T")[0])
+            .prop("readonly", true);
+
+        $("#peng_gudang_id")
+            .val(data.gudang_id)
+            .hide()
+            .after(`
+                <input type="text" readonly class="form-control fake-input" 
+                       value="${data.nama_gudang}">
+            `);
+
+        $("#peng_pegawai_id")
+            .hide()
+            .after(`
+                <input type="text" readonly class="form-control fake-input" 
+                    value="${data.nama_pegawai}">
+                <input type="hidden" name="peng_pegawai_id" value="${data.kd_pegawai}">
+            `);
+
         $("#peng_gudang_id").val(data.gudang_id).trigger("change");
         $("#jenis_kirim").val(data.jenis_kirim).trigger("change");
         $("#armada").val(data.armada).trigger("change");
@@ -279,6 +308,13 @@ function openModalPengiriman(mode, data = null) {
         );
     } else {
         $("#supplyPengirimanModal .modal-title").text("Tambah Data Pengiriman");
+
+        $("#tg_pengiriman").prop("readonly", false);
+        $("#peng_gudang_id, #peng_pegawai_id")
+            .val("")
+            .trigger("change");
+
+        reloadDropdownGudang("#peng_gudang_id", roleScope, penempatan);
     
         $("#supply-pengiriman-form").data("action", "add");
         $("#supply-pengiriman-form").removeData("id");

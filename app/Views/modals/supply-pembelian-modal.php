@@ -19,11 +19,8 @@
                         <div class="col-lg-12">
                             <div class="mb-3">
                                 <label class="form-label mb-1">Gudang</label>
-                                <select name="pem_gudang_id" id="pem_gudang_id" class="form-select" <?= $roleScope == 'gudang' ? 'disabled' : '' ?>>
+                                <select name="pem_gudang_id" id="pem_gudang_id" class="form-select">
                                     <option value="" disabled selected>Pilih Gudang</option>
-                                    <?php foreach ($gudang as $g): ?>
-                                        <option value="<?= esc($g->m_gudang_id) ?>"><?= esc($g->nama) ?></option>
-                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>

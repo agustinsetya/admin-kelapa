@@ -140,6 +140,20 @@ function initializeMasterUserTable(data) {
                     return meta.row + meta.settings._iDisplayStart + 1;
                 }
             },
+            { 
+                targets: 2, 
+                render: function (data, type, row) {
+                    let html = data ? `<div>${data}</div>` : '<div>-</div>';
+                    
+                    html += `
+                        <div>
+                            <small class="fst-italic text-muted">${row.nama_gudang}</small><br/>
+                        </div>
+                    `;
+            
+                    return html;
+                }
+            },
             {
                 targets: 4,
                 className: 'no-export',

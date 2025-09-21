@@ -22,7 +22,7 @@ class PegawaiModel extends Model
                     mt_pegawai.kd_pegawai,
                     mt_pegawai.nama AS nama_pegawai,
                     m_role.nama AS role_name,
-                    m_gudang.nama as gudang_name,
+                    m_gudang.nama as nama_gudang,
                     mt_pegawai.jenis_kelamin,
                     m_role.role_scope,
                     mt_pegawai.mt_pegawai_id,
@@ -42,6 +42,10 @@ class PegawaiModel extends Model
         if (isset($filters['mt_pegawai_id']) && is_numeric($filters['mt_pegawai_id'])) {
             $user->where('mt_pegawai.mt_pegawai_id', (int)$filters['mt_pegawai_id']);
         }
+
+        if (isset($filters['pegawai_id_not']) && is_numeric($filters['pegawai_id_not'])) {
+            $user->where('mt_pegawai.kd_pegawai !=' . (int)$filters['pegawai_id_not']);
+        }       
         
         if (isset($filters['role_id']) && is_numeric($filters['role_id'])) {
             $user->where('mt_pegawai.role_id', (int)$filters['role_id']);

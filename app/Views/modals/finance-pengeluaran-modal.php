@@ -32,7 +32,7 @@
                         <div class="col-lg-12">
                             <div class="mb-3">
                                 <label class="form-label mb-1">Gudang</label>
-                                <select name="peng_gudang_id" id="peng_gudang_id" class="form-select" <?= $roleScope == 'gudang' ? 'disabled' : '' ?>>
+                                <select name="peng_gudang_id" id="peng_gudang_id" class="form-select">
                                     <option value="" disabled selected>Pilih Gudang</option>
                                 </select>
                             </div>

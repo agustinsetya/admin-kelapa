@@ -90,6 +90,7 @@ function applyFilterPembelian() {
     getDataSupplyPembelian().done(function(response) {
         const rows = Array.isArray(response?.data) ? response.data : [];
         initializeSupplyPembelianTable(rows);
+        reloadDropdownGudang("#pem_gudang_id", roleScope, penempatan);
     }).fail(function(jqXHR, textStatus, errorThrown) {
         console.error("Request failed:", textStatus, errorThrown, jqXHR.responseText);
     });
@@ -227,6 +228,8 @@ function openModalPembelian(mode, data = null) {
         );
     } else {
         $("#supplyPembelianModal .modal-title").text("Tambah Data Pembelian");
+
+        reloadDropdownGudang("#pem_gudang_id", roleScope, penempatan);
     
         $("#supply-pembelian-form").data("action", "add");
         $("#supply-pembelian-form").removeData("id");
