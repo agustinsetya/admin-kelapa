@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Models\PengolahanModel;
+use App\Models\LogPengolahanModel;
 use App\Models\GajiPegawaiModel;
 use App\Models\GajiDriverModel;
 use App\Models\KomponenGajiModel;
@@ -14,7 +14,7 @@ class ReportController extends AuthRequiredController
 {
     use ApiResponse;
 
-    protected $pengolahanModel;
+    protected $logPengolahanModel;
     protected $gajiPegawaiModel;
     protected $gajiDriverModel;
     protected $komponenGajiModel;
@@ -22,7 +22,7 @@ class ReportController extends AuthRequiredController
 
     public function __construct()
     {
-        $this->pengolahanModel = new PengolahanModel();
+        $this->logPengolahanModel = new LogPengolahanModel();
         $this->gajiPegawaiModel = new GajiPegawaiModel();
         $this->gajiDriverModel = new GajiDriverModel();
         $this->komponenGajiModel = new KomponenGajiModel();
@@ -106,7 +106,7 @@ class ReportController extends AuthRequiredController
         $endDate   = $this->request->getGet('end_date');
 
         // Ambil raw rows dari model dengan filter
-        $rows = $this->pengolahanModel->getDataPengolahan([
+        $rows = $this->logPengolahanModel->getDataLogPengolahan([
             'gudang_id'  => is_numeric($gudangId) ? (int)$gudangId : null,
             'start_date' => $startDate ?: null,
             'end_date'   => $endDate ?: null,

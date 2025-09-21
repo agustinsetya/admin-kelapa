@@ -7,7 +7,7 @@ use App\Models\KategoriPengeluaranModel;
 use App\Models\KasbonModel;
 use App\Models\GudangModel;
 use App\Models\PegawaiModel;
-use App\Models\PengolahanModel;
+use App\Models\LogPengolahanModel;
 use App\Models\PengirimanModel;
 use App\Models\GajiDriverModel;
 use App\Models\GajiPegawaiModel;
@@ -22,7 +22,7 @@ class FinanceController extends AuthRequiredController
 	protected $kasbonModel;
 	protected $gudangModel;
     protected $pegawaiModel;
-    protected $pengolahanModel;
+    protected $logPengolahanModel;
     protected $pengirimanModel;
     protected $gajiDriverModel;
     protected $gajiPegawaiModel;
@@ -34,7 +34,7 @@ class FinanceController extends AuthRequiredController
 		$this->kasbonModel = new KasbonModel();
 		$this->gudangModel = new GudangModel();
         $this->pegawaiModel = new PegawaiModel();
-        $this->pengolahanModel = new PengolahanModel();
+        $this->logPengolahanModel = new LogPengolahanModel();
         $this->pengirimanModel = new PengirimanModel();
         $this->gajiDriverModel = new GajiDriverModel();
         $this->gajiPegawaiModel = new GajiPegawaiModel();
@@ -380,7 +380,7 @@ class FinanceController extends AuthRequiredController
 
 		$filters = array_merge($queryFilters, $roleFilters);
 
-        $upahProduksiPegawai = $this->pengolahanModel->getDataUpahProduksi($filters);
+        $upahProduksiPegawai = $this->logPengolahanModel->getDataUpahProduksi($filters);
 
         return $this->jsonSuccess(['data' => $upahProduksiPegawai]);
     }
@@ -423,7 +423,7 @@ class FinanceController extends AuthRequiredController
                 'end_date'   => $periodeEnd,
             ];
 
-            $upah = $this->pengolahanModel->getDataUpahProduksi($filters);
+            $upah = $this->logPengolahanModel->getDataUpahProduksi($filters);
 
             if (empty($upah)) {
                 return $this->jsonError('Upah tidak ditemukan untuk pegawai: ' . $pegawai['kdPegawai'], 404);

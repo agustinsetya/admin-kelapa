@@ -209,7 +209,7 @@ function initializeSupplyPengolahanTable(data) {
                         <div class="d-flex align-items-center">
                             <button type="button" class="btn btn-icon btn-edit-pengolahan"
                                 data-bs-toggle="tooltip" data-bs-placement="top"
-                                title="${tooltip}" data-id="${row.mt_pengolahan_id}" ${isDisabled}>
+                                title="${tooltip}" data-id="${row.mt_log_pengolahan_id}" ${isDisabled}>
                                 <i class="text-primary bx bx-pencil fs-5"></i>
                             </button>
                         </div>
@@ -300,7 +300,7 @@ function openModalPengolahan(mode, data = null) {
         $("#bonus_produksi").val(formatRupiah(data.bonus) ?? 0);
 
         $form.data("action", "edit");
-        $form.data("id", data.mt_pengolahan_id);
+        $form.data("id", data.mt_log_pengolahan_id);
         $form.append('<input type="hidden" name="_method" value="PATCH">');
     } else {
         $("#supplyPengolahanModal .modal-title").text("Tambah Data Pengolahan");

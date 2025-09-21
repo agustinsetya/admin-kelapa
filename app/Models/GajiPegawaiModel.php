@@ -109,7 +109,7 @@ class GajiPegawaiModel extends Model
         }
     
         foreach ($upahPegawai as $row) {
-            $tb = $this->db->table('mt_pengolahan')
+            $tb = $this->db->table('mt_log_pengolahan')
                 ->where('kd_pegawai', (int)$row['kd_pegawai'])
                 ->where('gudang_id',  (int)$row['gudang_id'])
                 ->where('is_stat_gaji', 0);

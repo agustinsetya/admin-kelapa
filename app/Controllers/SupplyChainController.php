@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\PembelianModel;
-use App\Models\PengolahanModel;
+use App\Models\LogPengolahanModel;
 use App\Models\PengirimanModel;
 use App\Models\GudangModel;
 use App\Models\PegawaiModel;
@@ -14,7 +14,7 @@ class SupplyChainController extends AuthRequiredController
     use ApiResponse;
 
 	protected $pembelianModel;
-	protected $pengolahanModel;
+	protected $logPengolahanModel;
 	protected $pengirimanModel;
 	protected $gudangModel;
     protected $pegawaiModel;
@@ -22,7 +22,7 @@ class SupplyChainController extends AuthRequiredController
 	public function __construct()
     {
         $this->pembelianModel = new PembelianModel();
-        $this->pengolahanModel = new PengolahanModel();
+        $this->logPengolahanModel = new LogPengolahanModel();
         $this->pengirimanModel = new PengirimanModel();
 		$this->gudangModel = new GudangModel();
         $this->pegawaiModel = new PegawaiModel();
@@ -51,7 +51,7 @@ class SupplyChainController extends AuthRequiredController
         return view('supply-data-pembelian', $data);
     }
 
-    public function showDataPengolahan()
+    public function showDataLogPengolahan()
     {
         $roleScope = session()->get('role_scope');
         $filters = array_merge(
@@ -203,26 +203,26 @@ class SupplyChainController extends AuthRequiredController
         ], 200);
     }
 
-    public function getDataPengolahan()
+    public function getDataLogPengolahan()
     {
         $filters   = $this->filtersFromUser();
-        $pengolahan = $this->pengolahanModel->getDataPengolahan($filters);
+        $pengolahan = $this->logPengolahanModel->getDataLogPengolahan($filters);
 
         return $this->jsonSuccess(['data' => $pengolahan]);
     }
 
-    public function getDetailPengolahan()
+    public function getDetailLogPengolahan()
     {
         $id = $this->request->getGet('id');
         if (!$id) {
             return $this->jsonError('ID pengolahan tidak ditemukan', 400);
         }
 
-        $detail = $this->pengolahanModel->getDataPengolahan(['mt_pengolahan_id' => $id]);
+        $detail = $this->logPengolahanModel->getDataLogPengolahan(['mt_log_pengolahan_id' => $id]);
         return $this->jsonSuccess(['data' => $detail]);
     }
 
-    public function addDetailPengolahan()
+    public function addDetailLogPengolahan()
     {
         $user = session()->get('user');
         if (!$user) {
@@ -249,10 +249,10 @@ class SupplyChainController extends AuthRequiredController
             'created_by'	    => $user->email ?? null,
         ];
 
-        $saved = $this->pengolahanModel->saveDataPengolahan($data);
+        $saved = $this->logPengolahanModel->saveDataLogPengolahan($data);
 
         if ($saved === false) {
-            $errors = $this->pengolahanModel->errors() ?: 'Gagal menyimpan data';
+            $errors = $this->logPengolahanModel->errors() ?: 'Gagal menyimpan data';
             return $this->jsonError($errors, 500);
         }
 
@@ -262,7 +262,7 @@ class SupplyChainController extends AuthRequiredController
         ], 201);
     }
 	
-    public function updateDetailPengolahan()
+    public function updateDetailLogPengolahan()
     {
         $user = session()->get('user');
         if (!$user) {
@@ -273,7 +273,7 @@ class SupplyChainController extends AuthRequiredController
         $id = $input['id'] ?? null;
 
         if (!$id) {
-            return $this->jsonError('ID pengolahan tidak ditemukan', 400);
+            return $this->jsonError('ID log pengolahan tidak ditemukan', 400);
         }
 
         $data = [
@@ -288,10 +288,10 @@ class SupplyChainController extends AuthRequiredController
             'updated_by'	    => $user->email ?? null,
         ];
 
-        $saved = $this->pengolahanModel->saveDataPengolahan($data, $id);
+        $saved = $this->logPengolahanModel->saveDataLogPengolahan($data, $id);
 
         if ($saved === false) {
-            $errors = $this->pengolahanModel->errors() ?: 'Gagal menyimpan data';
+            $errors = $this->logPengolahanModel->errors() ?: 'Gagal menyimpan data';
             return $this->jsonError($errors, 500);
         }
 
