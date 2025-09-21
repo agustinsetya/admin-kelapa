@@ -219,7 +219,7 @@ class DataUtamaController extends AuthRequiredController
             return $this->jsonError('Tidak terautentik', 401);
         }
 
-        if (!$this->validate('masterPegawai')) {
+        if (!$this->validate('masterUserUpdate')) {
             return $this->jsonError('Validasi gagal', 422, [
                 'errors' => $this->validator->getErrors(),
             ]);
