@@ -18,7 +18,7 @@ class PembelianModel extends Model
         'hasil_olahan_kopra',
         'hasil_olahan_kulit',
         'is_proses',
-        'created_at',
+        'created_by',
         'updated_by',
     ];
     protected $useTimestamps = true;

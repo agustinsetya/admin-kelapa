@@ -68,6 +68,11 @@
                                 <span data-key="t-supply-pengiriman"><?= lang('Files.Data_Pengiriman') ?></span>
                             </a>
                         </li>
+                        <li>
+                            <a href="<?= url_to('supply-penjualan') ?>">
+                                <span data-key="t-supply-penjualan"><?= lang('Files.Data_Penjualan') ?></span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 

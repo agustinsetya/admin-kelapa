@@ -16,6 +16,13 @@ $((function () {
         applyFilterPegawai();
     });
 
+	const initialRole = $("#peg_role_id").val();
+    toggleGudangField(initialRole);
+
+    $("#peg_role_id").on("change", function () {
+        toggleGudangField($(this).val());
+    });
+
     $("#btn-tambah-pegawai").on("click", function () {
         openModalPegawai("add");
     });
@@ -46,11 +53,11 @@ $((function () {
         }
         
         const gudangValue = $("#pg_gudang_id").val();
-        if (!gudangValue) {
-            $("#pg_gudang_id").addClass("is-invalid");
-        } else {
-            $("#pg_gudang_id").removeClass("is-invalid").addClass("is-valid");
-        }
+		if ($(".pg_gudang").is(":visible") && !gudangValue) {
+    		$("#pg_gudang_id").addClass("is-invalid");
+		} else {
+    		$("#pg_gudang_id").removeClass("is-invalid").addClass("is-valid");
+		}
     
         if (form.checkValidity() === false) {
             e.stopPropagation();
@@ -112,6 +119,14 @@ $((function () {
         });
     });
 }));
+
+function toggleGudangField(roleValue) {
+    if (roleValue !== "1" && roleValue !== null) {
+        $(".pg_gudang").css('display', 'block');
+    } else {
+        $(".pg_gudang").css('display', 'none');
+    }
+}
 
 function applyFilterPegawai(gudang = null, role = null) {
     getDataMasterPegawai(gudang, role).done(function(response) {
@@ -246,11 +261,11 @@ function openModalPegawai(mode, data = null) {
     if (mode === "edit" && data) {
         $("#masterPegawaiModal .modal-title").text("Edit Data Pegawai");
 
-        $("#kd_pegawai").val(data.kd_pegawai);
+        $("#kd_pegawai").val(data.kd_pegawai).prop("readonly", true);
         $("#nama_pegawai").val(data.nama_pegawai);
         $("#jenis_kelamin").val(data.jenis_kelamin).trigger("change");
         $("#peg_role_id").val(data.role_id).trigger("change");
-        $("#pg_gudang_id").val(data.penempatan_id).trigger("change");
+    	$("#pg_gudang_id").val(data.penempatan_id).trigger("change");
     
         $("#master-pegawai-form").data("action", "edit");
         $("#master-pegawai-form").data("id", data.mt_pegawai_id);
@@ -260,6 +275,7 @@ function openModalPegawai(mode, data = null) {
         );
     } else {
         $("#masterPegawaiModal .modal-title").text("Tambah Data Pegawai");
+    	$("#kd_pegawai").prop("readonly", false);
     
         $("#master-pegawai-form").data("action", "add");
         $("#master-pegawai-form").removeData("id");

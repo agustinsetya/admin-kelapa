@@ -19,7 +19,7 @@ class GajiPegawaiModel extends Model
         'total_upah_produksi',
         'total_bonus',
         'total_gaji_bersih',
-        'created_at',
+        'created_by',
         'updated_by',
     ];
     protected $useTimestamps = true;

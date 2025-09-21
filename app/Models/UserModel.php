@@ -9,7 +9,7 @@ class UserModel extends Model
     protected $table      = 'mt_user';
     protected $primaryKey = 'mt_user_id';
     protected $returnType = 'object';
-    protected $allowedFields = ['kd_pegawai','email','password'];
+    protected $allowedFields = ['kd_pegawai','email','password','created_by','updated_by'];
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';

@@ -300,3 +300,42 @@ function reloadDropdownContainerPembelianByGudang(targetId, gudangId) {
         },
     });
 }
+
+function reloadDropdownResiPengirimanByGudang(targetId, gudangId) {
+    const $target = $(targetId);
+
+    $target
+        .empty()
+        .append('<option value="" disabled selected>Pilih Nomor Resi</option>')
+        .prop("disabled", true);
+
+    if (!gudangId) return;
+
+    $.ajax({
+        url: base_url + 'supply-chain/pengiriman/data',
+        method: "GET",
+        data: {
+            gudang: gudangId,
+        },
+        dataType: "json",
+        success: function (response) {
+            if (Array.isArray(response.data)) {
+                response.data.forEach(function(pengiriman) {
+                    $target.append(
+                        $('<option>', {
+                            value: pengiriman.mt_log_pengiriman_id,
+                            text: pengiriman.nomor_resi
+                        })
+                    );
+                });
+
+                $target.prop("disabled", false);
+            }
+
+            $target.trigger("change");
+        },
+        error: function () {
+            console.error("Gagal memuat data pengiriman:", xhr.responseText);
+        }
+    });
+}

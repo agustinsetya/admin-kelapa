@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\PembelianModel;
 use App\Models\LogPengolahanModel;
 use App\Models\PengirimanModel;
+use App\Models\PenjualanModel;
 use App\Models\GudangModel;
 use App\Models\PegawaiModel;
 use App\Controllers\Concerns\ApiResponse;
@@ -13,9 +14,13 @@ class SupplyChainController extends AuthRequiredController
 {
     use ApiResponse;
 
+    private const HARGA_JUAL_TERIMA = 16000;
+    private const HARGA_JUAL_REJECT = 9000;
+
 	protected $pembelianModel;
 	protected $logPengolahanModel;
 	protected $pengirimanModel;
+	protected $penjualanModel;
 	protected $gudangModel;
     protected $pegawaiModel;
 
@@ -24,6 +29,7 @@ class SupplyChainController extends AuthRequiredController
         $this->pembelianModel = new PembelianModel();
         $this->logPengolahanModel = new LogPengolahanModel();
         $this->pengirimanModel = new PengirimanModel();
+        $this->penjualanModel = new PenjualanModel();
 		$this->gudangModel = new GudangModel();
         $this->pegawaiModel = new PegawaiModel();
     }
@@ -95,6 +101,23 @@ class SupplyChainController extends AuthRequiredController
         ];
 
         return view('supply-data-pengiriman', $data);
+    }
+    
+    public function showDataPenjualan()
+    {
+        $roleScope = session()->get('role_scope');
+
+        $data = [
+            'title_meta' => view('partials/title-meta', ['title' => 'Data_Penjualan']),
+            'page_title' => view('partials/page-title', [
+                'title' => 'Data_Penjualan',
+                'li_1'  => lang('Files.Supply_Chain'),
+                'li_2'  => lang('Files.Data_Penjualan'),
+            ]),
+            'roleScope' => $roleScope,
+        ];
+
+        return view('supply-data-penjualan', $data);
     }
 
     /* --------------------------------
@@ -403,6 +426,108 @@ class SupplyChainController extends AuthRequiredController
 
         return $this->jsonSuccess([
             'message' => 'Berhasil Update Data Pengiriman',
+        ], 200);
+    }
+    
+    public function getDataPenjualan()
+    {
+        $filters   = $this->filtersFromUser();
+        $penjualan = $this->penjualanModel->getDataPenjualan($filters);
+
+        return $this->jsonSuccess(['data' => $penjualan]);
+    }
+
+    public function getDetailPenjualan()
+    {
+        $id = $this->request->getGet('id');
+        if (!$id) {
+            return $this->jsonError('ID penjualan tidak ditemukan', 400);
+        }
+
+        $detail = $this->penjualanModel->getDataPenjualan(['mt_penjualan_id' => $id]);
+        return $this->jsonSuccess(['data' => $detail]);
+    }
+
+    public function addDetailPenjualan()
+    {
+        $user = session()->get('user');
+        if (!$user) {
+            return $this->jsonError('Tidak terautentik', 401);
+        }
+
+        if (!$this->validate('supplyChainPenjualan')) {
+            return $this->jsonError('Validasi gagal', 422, [
+                'errors' => $this->validator->getErrors(),
+            ]);
+        }
+
+        $input = $this->request->getPost();
+
+        $data = [
+            'tg_penjualan'	        => $input['tg_penjualan'],
+            'log_pengiriman_id'	    => $input['log_pengiriman_id'],
+            'daging_kelapa_terima'	=> $input['daging_kelapa_terima'],
+            'pendapatan_terima'	    => $input['daging_kelapa_terima'] * self::HARGA_JUAL_TERIMA,
+            'daging_kelapa_reject'	=> $input['daging_kelapa_reject'],
+            'pendapatan_reject'	    => $input['daging_kelapa_reject'] * self::HARGA_JUAL_REJECT,
+            'status'                => $input['penj_status'],
+            'created_by'	        => $user->email ?? null,
+        ];
+
+        $saved = $this->penjualanModel->saveDataPenjualan($data);
+
+        if ($saved === false) {
+            $errors = $this->penjualanModel->errors() ?: 'Gagal menyimpan data';
+            return $this->jsonError($errors, 500);
+        }
+
+        // 201 Created
+        return $this->jsonSuccess([
+            'message' => 'Berhasil Tambah Data Penjualan',
+        ], 201);
+
+    }
+	
+    public function updateDetailPenjualan()
+    {
+        $user = session()->get('user');
+        if (!$user) {
+            return $this->jsonError('Tidak terautentik', 401);
+        }
+
+        if (!$this->validate('supplyChainPenjualan')) {
+            return $this->jsonError('Validasi gagal', 422, [
+                'errors' => $this->validator->getErrors(),
+            ]);
+        }
+
+        $input = $this->request->getPost();
+        $id = $input['id'] ?? null;
+
+        if (!$id) {
+            return $this->jsonError('ID penjualan tidak ditemukan', 400);
+        }
+
+        $data = [
+            'tg_penjualan'	        => $input['tg_penjualan'],
+            'log_pengiriman_id'	    => $input['log_pengiriman_id'],
+            'daging_kelapa_terima'	=> $input['daging_kelapa_terima'],
+            'pendapatan_terima'	    => $input['daging_kelapa_terima'] * self::HARGA_JUAL_TERIMA,
+            'daging_kelapa_reject'	=> $input['daging_kelapa_reject'],
+            'pendapatan_reject'	    => $input['daging_kelapa_reject'] * self::HARGA_JUAL_REJECT,
+            'status'                => $input['penj_status'],
+            'updated_by'	        => $user->email ?? null,
+        ];
+
+        $saved = $this->penjualanModel->saveDataPenjualan($data, $id);
+
+        if ($saved === false) {
+            $errors = $this->penjualanModel->errors() ?: 'Gagal menyimpan data';
+            return $this->jsonError($errors, 500);
+        }
+
+        return $this->jsonSuccess([
+            'message' => 'Berhasil Update Data Penjualan',
         ], 200);
     }
 

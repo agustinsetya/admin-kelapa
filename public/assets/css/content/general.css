@@ -1,6 +1,6 @@
 @media (min-width: 768px) {
     #btn-tambah-user, #btn-tambah-user-roles, #btn-tambah-gudang, #btn-tambah-pembelian, #btn-tambah-pengolahan,
-    #btn-tambah-kategori-pengeluaran, #btn-tambah-pengiriman {
+    #btn-tambah-kategori-pengeluaran, #btn-tambah-pengiriman, #btn-tambah-penjualan {
         width: auto !important;
     }
 }

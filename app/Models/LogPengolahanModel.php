@@ -20,7 +20,7 @@ class LogPengolahanModel extends Model
         'bonus',
         'tg_proses_gaji',
         'is_stat_gaji',
-        'created_at',
+        'created_by',
         'updated_by',
     ];
     protected $useTimestamps = true;

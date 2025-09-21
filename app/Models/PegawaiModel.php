@@ -9,7 +9,7 @@ class PegawaiModel extends Model
     protected $table      = 'mt_pegawai';
     protected $primaryKey = 'mt_pegawai_id';
     protected $returnType = 'object';
-    protected $allowedFields = ['kd_pegawai','nama','jenis_kelamin','email','role_id','penempatan_id'];
+    protected $allowedFields = ['kd_pegawai','nama','jenis_kelamin','email','role_id','penempatan_id','created_by','updated_by'];
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';

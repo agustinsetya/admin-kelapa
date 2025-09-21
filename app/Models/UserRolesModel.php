@@ -9,8 +9,10 @@ class UserRolesModel extends Model
     protected $table         = 'm_role';
     protected $primaryKey    = 'm_role_id';
     protected $returnType    = 'object';
-    protected $allowedFields = ['nama','role_scope'];
+    protected $allowedFields = ['nama','role_scope','created_by','updated_by'];
     protected $useTimestamps = true;
+    protected $createdField  = 'created_at';
+    protected $updatedField  = 'updated_at';
 
     public function getDataUserRoles(array $filters = []): array
     {

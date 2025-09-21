@@ -121,6 +121,31 @@ class Validation extends BaseConfig
         ],
     ];
     
+    public $supplyChainPenjualan = [
+        'tg_penjualan'          => 'required',
+        'log_pengiriman_id'     => 'required|numeric',
+        'daging_kelapa_terima'  => 'required|numeric',
+        'daging_kelapa_reject'  => 'required|numeric',
+    ];
+
+    public $supplyChainPenjualan_errors = [
+        'tg_penjualan' => [
+            'required' => 'Tanggal Penjualan wajib diisi.',
+        ],
+        'log_pengiriman_id' => [
+            'required' => 'ID Pengiriman wajib diisi.',
+            'numeric'  => 'ID Pengiriman harus angka.',
+        ],
+        'daging_kelapa_terima' => [
+            'required' => 'Berat Daging Kelapa yang Diterima wajib diisi.',
+            'numeric'  => 'Berat Daging Kelapa yang Diterima harus angka.',
+        ],
+        'daging_kelapa_reject' => [
+            'required' => 'Berat Daging Kelapa yang Ditolak wajib diisi.',
+            'numeric'  => 'Berat Daging Kelapa yang Ditolak harus angka.',
+        ],
+    ];
+    
     public $masterUserRoles = [
         'nama_peran'      => 'required',
         'lingkup_peran'   => 'required',

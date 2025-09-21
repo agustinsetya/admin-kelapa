@@ -279,20 +279,20 @@ function openModalPengolahan(mode, data = null) {
             `);
 
         $("#peng_pegawai_id")
-        .hide()
-        .after(`
-            <input type="text" readonly class="form-control fake-input" 
-                value="${data.nama_pegawai}">
-            <input type="hidden" name="peng_pegawai_id" value="${data.kd_pegawai}">
-        `);
+            .hide()
+            .after(`
+                <input type="text" readonly class="form-control fake-input" 
+                    value="${data.nama_pegawai}">
+                <input type="hidden" name="peng_pegawai_id" value="${data.kd_pegawai}">
+            `);
 
         $("#peng_kode_container")
-        .hide()
-        .after(`
-            <input type="text" readonly class="form-control fake-input" 
-                value="${data.kode_container}">
-            <input type="hidden" name="peng_kode_container" value="${data.kode_container}">
-        `);
+            .hide()
+            .after(`
+                <input type="text" readonly class="form-control fake-input" 
+                    value="${data.kode_container}">
+                <input type="hidden" name="peng_kode_container" value="${data.kode_container}">
+            `);
 
         $("#berat_daging").val(data.berat_daging);
         $("#berat_kopra").val(data.berat_kopra);

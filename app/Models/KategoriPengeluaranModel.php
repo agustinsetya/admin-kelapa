@@ -9,7 +9,7 @@ class KategoriPengeluaranModel extends Model
     protected $table         = 'm_ktg_pengeluaran';
     protected $primaryKey    = 'm_ktg_pengeluaran_id';
     protected $returnType    = 'object';
-    protected $allowedFields = ['nama','keterangan'];
+    protected $allowedFields = ['nama','keterangan','created_by','updated_by'];
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
