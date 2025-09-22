@@ -6,7 +6,7 @@
  */
 
 return [
-    "Nama_CV" => "CV Java",
+    "Nama_CV" => "CV Ecotech",
     "Profile" => "Profil",
     "Lock_Screen" => "Kunci Layar",
     "Signin" => "Masuk",
