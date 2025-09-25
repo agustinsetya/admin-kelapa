@@ -10,6 +10,7 @@ class GudangModel extends Model
     protected $primaryKey    = 'm_gudang_id';
     protected $returnType    = 'object';
     protected $allowedFields = [
+        'kode_gudang',
         'nama',
         'takaran_daging',
         'upah_takaran_daging',
@@ -33,6 +34,7 @@ class GudangModel extends Model
 
         $gudang = $this->select('
                     m_gudang.m_gudang_id,
+                    m_gudang.kode_gudang,
                     m_gudang.nama,
                     m_gudang.takaran_daging,
                     m_gudang.upah_takaran_daging,
@@ -64,6 +66,15 @@ class GudangModel extends Model
             $ok = $this->update($gudangId, $data);
             $finalGudangId = $gudangId;
         } else {
+            $lastGudang = $this->select('kode_gudang')
+                           ->orderBy('m_gudang_id', 'DESC')
+                           ->first();
+
+            $lastKode = $lastGudang ? (int)$lastGudang->kode_gudang : 0;
+            $newKode  = $lastKode + 1;
+
+            $data['kode_gudang'] = $newKode;
+
             $ok = $this->insert($data, false);
             $finalGudangId = $this->getInsertID();
         }
