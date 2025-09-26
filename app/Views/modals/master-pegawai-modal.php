@@ -7,14 +7,14 @@
             </div>
             <form class="needs-validation" id="master-pegawai-form" novalidate>
                 <div class="modal-body">
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col-lg-12">
                             <div class="mb-3">
                                 <label for="kd_pegawai" class="form-label"><?= lang('Files.Kode_Pegawai') ?></label>
                                 <input type="number" name="kd_pegawai" id="kd_pegawai" required class="form-control" placeholder="<?= lang('Files.Input_Kode_Pegawai') ?>"/>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="mb-3">

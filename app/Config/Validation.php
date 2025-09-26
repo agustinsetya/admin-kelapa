@@ -181,7 +181,7 @@ class Validation extends BaseConfig
     ];
 
     public $masterPegawai = [
-        'kd_pegawai'      => 'required|numeric',
+        // 'kd_pegawai'      => 'required|numeric',
         'nama_pegawai'      => 'required',
         'jenis_kelamin' => 'required|in_list[P,L]',
         'peg_role_id'   => 'required|numeric',
@@ -189,10 +189,10 @@ class Validation extends BaseConfig
     ];
 
     public $masterPegawai_errors = [
-        'kd_pegawai' => [
-            'required' => 'Kode Pegawai wajib diisi.',
-            'numeric'  => 'Kode Pegawai harus angka.',
-        ],
+        // 'kd_pegawai' => [
+        //     'required' => 'Kode Pegawai wajib diisi.',
+        //     'numeric'  => 'Kode Pegawai harus angka.',
+        // ],
         'nama_pegawai' => [
             'required' => 'Nama Pegawai wajib diisi.',
         ],

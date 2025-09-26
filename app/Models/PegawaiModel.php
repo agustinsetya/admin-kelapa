@@ -64,24 +64,55 @@ class PegawaiModel extends Model
 
     public function saveDataPegawai(array $data, $pegawaiId = null): bool
     {
-        $data['mt_pegawai_id'] = $pegawaiId;
+        $this->db->transStart();  
 
-        $this->db->transStart();
+        if (empty($pegawaiId)) {  
+            // Ambil kode_gudang dari tabel m_gudang  
+            $builder = $this->db->table('m_gudang');  
+            $builder->select('kode_gudang');  
+            $builder->where('m_gudang_id', $data['penempatan_id']);  
+            $row = $builder->get()->getRow();  
 
-        $user = $this->where('mt_pegawai_id', $pegawaiId)->first();
+            if (!$row) {  
+                $this->db->transRollback();  
+                return false;  
+            }  
 
-        if ($user) {
-            $ok = $this->update($pegawaiId, $data);
-        } else {
-            $ok = $this->insert($data, false) !== false;
-        }
+            $kodeGudang = $row->kode_gudang;  
 
-        if (!$ok) {
-            $this->db->transRollback();
-            return false;
-        }
+            // Cari kd_pegawai terakhir berdasarkan kode_gudang  
+            $lastPegawai = $this->where("kd_pegawai LIKE", $kodeGudang . '%')  
+                                ->orderBy('kd_pegawai', 'DESC')  
+                                ->first();  
 
-        $this->db->transComplete();
+            if ($lastPegawai) {  
+                $lastNumber = (int) substr($lastPegawai->kd_pegawai, strlen($kodeGudang));  
+                $newNumber = $lastNumber + 1;  
+            } else {  
+                $newNumber = 1;  
+            }  
+
+            // Format kd_pegawai baru  
+            $data['kd_pegawai'] = $kodeGudang . str_pad($newNumber, 4, '0', STR_PAD_LEFT);  
+        } else {  
+            $data['mt_pegawai_id'] = $pegawaiId;  
+        }  
+
+        // Insert atau update  
+        $user = $this->where('mt_pegawai_id', $pegawaiId)->first();  
+
+        if ($user) {  
+            $ok = $this->update($pegawaiId, $data);  
+        } else {  
+            $ok = $this->insert($data, false) !== false;  
+        }  
+
+        if (!$ok) {  
+            $this->db->transRollback();  
+            return false;  
+        }  
+
+        $this->db->transComplete();  
         return $this->db->transStatus();
     }
 }

@@ -338,7 +338,7 @@ class DataUtamaController extends AuthRequiredController
         }
 
         $data = [
-            'kd_pegawai'    => $input['kd_pegawai'],
+            // 'kd_pegawai'    => $input['kd_pegawai'],
             'nama'          => $input['nama_pegawai'],
             'jenis_kelamin' => $input['jenis_kelamin'],
             'role_id'       => $input['peg_role_id'],
@@ -386,7 +386,7 @@ class DataUtamaController extends AuthRequiredController
         }
 
         $data = [
-            'kd_pegawai'    => $input['kd_pegawai'],
+            // 'kd_pegawai'    => $input['kd_pegawai'],
             'nama'          => $input['nama_pegawai'],
             'jenis_kelamin' => $input['jenis_kelamin'],
             'role_id'       => $input['peg_role_id'],
