@@ -6,6 +6,7 @@ use App\Models\PembelianModel;
 use App\Models\LogPengolahanModel;
 use App\Models\PengirimanModel;
 use App\Models\PenjualanModel;
+use App\Models\PenjualanLimbahModel;
 use App\Models\GudangModel;
 use App\Models\PegawaiModel;
 use App\Controllers\Concerns\ApiResponse;
@@ -21,6 +22,7 @@ class SupplyChainController extends AuthRequiredController
 	protected $logPengolahanModel;
 	protected $pengirimanModel;
 	protected $penjualanModel;
+	protected $penjualanLimbahModel;
 	protected $gudangModel;
     protected $pegawaiModel;
 
@@ -30,6 +32,7 @@ class SupplyChainController extends AuthRequiredController
         $this->logPengolahanModel = new LogPengolahanModel();
         $this->pengirimanModel = new PengirimanModel();
         $this->penjualanModel = new PenjualanModel();
+        $this->penjualanLimbahModel = new PenjualanLimbahModel();
 		$this->gudangModel = new GudangModel();
         $this->pegawaiModel = new PegawaiModel();
     }
@@ -114,6 +117,25 @@ class SupplyChainController extends AuthRequiredController
         ];
 
         return view('supply-data-penjualan', $data);
+    }
+    
+    public function showDataPenjualanLimbah()
+    {
+        $user = session()->get('user');
+        $roleScope = session()->get('role_scope');
+
+        $data = [
+            'title_meta' => view('partials/title-meta', ['title' => 'Data_Penjualan_Limbah']),
+            'page_title' => view('partials/page-title', [
+                'title' => 'Data_Penjualan_Limbah',
+                'li_1'  => lang('Files.Supply_Chain'),
+                'li_2'  => lang('Files.Data_Penjualan_Limbah'),
+            ]),
+            'roleScope' => $roleScope,
+            'penempatan' => $user->penempatan_id ?? '',
+        ];
+
+        return view('supply-data-penjualan-limbah', $data);
     }
 
     /* --------------------------------
@@ -524,6 +546,106 @@ class SupplyChainController extends AuthRequiredController
 
         return $this->jsonSuccess([
             'message' => 'Berhasil Update Data Penjualan',
+        ], 200);
+    }
+    
+    public function getDataPenjualanLimbah()
+    {
+        $filters   = $this->filtersFromUser();
+        $penjualanLimbah = $this->penjualanLimbahModel->getDataPenjualanLimbah($filters);
+
+        return $this->jsonSuccess(['data' => $penjualanLimbah]);
+    }
+
+    public function getDetailPenjualanLimbah()
+    {
+        $id = $this->request->getGet('id');
+        if (!$id) {
+            return $this->jsonError('ID penjualan Limbah tidak ditemukan', 400);
+        }
+
+        $detail = $this->penjualanLimbahModel->getDataPenjualanLimbah(['mt_penjualan_limbah_id' => $id]);
+        return $this->jsonSuccess(['data' => $detail]);
+    }
+
+    public function addDetailPenjualanLimbah()
+    {
+        $user = session()->get('user');
+        if (!$user) {
+            return $this->jsonError('Tidak terautentik', 401);
+        }
+
+        if (!$this->validate('supplyChainPenjualanLimbah')) {
+            return $this->jsonError('Validasi gagal', 422, [
+                'errors' => $this->validator->getErrors(),
+            ]);
+        }
+
+        $input = $this->request->getPost();
+
+        $data = [
+            'tg_penjualan'	        => $input['tg_penjualan'],
+            'gudang_id'	            => $input['penj_gudang_id'],
+            'jenis_limbah'	        => $input['jenis_limbah'],
+            'berat_limbah'	        => $input['berat_limbah'],
+            'pendapatan_limbah'	    => $input['pendapatan_limbah'],
+            'status'                => $input['penj_status'],
+            'created_by'	        => $user->email ?? null,
+        ];
+
+        $saved = $this->penjualanLimbahModel->saveDataPenjualanLimbah($data);
+
+        if ($saved === false) {
+            $errors = $this->penjualanLimbahModel->errors() ?: 'Gagal menyimpan data';
+            return $this->jsonError($errors, 500);
+        }
+
+        // 201 Created
+        return $this->jsonSuccess([
+            'message' => 'Berhasil Tambah Data Penjualan Limbah',
+        ], 201);
+
+    }
+	
+    public function updateDetailPenjualanLimbah()
+    {
+        $user = session()->get('user');
+        if (!$user) {
+            return $this->jsonError('Tidak terautentik', 401);
+        }
+
+        if (!$this->validate('supplyChainPenjualanLimbah')) {
+            return $this->jsonError('Validasi gagal', 422, [
+                'errors' => $this->validator->getErrors(),
+            ]);
+        }
+
+        $input = $this->request->getPost();
+        $id = $input['id'] ?? null;
+
+        if (!$id) {
+            return $this->jsonError('ID Penjualan Limbah tidak ditemukan', 400);
+        }
+
+        $data = [
+            'tg_penjualan'	        => $input['tg_penjualan'],
+            'gudang_id'	            => $input['penj_gudang_id'],
+            'jenis_limbah'	        => $input['jenis_limbah'],
+            'berat_limbah'	        => $input['berat_limbah'],
+            'pendapatan_limbah'	    => $input['pendapatan_limbah'],
+            'status'                => $input['penj_status'],
+            'updated_by'	        => $user->email ?? null,
+        ];
+
+        $saved = $this->penjualanLimbahModel->saveDataPenjualanLimbah($data, $id);
+
+        if ($saved === false) {
+            $errors = $this->penjualanLimbahModel->errors() ?: 'Gagal menyimpan data';
+            return $this->jsonError($errors, 500);
+        }
+
+        return $this->jsonSuccess([
+            'message' => 'Berhasil Update Data Penjualan Limbah',
         ], 200);
     }
 

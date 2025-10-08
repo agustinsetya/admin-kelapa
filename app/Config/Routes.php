@@ -108,6 +108,11 @@ $routes->group('supply-chain', ['filter' => 'auth'], function ($routes) {
     $routes->get('penjualan/detail', 'SupplyChainController::getDetailPenjualan', ['as' => 'supply-detail-penjualan']);
     $routes->post('penjualan/add', 'SupplyChainController::addDetailPenjualan', ['as' => 'supply-add-penjualan']);
     $routes->patch('penjualan/update', 'SupplyChainController::updateDetailPenjualan', ['as' => 'supply-update-penjualan']);
+    $routes->get('penjualan-limbah', 'SupplyChainController::showDataPenjualanLimbah', ['as' => 'supply-penjualan-limbah']);
+    $routes->get('penjualan-limbah/data', 'SupplyChainController::getDataPenjualanLimbah', ['as' => 'supply-data-penjualan-limbah']);
+    $routes->get('penjualan-limbah/detail', 'SupplyChainController::getDetailPenjualanLimbah', ['as' => 'supply-detail-penjualan-limbah']);
+    $routes->post('penjualan-limbah/add', 'SupplyChainController::addDetailPenjualanLimbah', ['as' => 'supply-add-penjualan-limbah']);
+    $routes->patch('penjualan-limbah/update', 'SupplyChainController::updateDetailPenjualanLimbah', ['as' => 'supply-update-penjualan-limbah']);
 });
 
 // Payroll

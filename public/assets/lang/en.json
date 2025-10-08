@@ -14,6 +14,7 @@
     "t-supply-pengolahan":"Processing Data",
     "t-supply-pengiriman":"Distribution Data",
     "t-supply-penjualan":"Sales Data",
+    "t-supply-penjualan-limbah":"Sales of Production Waste",
 
     "t-finance":"Finance",
     "t-pengeluaran":"Expenditure",

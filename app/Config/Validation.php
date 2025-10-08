@@ -146,6 +146,41 @@ class Validation extends BaseConfig
         ],
     ];
     
+    public $supplyChainPenjualanLimbah = [
+        'tg_penjualan'          => 'required',
+        'penj_gudang_id'         => 'required|numeric',
+        'jenis_limbah'          => 'required|in_list[AIR_KELAPA,BATOK_KELAPA]',
+        'berat_limbah'          => 'required|numeric',
+        'pendapatan_limbah'     => 'required|numeric',
+        'penj_status'           => 'required|in_list[BELUM_LUNAS,LUNAS]',
+    ];
+
+    public $supplyChainPenjualanLimbah_errors = [
+        'tg_penjualan' => [
+            'required' => 'Tanggal Penjualan wajib diisi.',
+        ],
+        'penj_gudang_id' => [
+            'required' => 'Gudang wajib diisi.',
+            'numeric'  => 'Gudang harus angka.',
+        ],
+        'jenis_limbah' => [
+            'required' => 'Jenis Limbah Produksi wajib dipilih.',
+            'in_list'  => 'Jenis Limbah Produksi hanya boleh diisi dengan Air Kelapa atau Batok Kelapa.',
+        ],
+        'berat_limbah' => [
+            'required' => 'Berat Limbah Produksi wajib diisi.',
+            'numeric'  => 'Berat Limbah Produksi harus angka.',
+        ],
+        'pendapatan_limbah' => [
+            'required' => 'Pendapatan Limbah Produksi wajib diisi.',
+            'numeric'  => 'Pendapatan Limbah Produksi harus angka.',
+        ],
+        'penj_status' => [
+            'required' => 'Status wajib dipilih.',
+            'in_list'  => 'Status hanya boleh diisi dengan Belum Lunas atau Lunas.',
+        ],
+    ];
+    
     public $masterUserRoles = [
         'nama_peran'      => 'required',
         'lingkup_peran'   => 'required',
