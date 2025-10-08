@@ -152,7 +152,7 @@ class LogPengolahanModel extends Model
         // Insert / Update log pengolahan
         $ok = $pengolahanId !== null
             ? $this->update($pengolahanId, $data)
-            : $this->insert($data, false) !== false;
+            : $this->insert($data) !== false;
 
         if (!$ok) {
             $this->db->transRollback();
