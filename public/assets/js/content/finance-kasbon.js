@@ -6,7 +6,7 @@ $((function () {
     $("#kb_gudang_id").on("change", function () {
         let gudangId = $(this).val();
 
-        reloadDropdownPegawaiByGudang('#kb_pegawai_id', gudangId, '6', pegawaiId, roleScope);
+        reloadDropdownPegawaiByGudang('#kb_pegawai_id', gudangId, roleScope);
     });
 
     applyFilterKasbon();

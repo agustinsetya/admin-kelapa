@@ -237,7 +237,7 @@ function reloadDropdownGudang(targetId, roleScope = null, penempatan = null) {
     });
 }
 
-function reloadDropdownPegawaiByGudang(targetId, gudangId, role_id_not = null, pegawaiId = null, roleScope = null) { 
+function reloadDropdownPegawaiByGudang(targetId, gudangId, roleScope = null, role_id_not = null, role = null, pegawaiId = null) { 
     const $target = $(targetId);
 
     $target
@@ -249,12 +249,21 @@ function reloadDropdownPegawaiByGudang(targetId, gudangId, role_id_not = null, p
 
     let requestData = { gudang: gudangId };
 
+    if (roleScope !== null) {
+        if (roleScope === 'gudang' && pegawaiId) {
+            requestData.pegawai_id_not = pegawaiId;
+        } else {
+            requestData.roleScope = roleScope;
+        }
+    }
+    
     if (role_id_not !== null) {
         requestData.role_id_not = role_id_not;
-    } 
-
-    if (roleScope === 'gudang' && pegawaiId) {
-        requestData.pegawai_id_not = pegawaiId;
+    }
+    
+    // role id allowed
+    if (role !== null) {
+        requestData.role = role;
     }
 
     $.ajax({

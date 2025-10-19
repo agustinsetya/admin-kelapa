@@ -6,7 +6,7 @@ $((function () {
     $("#peng_gudang_id").on("change", function () {
         let gudangId = $(this).val();
 
-        reloadDropdownPegawaiByGudang('#peng_pegawai_id', gudangId, '6', pegawaiId, roleScope);
+        reloadDropdownPegawaiByGudang('#peng_pegawai_id', gudangId, roleScope, '6');
         reloadDropdownContainerPembelianByGudang('#peng_kode_container', gudangId);
     });
 
