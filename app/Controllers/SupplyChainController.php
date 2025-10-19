@@ -344,6 +344,12 @@ class SupplyChainController extends AuthRequiredController
     public function getDataPengiriman()
     {
         $filters   = $this->filtersFromUser();
+
+        $gudangId = $this->request->getGet('gudang');
+        if (!empty($gudangId)) {
+            $filters['gudang_id'] = $gudangId;
+        }
+        
         $pengiriman = $this->pengirimanModel->getDataPengiriman($filters);
 
         return $this->jsonSuccess(['data' => $pengiriman]);

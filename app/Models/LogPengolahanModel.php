@@ -146,7 +146,7 @@ class LogPengolahanModel extends Model
         // Normalisasi input
         $fieldsInput = ['berat_daging', 'berat_kopra', 'berat_kulit'];
         foreach ($fieldsInput as $f) {
-            $data[$f] = isset($data[$f]) ? (int) $data[$f] : 0;
+            $data[$f] = isset($data[$f]) ? (float) $data[$f] : 0;
         }
 
         // Insert / Update log pengolahan
@@ -188,9 +188,9 @@ class LogPengolahanModel extends Model
         // Update pembelian
         $updatePembelian = [];
         foreach ($mapFields as $target => $source) {
-            $lama   = (int) $pembelian[$target];
-            $oldVal = (int) ($oldData[$source] ?? 0);
-            $baru   = (int) $data[$source];
+            $lama   = (float) $pembelian[$target];
+            $oldVal = (float) ($oldData[$source] ?? 0);
+            $baru   = (float) $data[$source];
 
             $updatePembelian[$target] = ($lama - $oldVal) + $baru;
         }
@@ -209,9 +209,9 @@ class LogPengolahanModel extends Model
                 'updated_by' => $actor,
             ];
             foreach ($mapFields as $target => $source) {
-                $lama   = (int) $existingPengolahan[$target];
-                $oldVal = (int) ($oldData[$source] ?? 0);
-                $baru   = (int) $data[$source];
+                $lama   = (float) $existingPengolahan[$target];
+                $oldVal = (float) ($oldData[$source] ?? 0);
+                $baru   = (float) $data[$source];
 
                 $updatePengolahan[$target] = ($lama - $oldVal) + $baru;
             }

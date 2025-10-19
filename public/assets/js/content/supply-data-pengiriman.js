@@ -291,10 +291,13 @@ function openModalPengiriman(mode, data = null) {
                 <input type="hidden" name="peng_pegawai_id" value="${data.kd_pegawai}">
             `);
 
+        $("#nomor_resi")
+            .val(data.nomor_resi)
+            .prop("readonly", true);
+
         $("#peng_gudang_id").val(data.gudang_id).trigger("change");
         $("#jenis_kirim").val(data.jenis_kirim).trigger("change");
         $("#armada").val(data.armada).trigger("change");
-        $("#nomor_resi").val(data.nomor_resi).trigger("change");
         $("#peng_pegawai_id").val(data.kd_pegawai).trigger("change");
         $("#jumlah_perjalanan").val(data.jumlah_perjalanan);
         $("#berat_daging").val(data.berat_daging);
