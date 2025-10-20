@@ -84,6 +84,19 @@ $((function () {
             resetButton("btn-save-pembelian","Simpan","btn btn-primary waves-effect waves-light");
         });
     });
+
+    $(document).on("click", ".btn-hapus-pembelian", function (e) {
+        e.preventDefault();
+    
+        let id = $(this).data('id');
+
+        if (!id) {
+            errorAlert('ID pembelian tidak ditemukan.');
+            return;
+        }
+
+        confirmDelete(() => deletePembelianData(encodeURIComponent(id)));
+    });
 }));
 
 function applyFilterPembelian() {
@@ -158,14 +171,20 @@ function initializeSupplyPembelianTable(data) {
                 width: '72px',
                 render: (data, type, row) => {
                     const isDisabled = row.is_proses == 1 ? 'disabled' : '';
-                    const tooltip = row.is_proses == 1 ? 'Sudah diproses' : 'Detail Pengiriman';
+                    const tooltipEdit = row.is_proses == 1 ? 'Sudah diproses' : 'Detail Pengiriman';
+                    const tooltipDelete = row.is_stat_gaji == 1 ? 'Sudah diproses' : 'Hapus Pembelian';
             
                     return `
                         <div class="d-flex align-items-center">
                             <button type="button" class="btn btn-icon btn-edit-pembelian"
                                 data-bs-toggle="tooltip" data-bs-placement="top"
-                                title="${tooltip}" data-id="${row.mt_pembelian_id}" ${isDisabled}>
+                                title="${tooltipEdit}" data-id="${row.mt_pembelian_id}" ${isDisabled}>
                                 <i class="text-primary bx bx-pencil fs-5"></i>
+                            </button>
+                            <button type="button" class="btn btn-icon btn-hapus-pembelian"
+                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="${tooltipDelete}" data-id="${row.mt_pembelian_id}" ${isDisabled}>
+                                <i class="text-danger bx bx-trash fs-5"></i>
                             </button>
                         </div>
                     `;
@@ -236,4 +255,45 @@ function openModalPembelian(mode, data = null) {
     }
 
     $("#supplyPembelianModal").modal("show");
+}
+
+function deletePembelianData(pembelianId) {
+    $.ajax({
+        url: base_url + `supply-chain/pembelian/delete/${pembelianId}`,
+        method: "DELETE",
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+    })
+    .done(function (response) {
+        if (response?.csrf?.name && response?.csrf?.hash) {
+            $('meta[name="csrf-token-name"]').attr('content', response.csrf.name);
+            $('meta[name="csrf-token"]').attr('content', response.csrf.hash);
+        }
+
+        if (response?.success) {
+            successAlert('Hapus Data Pembelian Berhasil!');
+
+            applyFilterPembelian();
+        } else {
+            const message = response?.errors ?? response?.message ?? 'Hapus Data Gagal!';
+            errorAlert(message, 'Hapus Data Gagal!');
+        }
+    })
+    .fail(function (jqXHR) {
+        try {
+            const res = jqXHR.responseJSON;
+    
+            if (res?.csrf?.name && res?.csrf?.hash) {
+                $('meta[name="csrf-token-name"]').attr('content', res.csrf.name);
+                $('meta[name="csrf-token"]').attr('content', res.csrf.hash);
+            }
+    
+            const msg = res?.errors ?? res?.message ?? res?.error ?? 'Terjadi kesalahan saat Menghapus';
+            errorAlert(msg, 'Gagal Menghapus');
+        } catch (e) {
+            errorAlert('Error!', 'Terjadi kesalahan. Cek konsol.');
+            console.error('Save error:', jqXHR.status, jqXHR.responseText);
+        }
+    })
 }

@@ -79,4 +79,25 @@ class PembelianModel extends Model
         $this->db->transComplete();
         return $this->db->transStatus();
     }
+    
+    public function deleteDataPembelian($pembelianId): bool
+    {
+        $data['mt_pembelian_id'] = $pembelianId;
+
+        $this->db->transStart();
+
+        $exists = $this->where('mt_pembelian_id', $pembelianId)->countAllResults() > 0;
+
+        if ($exists) {
+            $ok = $this->delete($pembelianId);
+        }
+
+        if (!$ok) {
+            $this->db->transRollback();
+            return false;
+        }
+
+        $this->db->transComplete();
+        return $this->db->transStatus();
+    }
 }

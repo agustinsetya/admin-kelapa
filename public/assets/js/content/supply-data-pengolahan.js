@@ -119,7 +119,7 @@ $((function () {
             return;
         }
 
-        confirmDelete(() => deleteUserData(encodeURIComponent(id)));
+        confirmDelete(() => deletePengolahanData(encodeURIComponent(id)));
     });
 }));
 
@@ -339,7 +339,7 @@ function openModalPengolahan(mode, data = null) {
     $("#supplyPengolahanModal").modal("show");
 }
 
-function deleteUserData(pengolahanId) {
+function deletePengolahanData(pengolahanId) {
     $.ajax({
         url: base_url + `supply-chain/pengolahan/delete/${pengolahanId}`,
         method: "DELETE",

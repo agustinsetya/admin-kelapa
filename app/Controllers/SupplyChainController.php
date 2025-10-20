@@ -244,6 +244,29 @@ class SupplyChainController extends AuthRequiredController
         ], 200);
     }
 
+    public function deleteDetailPembelian($pembelianId)
+    {
+        $user = session()->get('user');
+        if (!$user) {
+            return $this->jsonError('Tidak terautentik', 401);
+        }
+
+        if (!$pembelianId) {
+            return $this->jsonError('ID pembelian tidak ditemukan', 400);
+        }
+
+        $deleted = $this->pembelianModel->deleteDataPembelian($pembelianId);
+
+        if ($deleted === false) {
+            $errors = $this->pembelianModel->errors() ?: 'Gagal menghapus data';
+            return $this->jsonError($errors, 500);
+        }
+
+        return $this->jsonSuccess([
+            'message' => 'Berhasil Delete Data Pembelian',
+        ], 200);
+    }
+
     public function getDataLogPengolahan()
     {
         $filters   = $this->filtersFromUser();

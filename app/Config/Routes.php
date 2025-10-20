@@ -93,6 +93,7 @@ $routes->group('supply-chain', ['filter' => 'auth'], function ($routes) {
     $routes->get('pembelian/detail', 'SupplyChainController::getDetailPembelian', ['as' => 'supply-detail-pembelian']);
     $routes->post('pembelian/add', 'SupplyChainController::addDetailPembelian', ['as' => 'supply-add-pembelian']);
     $routes->patch('pembelian/update', 'SupplyChainController::updateDetailPembelian', ['as' => 'supply-update-pembelian']);
+    $routes->delete('pembelian/delete/(:num)', 'SupplyChainController::deleteDetailPembelian/$1', ['as' => 'supply-delete-pembelian']);
     $routes->get('pengolahan', 'SupplyChainController::showDataLogPengolahan', ['as' => 'supply-pengolahan']);
     $routes->get('pengolahan/data', 'SupplyChainController::getDataLogPengolahan', ['as' => 'supply-data-pengolahan']);
     $routes->get('pengolahan/detail', 'SupplyChainController::getDetailLogPengolahan', ['as' => 'supply-detail-pengolahan']);
