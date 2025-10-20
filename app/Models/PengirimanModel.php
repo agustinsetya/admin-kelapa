@@ -21,6 +21,7 @@ class PengirimanModel extends Model
         'bonus',
         'tg_proses_gaji',
         'is_stat_gaji',
+        'is_stat_penjualan',
         'created_by',
         'updated_by',
     ];
@@ -43,6 +44,7 @@ class PengirimanModel extends Model
                     mt_log_pengiriman.bonus,
                     mt_log_pengiriman.tg_proses_gaji,
                     mt_log_pengiriman.is_stat_gaji,
+                    mt_log_pengiriman.is_stat_penjualan,
                     m_gudang.nama AS nama_gudang,
                     mt_pegawai.nama AS nama_pegawai,
                     mt_log_pengiriman.created_at,
@@ -153,6 +155,27 @@ class PengirimanModel extends Model
             $ok = $this->update($pengirimanId, $data);
         } else {
             $ok = $this->insert($data, false) !== false;
+        }
+
+        if (!$ok) {
+            $this->db->transRollback();
+            return false;
+        }
+
+        $this->db->transComplete();
+        return $this->db->transStatus();
+    }
+
+    public function deleteDataPengiriman($pengirimanId): bool
+    {
+        $data['mt_log_pengiriman_id'] = $pengirimanId;
+
+        $this->db->transStart();
+
+        $exists = $this->where('mt_log_pengiriman_id', $pengirimanId)->countAllResults() > 0;
+
+        if ($exists) {
+            $ok = $this->delete($pengirimanId);
         }
 
         if (!$ok) {

@@ -105,6 +105,7 @@ $routes->group('supply-chain', ['filter' => 'auth'], function ($routes) {
     $routes->get('pengiriman/detail', 'SupplyChainController::getDetailPengiriman', ['as' => 'supply-detail-pengiriman']);
     $routes->post('pengiriman/add', 'SupplyChainController::addDetailPengiriman', ['as' => 'supply-add-pengiriman']);
     $routes->patch('pengiriman/update', 'SupplyChainController::updateDetailPengiriman', ['as' => 'supply-update-pengiriman']);
+    $routes->delete('pengiriman/delete/(:num)', 'SupplyChainController::deleteDetailPengiriman/$1', ['as' => 'supply-delete-pengiriman']);
     $routes->get('penjualan', 'SupplyChainController::showDataPenjualan', ['as' => 'supply-penjualan']);
     $routes->get('penjualan/data', 'SupplyChainController::getDataPenjualan', ['as' => 'supply-data-penjualan']);
     $routes->get('penjualan/detail', 'SupplyChainController::getDetailPenjualan', ['as' => 'supply-detail-penjualan']);
