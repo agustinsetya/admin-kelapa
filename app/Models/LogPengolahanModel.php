@@ -247,4 +247,133 @@ class LogPengolahanModel extends Model
         $this->db->transComplete();
         return $this->db->transStatus();
     }
+
+    public function deleteDataLogPengolahan($pengolahanId, ?string $actor = null, bool $deleteEmptyPengolahan = false): bool
+    {
+        $this->db->transStart();
+
+        $pembelianModel  = new \App\Models\PembelianModel();
+        $pengolahanModel = new \App\Models\PengolahanModel();
+
+        // 1) Ambil data log yang mau dihapus (oldData)
+        $oldData = $this->asArray()
+            ->where('mt_log_pengolahan_id', $pengolahanId)
+            ->first();
+
+        if (!$oldData) {
+            $this->db->transRollback();
+            return false; // log tidak ditemukan
+        }
+
+        $mapFields = [
+            'hasil_olahan_daging' => 'berat_daging',
+            'hasil_olahan_kopra'  => 'berat_kopra',
+            'hasil_olahan_kulit'  => 'berat_kulit',
+        ];
+        foreach ($mapFields as $target => $source) {
+            $oldData[$source] = isset($oldData[$source]) ? (float) $oldData[$source] : 0.0;
+        }
+
+        // 2) Ambil pembelian terkait (kunci: kode_container + gudang_id)
+        $pembelian = $pembelianModel->asArray()
+            ->where('kode_container', $oldData['kode_container'])
+            ->where('gudang_id', $oldData['gudang_id'])
+            ->first();
+
+        if (!$pembelian) {
+            $this->db->transRollback();
+            return false;
+        }
+
+        // 3) Ambil pengolahan harian terkait (kunci: tg_pengolahan + gudang_id)
+        $existingPengolahan = $pengolahanModel->asArray()
+            ->where('tg_pengolahan', $oldData['tg_pengolahan'])
+            ->where('gudang_id', $oldData['gudang_id'])
+            ->first();
+
+        if (!$existingPengolahan) {
+            $this->db->transRollback();
+            return false;
+        }
+
+        // 4) Update PEBELIAN: kurangi agregat sesuai log yang dihapus (clamp minimal 0)
+        $updatePembelian = [
+            'updated_by' => $actor,
+        ];
+        foreach ($mapFields as $target => $source) {
+            $lama = isset($pembelian[$target]) ? (float) $pembelian[$target] : 0.0;
+            $dec  = (float) $oldData[$source];
+            $baru = $lama - $dec;
+            if ($baru < 0) $baru = 0; // clamp
+            $updatePembelian[$target] = $baru;
+        }
+
+        // is_proses jadi 0 kalau semua hasil_olahan* = 0 setelah pengurangan
+        $allZeroPembelian = (
+            ($updatePembelian['hasil_olahan_daging'] ?? 0) <= 0 &&
+            ($updatePembelian['hasil_olahan_kopra']  ?? 0) <= 0 &&
+            ($updatePembelian['hasil_olahan_kulit']  ?? 0) <= 0
+        );
+        $updatePembelian['is_proses'] = $allZeroPembelian ? 0 : 1;
+
+        $pembelianModel
+            ->where('kode_container', $oldData['kode_container'])
+            ->where('gudang_id', $oldData['gudang_id'])
+            ->set($updatePembelian)
+            ->update();
+
+        // 5) Update PENGOLAHAN HARIAN: kurangi agregat & hitung ulang rendemen
+        $updatePengolahan = [
+            'updated_by' => $actor,
+        ];
+        foreach ($mapFields as $target => $source) {
+            $lama = isset($existingPengolahan[$target]) ? (float) $existingPengolahan[$target] : 0.0;
+            $dec  = (float) $oldData[$source];
+            $baru = $lama - $dec;
+            if ($baru < 0) $baru = 0; // clamp
+            $updatePengolahan[$target] = $baru;
+        }
+
+        // Recompute rendemen = kulit / daging * 100 (hindari div zero)
+        $daging = (float) ($updatePengolahan['hasil_olahan_daging'] ?? 0);
+        $kulit  = (float) ($updatePengolahan['hasil_olahan_kulit']  ?? 0);
+        $updatePengolahan['rendemen'] = $daging > 0 ? ($kulit / $daging) * 100 : 0;
+
+        if ($deleteEmptyPengolahan) {
+            $allZeroPengolahan = (
+                ($updatePengolahan['hasil_olahan_daging'] ?? 0) <= 0 &&
+                ($updatePengolahan['hasil_olahan_kopra']  ?? 0) <= 0 &&
+                ($updatePengolahan['hasil_olahan_kulit']  ?? 0) <= 0
+            );
+
+            if ($allZeroPengolahan) {
+                $pengolahanModel
+                    ->where('tg_pengolahan', $oldData['tg_pengolahan'])
+                    ->where('gudang_id', $oldData['gudang_id'])
+                    ->delete();
+            } else {
+                $pengolahanModel
+                    ->where('tg_pengolahan', $oldData['tg_pengolahan'])
+                    ->where('gudang_id', $oldData['gudang_id'])
+                    ->set($updatePengolahan)
+                    ->update();
+            }
+        } else {
+            $pengolahanModel
+                ->where('tg_pengolahan', $oldData['tg_pengolahan'])
+                ->where('gudang_id', $oldData['gudang_id'])
+                ->set($updatePengolahan)
+                ->update();
+        }
+
+        // 6) Hapus LOG pengolahan
+        $ok = $this->delete($pengolahanId);
+        if ($ok === false) {
+            $this->db->transRollback();
+            return false;
+        }
+
+        $this->db->transComplete();
+        return $this->db->transStatus();
+    }
 }

@@ -108,6 +108,19 @@ $((function () {
             resetButton("btn-save-pengolahan","Simpan","btn btn-primary waves-effect waves-light");
         });
     });
+
+    $(document).on("click", ".btn-hapus-pengolahan", function (e) {
+        e.preventDefault();
+    
+        let id = $(this).data('id');
+
+        if (!id) {
+            errorAlert('ID pengolahan tidak ditemukan.');
+            return;
+        }
+
+        confirmDelete(() => deleteUserData(encodeURIComponent(id)));
+    });
 }));
 
 function applyFilterPengolahan() {
@@ -203,14 +216,20 @@ function initializeSupplyPengolahanTable(data) {
                 width: '72px',
                 render: (data, type, row) => {
                     const isDisabled = row.is_stat_gaji == 1 ? 'disabled' : '';
-                    const tooltip = row.is_stat_gaji == 1 ? 'Sudah diproses' : 'Detail Pengolahan';
+                    const tooltipEdit = row.is_stat_gaji == 1 ? 'Sudah diproses' : 'Detail Pengolahan';
+                    const tooltipDelete = row.is_stat_gaji == 1 ? 'Sudah diproses' : 'Hapus Pengolahan';
             
                     return `
                         <div class="d-flex align-items-center">
                             <button type="button" class="btn btn-icon btn-edit-pengolahan"
                                 data-bs-toggle="tooltip" data-bs-placement="top"
-                                title="${tooltip}" data-id="${row.mt_log_pengolahan_id}" ${isDisabled}>
+                                title="${tooltipEdit}" data-id="${row.mt_log_pengolahan_id}" ${isDisabled}>
                                 <i class="text-primary bx bx-pencil fs-5"></i>
+                            </button>
+                            <button type="button" class="btn btn-icon btn-hapus-pengolahan"
+                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="${tooltipDelete}" data-id="${row.mt_log_pengolahan_id}" ${isDisabled}>
+                                <i class="text-danger bx bx-trash fs-5"></i>
                             </button>
                         </div>
                     `;
@@ -227,7 +246,6 @@ function initializeSupplyPengolahanTable(data) {
             't<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
     });
 }
-
 
 function getDetailSupplyPengolahan(button) {
     var id = $(button).data("id");
@@ -319,4 +337,45 @@ function openModalPengolahan(mode, data = null) {
     }
 
     $("#supplyPengolahanModal").modal("show");
+}
+
+function deleteUserData(pengolahanId) {
+    $.ajax({
+        url: base_url + `supply-chain/pengolahan/delete/${pengolahanId}`,
+        method: "DELETE",
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+    })
+    .done(function (response) {
+        if (response?.csrf?.name && response?.csrf?.hash) {
+            $('meta[name="csrf-token-name"]').attr('content', response.csrf.name);
+            $('meta[name="csrf-token"]').attr('content', response.csrf.hash);
+        }
+
+        if (response?.success) {
+            successAlert('Hapus Data Pengolahan Berhasil!');
+
+            applyFilterPengolahan();
+        } else {
+            const message = response?.errors ?? response?.message ?? 'Hapus Data Gagal!';
+            errorAlert(message, 'Hapus Data Gagal!');
+        }
+    })
+    .fail(function (jqXHR) {
+        try {
+            const res = jqXHR.responseJSON;
+    
+            if (res?.csrf?.name && res?.csrf?.hash) {
+                $('meta[name="csrf-token-name"]').attr('content', res.csrf.name);
+                $('meta[name="csrf-token"]').attr('content', res.csrf.hash);
+            }
+    
+            const msg = res?.errors ?? res?.message ?? res?.error ?? 'Terjadi kesalahan saat Menghapus';
+            errorAlert(msg, 'Gagal Menghapus');
+        } catch (e) {
+            errorAlert('Error!', 'Terjadi kesalahan. Cek konsol.');
+            console.error('Save error:', jqXHR.status, jqXHR.responseText);
+        }
+    })
 }

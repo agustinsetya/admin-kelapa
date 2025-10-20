@@ -85,22 +85,6 @@ function successAlert(alertText, url = null) {
     });
 }
 
-function successAlert(alertText, url = null) {
-    Swal.fire({
-        title: "Good job!",
-        text: alertText,
-        icon: "success",
-        customClass: {
-            confirmButton: "btn btn-primary waves-effect waves-light",
-        },
-        buttonsStyling: false,
-    }).then(function (result) {
-        if (url !== null) {
-            location.href = `${siteUrl}/` + url;
-        }
-    });
-}
-
 function errorAlert(alertContent = null, title = 'Gagal!') {
     let html = '';
     
@@ -121,7 +105,7 @@ function errorAlert(alertContent = null, title = 'Gagal!') {
     });
 }
 
-function confirmDelete(url) {
+function confirmDelete(actionDelete) {
     Swal.fire({
         title: 'Yakin mau hapus data ini?',
         text: "Tindakan ini tidak bisa dibatalkan!",
@@ -131,9 +115,9 @@ function confirmDelete(url) {
         cancelButtonColor: '#3085d6',
         confirmButtonText: 'Ya, hapus!',
         cancelButtonText: 'Batal'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            location.href = `${siteUrl}/` + url;
+    }).then(({ isConfirmed }) => {
+        if (isConfirmed && typeof actionDelete === 'function') {
+          actionDelete();
         }
     });
 }

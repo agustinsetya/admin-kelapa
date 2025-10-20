@@ -98,6 +98,7 @@ $routes->group('supply-chain', ['filter' => 'auth'], function ($routes) {
     $routes->get('pengolahan/detail', 'SupplyChainController::getDetailLogPengolahan', ['as' => 'supply-detail-pengolahan']);
     $routes->post('pengolahan/add', 'SupplyChainController::addDetailLogPengolahan', ['as' => 'supply-add-pengolahan']);
     $routes->patch('pengolahan/update', 'SupplyChainController::updateDetailLogPengolahan', ['as' => 'supply-update-pengolahan']);
+    $routes->delete('pengolahan/delete/(:num)', 'SupplyChainController::deleteDetailLogPengolahan/$1', ['as' => 'supply-delete-pengolahan']);
     $routes->get('pengiriman', 'SupplyChainController::showDataPengiriman', ['as' => 'supply-pengiriman']);
     $routes->get('pengiriman/data', 'SupplyChainController::getDataPengiriman', ['as' => 'supply-data-pengiriman']);
     $routes->get('pengiriman/detail', 'SupplyChainController::getDetailPengiriman', ['as' => 'supply-detail-pengiriman']);

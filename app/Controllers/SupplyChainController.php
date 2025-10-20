@@ -341,6 +341,29 @@ class SupplyChainController extends AuthRequiredController
         ], 200);
     }
     
+    public function deleteDetailLogPengolahan($pengolahanId)
+    {
+        $user = session()->get('user');
+        if (!$user) {
+            return $this->jsonError('Tidak terautentik', 401);
+        }
+
+        if (!$pengolahanId) {
+            return $this->jsonError('ID log pengolahan tidak ditemukan', 400);
+        }
+
+        $deleted = $this->logPengolahanModel->deleteDataLogPengolahan($pengolahanId, $user->email ?? null);
+
+        if ($deleted === false) {
+            $errors = $this->logPengolahanModel->errors() ?: 'Gagal menghapus data';
+            return $this->jsonError($errors, 500);
+        }
+
+        return $this->jsonSuccess([
+            'message' => 'Berhasil Delete Data Pengolahan',
+        ], 200);
+    }
+    
     public function getDataPengiriman()
     {
         $filters   = $this->filtersFromUser();

@@ -73,7 +73,7 @@
                                             <th>Tanggal Pengolahan</th>
                                             <th>Nama Gudang</th>
                                             <th>Hasil Olahan</th>
-                                            <th>Rendumen</th>
+                                            <th>Rendemen</th>
                                         </tr>
                                     </thead>
                                     <tbody></tbody>
