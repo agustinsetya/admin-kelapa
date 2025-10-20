@@ -623,6 +623,29 @@ class SupplyChainController extends AuthRequiredController
             'message' => 'Berhasil Update Data Penjualan',
         ], 200);
     }
+
+    public function deleteDetailPenjualan($penjualanId)
+    {
+        $user = session()->get('user');
+        if (!$user) {
+            return $this->jsonError('Tidak terautentik', 401);
+        }
+
+        if (!$penjualanId) {
+            return $this->jsonError('ID penjualan tidak ditemukan', 400);
+        }
+
+        $deleted = $this->penjualanModel->deleteDataPenjualan($penjualanId);
+
+        if ($deleted === false) {
+            $errors = $this->penjualanModel->errors() ?: 'Gagal menghapus data';
+            return $this->jsonError($errors, 500);
+        }
+
+        return $this->jsonSuccess([
+            'message' => 'Berhasil Delete Data Penjualan',
+        ], 200);
+    }
     
     public function getDataPenjualanLimbah()
     {

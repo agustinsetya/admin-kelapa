@@ -65,6 +65,8 @@ class PenjualanModel extends Model
     {
         $data['mt_penjualan_id'] = $penjualanId;
 
+        $pengirimanModel = new \App\Models\PengirimanModel();
+
         $this->db->transStart();
 
         $exists = $this->where('mt_penjualan_id', $penjualanId)->countAllResults() > 0;
@@ -78,6 +80,69 @@ class PenjualanModel extends Model
         if (!$ok) {
             $this->db->transRollback();
             return false;
+        }
+
+        $logPengirimanId = $data['log_pengiriman_id'] ?? null;
+
+        if ($logPengirimanId) {
+            $updatePengiriman = [
+                'is_stat_penjualan' => 1
+            ];
+
+            $updateStatus = $pengirimanModel
+                ->where('mt_log_pengiriman_id', $logPengirimanId)
+                ->set($updatePengiriman)
+                ->update();
+
+            if (!$updateStatus) {
+                $this->db->transRollback();
+                return false;
+            }
+        }
+
+        $this->db->transComplete();
+        return $this->db->transStatus();
+    }
+
+    public function deleteDataPenjualan($penjualanId): bool
+    {
+        $this->db->transStart();
+
+        $row = $this->asArray()
+            ->where('mt_penjualan_id', $penjualanId)
+            ->first();
+
+        if (!$row) {
+            $this->db->transRollback();
+            return false;
+        }
+
+        $logPengirimanId = $row['log_pengiriman_id'] ?? null;
+
+        // 1) Hapus data penjualan
+        $ok = $this->delete($penjualanId);
+        if (!$ok) {
+            $this->db->transRollback();
+            return false;
+        }
+
+        // 2) Jika ada log_pengiriman_id, cek apakah masih ada penjualan lain
+        if ($logPengirimanId) {
+            $sisa = $this->builder()
+                ->where('log_pengiriman_id', $logPengirimanId)
+                ->countAllResults();
+
+            // 3) Jika tidak ada sisa penjualan dg log_pengiriman_id tsb, reset status di mt_log_pengiriman
+            if ($sisa === 0) {
+                $upd = $this->db->table('mt_log_pengiriman')
+                    ->where('mt_log_pengiriman_id', $logPengirimanId)
+                    ->update(['is_stat_penjualan' => 0]);
+
+                if (!$upd) {
+                    $this->db->transRollback();
+                    return false;
+                }
+            }
         }
 
         $this->db->transComplete();

@@ -97,6 +97,19 @@ $((function () {
             resetButton("btn-save-penjualan","Simpan","btn btn-primary waves-effect waves-light");
         });
     });
+
+    $(document).on("click", ".btn-hapus-penjualan", function (e) {
+        e.preventDefault();
+    
+        let id = $(this).data('id');
+
+        if (!id) {
+            errorAlert('ID penjualan tidak ditemukan.');
+            return;
+        }
+
+        confirmDelete(() => deletePenjualanData(encodeURIComponent(id)));
+    });
 }));
 
 function applyFilterPenjualan() {
@@ -208,14 +221,20 @@ function initializeSupplyPenjualanTable(data) {
                 width: '72px',
                 render: (data, type, row) => {
                     const isDisabled = row.status == 'LUNAS' ? 'disabled' : '';
-                    const tooltip = row.status == 'LUNAS' ? 'Sudah Lunas' : 'Detail Penjualan';
+                    const tooltipEdit = row.status == 'LUNAS' ? 'Sudah Lunas' : 'Detail Penjualan';
+                    const tooltipDelete = row.is_stat_gaji == 1 ? 'Sudah diproses' : 'Hapus Penjualan';
             
                     return `
                         <div class="d-flex align-items-center">
                             <button type="button" class="btn btn-icon btn-edit-penjualan"
                                 data-bs-toggle="tooltip" data-bs-placement="top"
-                                title="${tooltip}" data-id="${row.mt_penjualan_id}" ${isDisabled}>
+                                title="${tooltipEdit}" data-id="${row.mt_penjualan_id}" ${isDisabled}>
                                 <i class="text-primary bx bx-pencil fs-5"></i>
+                            </button>
+                            <button type="button" class="btn btn-icon btn-hapus-penjualan"
+                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="${tooltipDelete}" data-id="${row.mt_penjualan_id}" ${isDisabled}>
+                                <i class="text-danger bx bx-trash fs-5"></i>
                             </button>
                         </div>
                     `;
@@ -311,4 +330,45 @@ function openModalPenjualan(mode, data = null) {
     }
 
     $("#supplyPenjualanModal").modal("show");
+}
+
+function deletePenjualanData(penjualanId) {
+    $.ajax({
+        url: base_url + `supply-chain/penjualan/delete/${penjualanId}`,
+        method: "DELETE",
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+    })
+    .done(function (response) {
+        if (response?.csrf?.name && response?.csrf?.hash) {
+            $('meta[name="csrf-token-name"]').attr('content', response.csrf.name);
+            $('meta[name="csrf-token"]').attr('content', response.csrf.hash);
+        }
+
+        if (response?.success) {
+            successAlert('Hapus Data Penjualan Berhasil!');
+
+            applyFilterPenjualan();
+        } else {
+            const message = response?.errors ?? response?.message ?? 'Hapus Data Gagal!';
+            errorAlert(message, 'Hapus Data Gagal!');
+        }
+    })
+    .fail(function (jqXHR) {
+        try {
+            const res = jqXHR.responseJSON;
+    
+            if (res?.csrf?.name && res?.csrf?.hash) {
+                $('meta[name="csrf-token-name"]').attr('content', res.csrf.name);
+                $('meta[name="csrf-token"]').attr('content', res.csrf.hash);
+            }
+    
+            const msg = res?.errors ?? res?.message ?? res?.error ?? 'Terjadi kesalahan saat Menghapus';
+            errorAlert(msg, 'Gagal Menghapus');
+        } catch (e) {
+            errorAlert('Error!', 'Terjadi kesalahan. Cek konsol.');
+            console.error('Save error:', jqXHR.status, jqXHR.responseText);
+        }
+    })
 }
