@@ -79,4 +79,25 @@ class PenjualanLimbahModel extends Model
         $this->db->transComplete();
         return $this->db->transStatus();
     }
+
+    public function deleteDataPenjualanLimbah($penjualanLimbahId): bool
+    {
+        $data['mt_penjualan_limbah_id'] = $penjualanLimbahId;
+
+        $this->db->transStart();
+
+        $exists = $this->where('mt_penjualan_limbah_id', $penjualanLimbahId)->countAllResults() > 0;
+
+        if ($exists) {
+            $ok = $this->delete($penjualanLimbahId);
+        }
+
+        if (!$ok) {
+            $this->db->transRollback();
+            return false;
+        }
+
+        $this->db->transComplete();
+        return $this->db->transStatus();
+    }
 }

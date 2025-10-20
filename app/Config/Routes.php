@@ -117,6 +117,7 @@ $routes->group('supply-chain', ['filter' => 'auth'], function ($routes) {
     $routes->get('penjualan-limbah/detail', 'SupplyChainController::getDetailPenjualanLimbah', ['as' => 'supply-detail-penjualan-limbah']);
     $routes->post('penjualan-limbah/add', 'SupplyChainController::addDetailPenjualanLimbah', ['as' => 'supply-add-penjualan-limbah']);
     $routes->patch('penjualan-limbah/update', 'SupplyChainController::updateDetailPenjualanLimbah', ['as' => 'supply-update-penjualan-limbah']);
+    $routes->delete('penjualan-limbah/delete/(:num)', 'SupplyChainController::deleteDetailPenjualanLimbah/$1', ['as' => 'supply-delete-penjualan-limbah']);
 });
 
 // Payroll
