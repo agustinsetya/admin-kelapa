@@ -52,6 +52,7 @@ function initializeKomponenGajiTable(data) {
                 { data: 'takaran_kulit', defaultContent: "-" },          
                 { data: 'upah_takaran_kulit', defaultContent: "-" },          
                 { data: null, defaultContent: "-" },          
+                { data: 'gaji_pacak_mesin', defaultContent: "-" },          
             ],
             columnDefs: [
                 // Additional column
@@ -69,7 +70,7 @@ function initializeKomponenGajiTable(data) {
                 },
                 { targets: [3,5,7], render: (d) => d ? formatAngkaDecimal(d) : "-" },
                 {
-                    targets: [4,6,8],
+                    targets: [4,6,8,10],
                     render: function(data, type, row, meta) {
                         return formatRupiah(data);
                     }

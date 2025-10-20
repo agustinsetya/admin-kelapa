@@ -21,6 +21,7 @@ class GudangModel extends Model
         'gaji_driver_distribusi',
         'gaji_driver_ngepok_truk',
         'gaji_driver_ngepok_pickup',
+        'gaji_pacak_mesin',
         'created_by',
         'updated_by',
     ];
@@ -45,6 +46,7 @@ class GudangModel extends Model
                     m_gudang.gaji_driver_distribusi,
                     m_gudang.gaji_driver_ngepok_truk,
                     m_gudang.gaji_driver_ngepok_pickup,
+                    m_gudang.gaji_pacak_mesin,
                 ');
 
         if (isset($filters['m_gudang_id']) && is_numeric($filters['m_gudang_id'])) {
@@ -95,6 +97,7 @@ class GudangModel extends Model
             'gaji_driver_distribusi'    => $data['gaji_driver_distribusi'] ?? 0,
             'gaji_driver_ngepok_truk'   => $data['gaji_driver_ngepok_truk'] ?? 0,
             'gaji_driver_ngepok_pickup' => $data['gaji_driver_ngepok_pickup'] ?? 0,
+            'gaji_pacak_mesin'          => $data['gaji_pacak_mesin'] ?? 0,
             'created_by'                => $data['created_by'] ?? $data['updated_by'],
         ];
 

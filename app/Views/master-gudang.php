@@ -51,6 +51,7 @@
                                                     <th>Takaran Kulit (kg)</th>
                                                     <th>Upah per Takaran Kulit</th>
                                                     <th>Gaji Driver</th>
+                                                    <th>Gaji Pacak Mesin</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>

@@ -41,6 +41,9 @@ $((function () {
         
         const $gaji_driver_ngepok_pickup = $("#gaji_driver_ngepok_pickup");
         $gaji_driver_ngepok_pickup.val(unmaskRupiah($gaji_driver_ngepok_pickup.val()));
+        
+        const $gaji_pacak_mesin = $("#gaji_pacak_mesin");
+        $gaji_pacak_mesin.val(unmaskRupiah($gaji_pacak_mesin.val()));
 
         let url = 'master/gudang/add';
         if (action === 'edit') url = 'master/gudang/update';
@@ -138,6 +141,7 @@ function initializeMasterGudangTable(data) {
             { data: 'takaran_kulit', defaultContent: "-" },          
             { data: 'upah_takaran_kulit', defaultContent: "-" },     
             { data: null, defaultContent: "-" },     
+            { data: 'gaji_pacak_mesin', defaultContent: "-" },     
             { data: null, defaultContent: "" }             
         ],
         columnDefs: [
@@ -150,7 +154,7 @@ function initializeMasterGudangTable(data) {
             },
             { targets: [2,4,6], render: (d) => d ? formatAngkaDecimal(d) : "-" },
             {
-                targets: [3,5,7],
+                targets: [3,5,7,9],
                 render: function(data, type, row, meta) {
                     return formatRupiah(data);
                 }
@@ -170,7 +174,7 @@ function initializeMasterGudangTable(data) {
                 }
             },
             {
-                targets: 9,
+                targets: 10,
                 className: 'no-export',
                 title: 'Action',
                 orderable: false,
@@ -247,6 +251,7 @@ function openModalGudang(mode, data = null) {
         $("#gaji_driver_distribusi").val(formatRupiah(data.gaji_driver_distribusi));
         $("#gaji_driver_ngepok_truk").val(formatRupiah(data.gaji_driver_ngepok_truk));
         $("#gaji_driver_ngepok_pickup").val(formatRupiah(data.gaji_driver_ngepok_pickup));
+        $("#gaji_pacak_mesin").val(formatRupiah(data.gaji_pacak_mesin));
         
         $("#master-gudang-form").data("action", "edit");
         $("#master-gudang-form").data("id", data.m_gudang_id );

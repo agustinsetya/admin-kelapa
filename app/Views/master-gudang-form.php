@@ -111,6 +111,14 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="mb-3">
+                                                        <label for="gaji_pacak_mesin" class="form-label"><?= lang('Files.Gaji_Pacak_Mesin') ?></label>
+                                                        <input type="text" class="form-control currency-rupiah-mask" name="gaji_pacak_mesin" id="gaji_pacak_mesin" placeholder="<?= lang('Files.Input_Upah') ?>">
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="card-footer">
                                             <button type="button" class="btn btn-primary text-nowrap w-100 w-md-auto waves-effect waves-light" id="btn-save-detail-gudang"><?= lang('Files.Save') ?></button>

@@ -58,6 +58,7 @@ return [
     "Gaji_Driver_Distribusi" => "Distribution Driver Salary",
     "Gaji_Driver_Ngepok_Truk" => "Stuffing Truck Salary",
     "Gaji_Driver_Ngepok_Pickup" => "Stuffing Pickup Salary",
+    "Gaji_Pacak_Mesin" => "Machine Operator Salary",
     "Gaji_Pegawai" => "Employee Salary",
     "Date" => "Date",
     "Report" => "Report",

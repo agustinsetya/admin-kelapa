@@ -20,6 +20,7 @@ class KomponenGajiModel extends Model
         'gaji_driver_distribusi',
         'gaji_driver_ngepok_truk',
         'gaji_driver_ngepok_pickup',
+        'gaji_pacak_mesin',
         'created_by',
     ];
     protected $useTimestamps = true;
@@ -40,6 +41,7 @@ class KomponenGajiModel extends Model
                     mt_komponen_gaji.gaji_driver_distribusi,
                     mt_komponen_gaji.gaji_driver_ngepok_truk,
                     mt_komponen_gaji.gaji_driver_ngepok_pickup,
+                    mt_komponen_gaji.gaji_pacak_mesin,
                     m_gudang.nama AS nama_gudang,
                     mt_komponen_gaji.created_at
                 ')

@@ -58,6 +58,7 @@ return [
     "Gaji_Driver_Distribusi" => "Gaji Sopir Distribusi",
     "Gaji_Driver_Ngepok_Truk" => "Gaji Sopir Ngepok Truk",
     "Gaji_Driver_Ngepok_Pickup" => "Gaji Sopir Ngepok Pickup",
+    "Gaji_Pacak_Mesin" => "Gaji Pacak Mesin",
     "Gaji_Pegawai" => "Gaji Pegawai",
     "Date" => "Tanggal",
     "Report" => "Laporan",

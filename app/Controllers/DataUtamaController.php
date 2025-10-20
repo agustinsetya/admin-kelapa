@@ -480,6 +480,7 @@ class DataUtamaController extends AuthRequiredController
             'gaji_driver_distribusi'    => $input['gaji_driver_distribusi'],
             'gaji_driver_ngepok_truk'   => $input['gaji_driver_ngepok_truk'],
             'gaji_driver_ngepok_pickup' => $input['gaji_driver_ngepok_pickup'],
+            'gaji_pacak_mesin'          => $input['gaji_pacak_mesin'],
             'created_by'	            => $user->email ?? null,
         ];
 
@@ -527,6 +528,7 @@ class DataUtamaController extends AuthRequiredController
             'gaji_driver_distribusi'    => $input['gaji_driver_distribusi'],
             'gaji_driver_ngepok_truk'   => $input['gaji_driver_ngepok_truk'],
             'gaji_driver_ngepok_pickup' => $input['gaji_driver_ngepok_pickup'],
+            'gaji_pacak_mesin'          => $input['gaji_pacak_mesin'],
             'updated_by'	            => $user->email ?? null,
         ];
 
