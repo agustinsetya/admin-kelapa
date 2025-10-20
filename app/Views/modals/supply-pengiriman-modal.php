@@ -53,7 +53,7 @@
                         <div class="col-lg-12">
                             <div class="mb-3">
                                 <label for="nomor_resi" class="form-label">Nomor Resi</label>
-                                <input type="text" name="nomor_resi" id="nomor_resi" maxlength="100" required class="form-control" placeholder="Masukkan Nomor Resi"/>
+                                <input type="text" name="nomor_resi" id="nomor_resi" minlength="10" maxlength="15" required class="form-control" placeholder="[tanggal][nopol], contoh : 251019W1111CAW"/>
                             </div>
                         </div>
                     </div>
@@ -83,7 +83,7 @@
                             <div class="mb-3">
                                 <label for="berat_daging" class="form-label"><?= lang('Files.Berat_Daging') ?></label>
                                 <div class="input-group">
-                                    <input type="number" name="berat_daging" id="berat_daging" min="1" data-pristine-min-message="Berat Daging Kelapa min. 1 Kg" required class="form-control" placeholder="<?= lang('Files.Input_Berat') ?>"/>
+                                    <input type="number" name="berat_daging" id="berat_daging" min="0.1" step="0.001" data-pristine-min-message="Berat Daging Kelapa min. 0.1 Kg" required class="form-control" placeholder="<?= lang('Files.Input_Berat') ?>"/>
                                     <span class="input-group-text">Kg</span>
                                 </div>
                             </div>
