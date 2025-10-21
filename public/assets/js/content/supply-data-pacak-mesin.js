@@ -6,7 +6,7 @@ $((function () {
     $("#pcm_gudang_id").on("change", function () {
         let gudangId = $(this).val();
 
-        reloadDropdownPegawaiByGudang('#pcm_pegawai_id', gudangId, roleScope, '6');
+        reloadDropdownPegawaiByGudang('#pcm_pegawai_id', gudangId, roleScope, null, '10');
     });
 
     $("#btn-tambah-pacak-mesin").on("click", function () {
