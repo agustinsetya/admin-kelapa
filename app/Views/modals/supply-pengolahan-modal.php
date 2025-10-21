@@ -82,7 +82,7 @@
                         <div class="col-lg-12">
                             <div class="mb-3">
                                 <label for="bonus_produksi" class="form-label"><?= lang('Files.Bonus_Produksi') ?></label>
-                                <input type="text" class="form-control currency-rupiah-mask" name="bonus_produksi" id="bonus_produksi" placeholder="<?= lang('Files.Input_Upah') ?>">
+                                <input type="text" class="form-control currency-rupiah-mask" name="bonus_produksi" id="bonus_produksi" placeholder="<?= lang('Files.Input_Bonus') ?>">
                             </div>
                         </div>
                     </div>

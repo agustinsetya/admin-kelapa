@@ -66,6 +66,31 @@ class Validation extends BaseConfig
         ],
     ];
     
+    public $supplyChainPacakMesin = [
+        'tg_pacak_mesin'        => 'required',
+        'pcm_gudang_id'         => 'required|numeric',
+        'pcm_pegawai_id'        => 'required|numeric',
+        'jumlah_kelapa'         => 'required|numeric',
+    ];
+
+    public $supplyChainPacakMesin_errors = [
+        'tg_pacak_mesin' => [
+            'required' => 'Tanggal Pacak Mesin wajib diisi.',
+        ],
+        'pcm_gudang_id' => [
+            'required' => 'Gudang wajib diisi.',
+            'numeric'  => 'Gudang harus angka.',
+        ],
+        'pcm_pegawai_id' => [
+            'required' => 'Pegawai wajib diisi.',
+            'numeric'  => 'Pegawai harus angka.',
+        ],
+        'jumlah_kelapa' => [
+            'required' => 'Jumlah Kelapa wajib diisi.',
+            'numeric'  => 'Jumlah Kelapa harus angka.',
+        ],
+    ];
+    
     public $supplyChainPengolahan = [
         'tg_pengolahan'   => 'required',
         'peng_gudang_id'  => 'required|numeric',

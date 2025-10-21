@@ -7,6 +7,7 @@ use App\Models\LogPengolahanModel;
 use App\Models\PengirimanModel;
 use App\Models\PenjualanModel;
 use App\Models\PenjualanLimbahModel;
+use App\Models\PacakMesinModel;
 use App\Models\GudangModel;
 use App\Models\PegawaiModel;
 use App\Controllers\Concerns\ApiResponse;
@@ -23,6 +24,7 @@ class SupplyChainController extends AuthRequiredController
 	protected $pengirimanModel;
 	protected $penjualanModel;
 	protected $penjualanLimbahModel;
+	protected $pacakMesinModel;
 	protected $gudangModel;
     protected $pegawaiModel;
 
@@ -33,6 +35,7 @@ class SupplyChainController extends AuthRequiredController
         $this->pengirimanModel = new PengirimanModel();
         $this->penjualanModel = new PenjualanModel();
         $this->penjualanLimbahModel = new PenjualanLimbahModel();
+        $this->pacakMesinModel = new PacakMesinModel();
 		$this->gudangModel = new GudangModel();
         $this->pegawaiModel = new PegawaiModel();
     }
@@ -136,6 +139,25 @@ class SupplyChainController extends AuthRequiredController
         ];
 
         return view('supply-data-penjualan-limbah', $data);
+    }
+    
+    public function showDataPacakMesin()
+    {
+        $user = session()->get('user');
+        $roleScope = session()->get('role_scope');
+
+        $data = [
+            'title_meta' => view('partials/title-meta', ['title' => 'Data_Pacak_Mesin']),
+            'page_title' => view('partials/page-title', [
+                'title' => 'Data_Pacak_Mesin',
+                'li_1'  => lang('Files.Supply_Chain'),
+                'li_2'  => lang('Files.Data_Pacak_Mesin'),
+            ]),
+            'roleScope' => $roleScope,
+            'penempatan' => $user->penempatan_id ?? '',
+        ];
+
+        return view('supply-data-pacak-mesin', $data);
     }
 
     /* --------------------------------
@@ -264,6 +286,127 @@ class SupplyChainController extends AuthRequiredController
 
         return $this->jsonSuccess([
             'message' => 'Berhasil Delete Data Pembelian',
+        ], 200);
+    }
+
+    public function getDataPacakMesin()
+    {
+        $filters   = $this->filtersFromUser();
+        $pacakMesin = $this->pacakMesinModel->getDataPacakMesin($filters);
+
+        return $this->jsonSuccess(['data' => $pacakMesin]);
+    }
+
+    public function getDetailPacakMesin()
+    {
+        $id = $this->request->getGet('id');
+        if (!$id) {
+            return $this->jsonError('ID Pacak Mesin tidak ditemukan', 400);
+        }
+
+        $detail = $this->pacakMesinModel->getDataPacakMesin(['mt_pacak_mesin_id' => $id]);
+        return $this->jsonSuccess(['data' => $detail]);
+    }
+
+    public function addDetailPacakMesin()
+    {
+        $user = session()->get('user');
+        if (!$user) {
+            return $this->jsonError('Tidak terautentik', 401);
+        }
+
+        if (!$this->validate('supplyChainPacakMesin')) {
+            return $this->jsonError('Validasi gagal', 422, [
+                'errors' => $this->validator->getErrors(),
+            ]);
+        }
+
+        $input = $this->request->getPost();
+
+        $data = [
+            'tg_pacak_mesin'	    => $input['tg_pacak_mesin'],
+            'gudang_id'	            => $input['pcm_gudang_id'],
+            'kd_pegawai'	        => $input['pcm_pegawai_id'],
+            'jumlah_kelapa'	        => $input['jumlah_kelapa'],
+            'bonus'                 => $input['bonus_pacak_mesin'],
+            'created_by'	        => $user->email ?? null,
+        ];
+
+        $saved = $this->pacakMesinModel->saveDataPacakMesin($data);
+
+        if ($saved === false) {
+            $errors = $this->pacakMesinModel->errors() ?: 'Gagal menyimpan data';
+            return $this->jsonError($errors, 500);
+        }
+
+        // 201 Created
+        return $this->jsonSuccess([
+            'message' => 'Berhasil Tambah Data Pacak Mesin',
+        ], 201);
+
+    }
+	
+    public function updateDetailPacakMesin()
+    {
+        $user = session()->get('user');
+        if (!$user) {
+            return $this->jsonError('Tidak terautentik', 401);
+        }
+
+        if (!$this->validate('supplyChainPacakMesin')) {
+            return $this->jsonError('Validasi gagal', 422, [
+                'errors' => $this->validator->getErrors(),
+            ]);
+        }
+
+        $input = $this->request->getPost();
+        $id = $input['id'] ?? null;
+
+        if (!$id) {
+            return $this->jsonError('ID Pacak Mesin tidak ditemukan', 400);
+        }
+
+        $data = [
+            'tg_pacak_mesin'	    => $input['tg_pacak_mesin'],
+            'gudang_id'	            => $input['pcm_gudang_id'],
+            'kd_pegawai'	        => $input['pcm_pegawai_id'],
+            'jumlah_kelapa'	        => $input['jumlah_kelapa'],
+            'bonus'                 => $input['bonus_pacak_mesin'],
+            'updated_by'	        => $user->email ?? null,
+        ];
+
+        $saved = $this->pacakMesinModel->saveDataPacakMesin($data, $id);
+
+        if ($saved === false) {
+            $errors = $this->pacakMesinModel->errors() ?: 'Gagal menyimpan data';
+            return $this->jsonError($errors, 500);
+        }
+
+        return $this->jsonSuccess([
+            'message' => 'Berhasil Update Data Pacak Mesin',
+        ], 200);
+    }
+
+    public function deleteDetailPacakMesin($pacakMesinId)
+    {
+        $user = session()->get('user');
+        if (!$user) {
+            return $this->jsonError('Tidak terautentik', 401);
+        }
+
+        if (!$pacakMesinId) {
+            return $this->jsonError('ID Pacak Mesin tidak ditemukan', 400);
+        }
+
+        $deleted = $this->pacakMesinModel->deleteDataPacakMesin($pacakMesinId);
+
+        if ($deleted === false) {
+            $errors = $this->pacakMesinModel->errors() ?: 'Gagal menghapus data';
+            return $this->jsonError($errors, 500);
+        }
+
+        return $this->jsonSuccess([
+            'message' => 'Berhasil Delete Data Pacak Mesin',
         ], 200);
     }
 

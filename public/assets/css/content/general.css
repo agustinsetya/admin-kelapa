@@ -1,7 +1,7 @@
 @media (min-width: 768px) {
     #btn-tambah-user, #btn-tambah-user-roles, #btn-tambah-gudang, #btn-tambah-pembelian, #btn-tambah-pengolahan,
     #btn-tambah-kategori-pengeluaran, #btn-tambah-pengiriman, #btn-tambah-penjualan, #btn-save-detail-gudang,
-    #btn-tambah-penjualan-limbah {
+    #btn-tambah-penjualan-limbah, #btn-tambah-pacak-mesin {
         width: auto !important;
     }
 }

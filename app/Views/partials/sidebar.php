@@ -66,6 +66,11 @@
                             </a>
                         </li>
                         <li>
+                            <a href="<?= url_to('supply-pacak-mesin') ?>">
+                                <span data-key="t-supply-pacak-mesin"><?= lang('Files.Data_Pacak_Mesin') ?></span>
+                            </a>
+                        </li>
+                        <li>
                             <a href="<?= url_to('supply-pengolahan') ?>">
                                 <span data-key="t-supply-pengolahan"><?= lang('Files.Data_Pengolahan') ?></span>
                             </a>
