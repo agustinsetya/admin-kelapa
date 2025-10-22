@@ -9,6 +9,8 @@ use App\Models\GudangModel;
 use App\Models\PegawaiModel;
 use App\Models\LogPengolahanModel;
 use App\Models\PengirimanModel;
+use App\Models\PacakMesinModel;
+use App\Models\GajiPacakMesinModel;
 use App\Models\GajiDriverModel;
 use App\Models\GajiPegawaiModel;
 use App\Controllers\Concerns\ApiResponse;
@@ -24,6 +26,8 @@ class FinanceController extends AuthRequiredController
     protected $pegawaiModel;
     protected $logPengolahanModel;
     protected $pengirimanModel;
+    protected $pacakMesinModel;
+    protected $gajiPacakMesinModel;
     protected $gajiDriverModel;
     protected $gajiPegawaiModel;
 
@@ -36,6 +40,8 @@ class FinanceController extends AuthRequiredController
         $this->pegawaiModel = new PegawaiModel();
         $this->logPengolahanModel = new LogPengolahanModel();
         $this->pengirimanModel = new PengirimanModel();
+        $this->pacakMesinModel = new PacakMesinModel();
+        $this->gajiPacakMesinModel = new GajiPacakMesinModel();
         $this->gajiDriverModel = new GajiDriverModel();
         $this->gajiPegawaiModel = new GajiPegawaiModel();
     }
@@ -91,7 +97,24 @@ class FinanceController extends AuthRequiredController
 		return view('finance-kasbon', $data);
 	}
 	
-	public function showDataGajiDriver()
+	public function showDataGajiPacakMesin()
+	{
+		$data = [
+			'title_meta' => view('partials/title-meta', [
+				'title' => 'Gaji_Pacak_Mesin'
+			]),
+			'page_title' => view('partials/page-title', [
+				'title' => 'Gaji_Pacak_Mesin',
+				'li_1'  => lang('Files.Finance'),
+				'li_2'  => lang('Files.Gaji_Pacak_Mesin')
+            ]),
+            'gudang'    => $this->gudangModel->getDataGudang(),
+		];
+		
+		return view('finance-gaji-pacak-mesin', $data);
+	}
+	
+    public function showDataGajiDriver()
 	{
 		$data = [
 			'title_meta' => view('partials/title-meta', [
@@ -448,6 +471,103 @@ class FinanceController extends AuthRequiredController
         ], 201);
     }
 
+    public function getDataUpahPacakMesin()
+    {
+        $roleFilters	= $this->filtersFromUser();
+
+		$gudangId 		= $this->request->getGet('gudang_id') ?? null;
+		$start			= $this->request->getGet('start_date') ?? null;
+		$end			= $this->request->getGet('end_date') ?? null;
+
+		$queryFilters = [];
+		
+		if (($user->role_scope ?? null) !== 'gudang' && !empty($gudangId)) {
+			$queryFilters['gudang_id'] = $gudangId;
+		}
+		if (!empty($start)) $queryFilters['start_date'] = $start;
+		if (!empty($end))   $queryFilters['end_date']   = $end;
+
+		$filters = array_merge($queryFilters, $roleFilters);
+
+        $upahPacakMesin = $this->pacakMesinModel->getDataUpahPacakMesin($filters);
+
+        return $this->jsonSuccess(['data' => $upahPacakMesin]);
+    }
+
+    public function addDetailGajiPacakMesin()
+    {
+        $user = session()->get('user');
+        if (!$user) {
+            return $this->jsonError('Tidak terautentik', 401);
+        }
+
+        $input = $this->request->getJSON(true);
+        if (!$input) $input = $this->request->getPost();
+
+        $periodeStart = $input['start_date'] ?? null;
+        $periodeEnd   = $input['end_date']   ?? null;
+
+        if (!$this->validate('financeGajiPacakMesin')) {
+            return $this->jsonError('Validasi gagal', 422, [
+                'errors' => $this->validator->getErrors(),
+            ]);
+        }
+
+        if (empty($input['data']) || !is_array($input['data'])) {
+            return $this->jsonError('Data Pacak Mesin tidak valid.', 422);
+        }
+
+        $dataPegawai = $input['data'];
+        $resultUpah = [];
+
+        foreach ($dataPegawai as $pegawai) {
+            if (empty($pegawai['kdPegawai']) || empty($pegawai['gudangId'])) {
+                return $this->jsonError('Data pegawai atau gudang tidak lengkap.', 422);
+            }
+
+            $filters = [
+                'kd_pegawai' => $pegawai['kdPegawai'],
+                'gudang_id'  => $pegawai['gudangId'],
+                'start_date' => $periodeStart,
+                'end_date'   => $periodeEnd,
+            ];
+
+            $upah = $this->pacakMesinModel->getDataUpahPacakMesin($filters);
+
+            if (empty($upah)) {
+                return $this->jsonError('Upah tidak ditemukan untuk pegawai: ' . $pegawai['kdPegawai'], 404);
+            }
+
+            $resultUpah[] = $upah;
+        }
+
+        $upahPacakMesin = !empty($resultUpah) ? array_merge(...$resultUpah) : [];
+
+        foreach ($upahPacakMesin as &$row) {
+            $row['total_upah_pacak_mesin']  = $row['total_upah_pacak_mesin'] ?? 0;
+            $row['total_bonus']             = $row['total_bonus'] ?? 0;
+            $row['total_gaji_bersih']       = $row['total_gaji_bersih'] ?? 0;
+        }
+        unset($row); 
+
+        $saved = $this->gajiPacakMesinModel->prosesGajiPacakMesin(
+            $user->email ?? null,
+            $periodeStart,
+            $periodeEnd,
+            $upahPacakMesin,
+        );
+
+        if ($saved === false) {
+            $errors = $this->gajiPacakMesinModel->errors() ?: 'Gagal menyimpan data';
+            return $this->jsonError($errors, 500);
+        }
+
+        // 201 Created
+        return $this->jsonSuccess([
+            'message' => 'Gaji Pacak Mesin Berhasil diproses.',
+        ], 201);
+    }
+    
     public function getDataUpahDriver()
     {
         $roleFilters	= $this->filtersFromUser();

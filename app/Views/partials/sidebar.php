@@ -110,6 +110,11 @@
                             </a>
                         </li>
                         <li>
+                            <a href="<?= url_to('finance-gaji-pacak-mesin') ?>">
+                                <span data-key="t-gaji-pacak-mesin"><?= lang('Files.Gaji_Pacak_Mesin') ?></span>
+                            </a>
+                        </li>
+                        <li>
                             <a href="<?= url_to('finance-gaji-driver') ?>">
                                 <span data-key="t-gaji-driver"><?= lang('Files.Gaji_Driver') ?></span>
                             </a>
@@ -137,6 +142,11 @@
                         <li>
                             <a href="<?= url_to('report-komponen-gaji') ?>">
                                 <span data-key="t-report-komponen-gaji"><?= lang('Files.Komponen_Gaji') ?></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?= url_to('report-gaji-pacak-mesin') ?>">
+                                <span data-key="t-report-gaji-pacak-mesin"><?= lang('Files.Gaji_Pacak_Mesin') ?></span>
                             </a>
                         </li>
                         <li>

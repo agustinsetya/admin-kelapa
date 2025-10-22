@@ -6,6 +6,7 @@ use App\Models\LogPengolahanModel;
 use App\Models\PengolahanModel;
 use App\Models\GajiPegawaiModel;
 use App\Models\GajiDriverModel;
+use App\Models\GajiPacakMesinModel;
 use App\Models\KomponenGajiModel;
 use App\Models\GudangModel;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -19,6 +20,7 @@ class ReportController extends AuthRequiredController
     protected $pengolahanModel;
     protected $gajiPegawaiModel;
     protected $gajiDriverModel;
+    protected $gajiPacakMesinModel;
     protected $komponenGajiModel;
     protected $gudangModel;
 
@@ -28,6 +30,7 @@ class ReportController extends AuthRequiredController
         $this->pengolahanModel = new PengolahanModel();
         $this->gajiPegawaiModel = new GajiPegawaiModel();
         $this->gajiDriverModel = new GajiDriverModel();
+        $this->gajiPacakMesinModel = new GajiPacakMesinModel();
         $this->komponenGajiModel = new KomponenGajiModel();
         $this->gudangModel = new GudangModel();
     }
@@ -100,6 +103,23 @@ class ReportController extends AuthRequiredController
 		];
 		
 		return view('report-gaji-driver', $data);
+	}
+    
+    public function showReportGajiPacakMesin()
+	{
+		$data = [
+			'title_meta' => view('partials/title-meta', [
+				'title' => 'Report_Gaji_Pacak_Mesin'
+			]),
+			'page_title' => view('partials/page-title', [
+				'title' => 'Report_Gaji_Pacak_Mesin',
+				'li_1'  => lang('Files.Report'),
+				'li_2'  => lang('Files.Report_Gaji_Pacak_Mesin')
+            ]),
+            'gudang'    => $this->gudangModel->getDataGudang(),
+		];
+		
+		return view('report-gaji-pacak-mesin', $data);
 	}
 
     public function getReportPengolahan(): ResponseInterface
@@ -205,6 +225,29 @@ class ReportController extends AuthRequiredController
         $gajiDriver = $this->gajiDriverModel->getDataGajiDriver($filters);
 
         return $this->jsonSuccess(['data' => $gajiDriver]);
+    }
+    
+    public function getReportGajiPacakMesin()
+    {
+        $roleFilters	= $this->filtersFromUser();
+
+		$gudangId 		= $this->request->getGet('gudang_id') ?? null;
+		$start			= $this->request->getGet('start_date') ?? null;
+		$end			= $this->request->getGet('end_date') ?? null;
+
+		$queryFilters = [];
+		
+		if (($user->role_scope ?? null) !== 'gudang' && !empty($gudangId)) {
+			$queryFilters['gudang_id'] = $gudangId;
+		}
+		if (!empty($start)) $queryFilters['start_date'] = $start;
+		if (!empty($end))   $queryFilters['end_date']   = $end;
+
+		$filters = array_merge($queryFilters, $roleFilters);
+
+        $gajiPacakMesin = $this->gajiPacakMesinModel->getDataGajiPacakMesin($filters);
+
+        return $this->jsonSuccess(['data' => $gajiPacakMesin]);
     }
 
     public function getReportKomponenGaji()

@@ -64,6 +64,7 @@ return [
     "Date" => "Date",
     "Report" => "Report",
     "Report_Pengolahan" => "Processing Report",
+    "Report_Gaji_Pacak_Mesin" => "Machine Operator Salary Report",
     "Report_Gaji_Driver" => "Driver Salary Report",
     "Report_Gaji_Pegawai" => "Employee Salary Report",
     "Input_Jumlah" => "Enter Amount",

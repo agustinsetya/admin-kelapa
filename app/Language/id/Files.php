@@ -64,6 +64,7 @@ return [
     "Date" => "Tanggal",
     "Report" => "Laporan",
     "Report_Pengolahan" => "Laporan Pengolahan",
+    "Machine Operator" => "Laporan Gaji Pacak Mesin",
     "Report_Gaji_Driver" => "Laporan Gaji Sopir",
     "Report_Gaji_Pegawai" => "Laporan Gaji Pegawai",
     "Input_Berat" => "Masukkan Berat",
