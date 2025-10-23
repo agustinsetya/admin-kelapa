@@ -1,9 +1,7 @@
 "use strict";
 
 function formatTanggal(tanggal) {
-    if (!tanggal) {
-        return '';
-    }
+    if (!tanggal) { return ''; }
 
     if (tanggal.length === 10) {
         tanggal += ' 00:00:00';
