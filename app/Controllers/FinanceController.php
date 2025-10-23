@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\PengeluaranModel;
 use App\Models\KategoriPengeluaranModel;
 use App\Models\KasbonModel;
+use App\Models\LogKasbonModel;
 use App\Models\GudangModel;
 use App\Models\PegawaiModel;
 use App\Models\LogPengolahanModel;
@@ -22,6 +23,7 @@ class FinanceController extends AuthRequiredController
 	protected $pengeluaranModel;
 	protected $kategoriPengeluaranModel;
 	protected $kasbonModel;
+	protected $logKasbonModel;
 	protected $gudangModel;
     protected $pegawaiModel;
     protected $logPengolahanModel;
@@ -36,6 +38,7 @@ class FinanceController extends AuthRequiredController
         $this->pengeluaranModel = new PengeluaranModel();
         $this->kategoriPengeluaranModel = new KategoriPengeluaranModel();
 		$this->kasbonModel = new KasbonModel();
+		$this->logKasbonModel = new LogKasbonModel();
 		$this->gudangModel = new GudangModel();
         $this->pegawaiModel = new PegawaiModel();
         $this->logPengolahanModel = new LogPengolahanModel();
@@ -95,6 +98,35 @@ class FinanceController extends AuthRequiredController
 		];
 
 		return view('finance-kasbon', $data);
+	}
+    
+    public function showDataDetailKasbon($detailPegawaiId)
+	{
+		$user = session()->get('user');
+		$roleScope = session()->get('role_scope');
+
+        if (!$detailPegawaiId) {
+            return $this->jsonError('ID Pegawai untuk Menampilkan Detail Kasbon tidak ditemukan', 400);
+        }
+
+        $data = [
+			'title_meta' => view('partials/title-meta', [
+				'title' => 'Detail_Kasbon'
+			]),
+			'page_title' => view('partials/page-title', [
+				'title' => 'Detail_Kasbon',
+				'li_1'  => lang('Files.Finance'),
+				'li_2'  => lang('Files.Kasbon'),
+				'li_3'  => lang('Files.Detail_Kasbon')
+			]),
+			'gudang'    => $this->gudangModel->getDataGudang(),
+			'roleScope' => $roleScope,
+            'penempatan' => $user->penempatan_id ?? '',
+            'pegawaiId' => $user->kd_pegawai ?? '',
+            'detailPegawaiId' => $detailPegawaiId,
+		];
+
+		return view('finance-detail-kasbon', $data);
 	}
 	
 	public function showDataGajiPacakMesin()
@@ -274,16 +306,12 @@ class FinanceController extends AuthRequiredController
         $roleFilters	= $this->filtersFromUser();
 
 		$gudangId 		= $this->request->getGet('gudang_id') ?? null;
-		$start			= $this->request->getGet('start_date') ?? null;
-		$end			= $this->request->getGet('end_date') ?? null;
 
 		$queryFilters = [];
 		
 		if (($user->role_scope ?? null) !== 'gudang' && !empty($gudangId)) {
 			$queryFilters['gudang_id'] = $gudangId;
 		}
-		if (!empty($start)) $queryFilters['tg_kasbon_start'] = $start;
-		if (!empty($end))   $queryFilters['tg_kasbon_end']   = $end;
 
 		$filters = array_merge($queryFilters, $roleFilters);
 
@@ -294,12 +322,26 @@ class FinanceController extends AuthRequiredController
 
 	public function getDetailKasbon()
     {
-        $id = $this->request->getGet('id');
-        if (!$id) {
-            return $this->jsonError('ID kasbon tidak ditemukan', 400);
+        $roleFilters	= $this->filtersFromUser();
+
+		$start			= $this->request->getGet('start_date') ?? null;
+		$end			= $this->request->getGet('end_date') ?? null;
+
+		$queryFilters = [];
+		
+		if (!empty($start)) $queryFilters['tg_kasbon_start'] = $start;
+		if (!empty($end))   $queryFilters['tg_kasbon_end']   = $end;
+
+        $kd_pegawai = $this->request->getGet('detailPegawaiId');
+        if (!$kd_pegawai) {
+            return $this->jsonError('ID Pegawai tidak ditemukan', 400);
+        } else {
+            $queryFilters['kd_pegawai'] = $kd_pegawai;
         }
 
-        $detail = $this->kasbonModel->getDataKasbon(['mt_kasbon_id' => $id]);
+        $filters = array_merge($queryFilters, $roleFilters);
+
+        $detail = $this->logKasbonModel->getDataLogKasbon($filters);
         return $this->jsonSuccess(['data' => $detail]);
     }
 
@@ -322,53 +364,23 @@ class FinanceController extends AuthRequiredController
             'tg_kasbon'		=> $input['tg_kasbon'],
             'kd_pegawai'	=> $input['kb_pegawai_id'],
             'jumlah'  		=> $input['jumlah'],
-            'status'  		=> $input['kb_status'],
+            'tipe'  		=> $input['kb_tipe'],
             'created_by'	=> $user->email ?? null,
         ];
 
-        $saved = $this->kasbonModel->saveDataKasbon($data);
-
-        if ($saved === false) {
-            $errors = $this->kasbonModel->errors() ?: 'Gagal menyimpan data';
-            return $this->jsonError($errors, 500);
+        try {
+            $saved = $this->kasbonModel->saveDataKasbon($data);
+    
+            if ($saved === false) {
+                return $this->jsonError('Gagal menyimpan data kasbon', 500);
+            }
+    
+            return $this->jsonSuccess([
+                'message' => 'Berhasil Tambah Data Kasbon',
+            ], 201);
+        } catch (\Exception $e) {
+            return $this->jsonError($e->getMessage(), 500);
         }
-
-        // 201 Created
-        return $this->jsonSuccess([
-            'message' => 'Berhasil Tambah Data Kasbon',
-        ], 201);
-
-    }
-	
-    public function updateDetailKasbon()
-    {
-        $user = session()->get('user');
-        if (!$user) {
-            return $this->jsonError('Tidak terautentik', 401);
-        }
-
-        $input = $this->request->getPost();
-        $id = $input['id'] ?? null;
-
-        if (!$id) {
-            return $this->jsonError('ID kasbon tidak ditemukan', 400);
-        }
-
-        $data = [
-            'status'  		=> $input['kb_status'],
-            'updated_by'    => $user->email ?? null,
-        ];
-
-        $saved = $this->kasbonModel->saveDataKasbon($data, $id);
-
-        if ($saved === false) {
-            $errors = $this->kasbonModel->errors() ?: 'Gagal menyimpan data';
-            return $this->jsonError($errors, 500);
-        }
-
-        return $this->jsonSuccess([
-            'message' => 'Berhasil Update Data Kasbon',
-        ], 200);
     }
 
     public function getDataUpahPegawai()

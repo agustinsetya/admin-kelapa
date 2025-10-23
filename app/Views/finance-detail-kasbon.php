@@ -25,59 +25,35 @@
                             <div class="col-12">
                                 <div class="card">
                                     <div class="card-header">
-                                        <div class="row align-items-end g-2">
-                                            <div class="col-md-6">
-                                                <form id="filter-kasbon-form" class="row g-2 align-items-end mb-0">
-                                                    <div class="col-md-4">
-                                                        <label class="form-label mb-1">Gudang</label>
-                                                        <select name="fn_gudang_id" id="fn_gudang_id" class="form-select">
-                                                            <option value="" disabled selected>Pilih Gudang</option>
-                                                            <?php foreach ($gudang as $g): ?>
-                                                                <option value="<?= esc($g->m_gudang_id) ?>"><?= esc($g->nama) ?></option>
-                                                            <?php endforeach; ?>
-                                                        </select>
-                                                    </div>
+                                        <form id="filter-kasbon-form" class="row g-2 align-items-end mb-0">
+                                            <div class="col-md-4">
+                                                <label class="form-label mb-1">Tanggal Kasbon</label>
+                                                <input type="text" class="form-control" id="tg_kasbon_filter" name="tg_kasbon_filter" placeholder="Pilih Tanggal">
+                                            </div>
 
-                                                    <div class="col-12 col-md-4 d-flex gap-2 mt-3 mt-md-0">
-                                                        <button type="button" id="applyKasbonFilter" class="btn btn-primary w-100 text-nowrap">
-                                                            <i class="bx bx-filter"></i> Apply Filter
-                                                        </button>
-                                                        <button type="button" id="resetKasbonFilter" class="btn btn-light w-100 text-nowrap">Reset</button>
-                                                    </div>
-                                                </form>
+                                            <div class="col-12 col-md-4 d-flex gap-2 mt-3 mt-md-0">
+                                                <button type="button" id="applyDetailKasbonFilter" class="btn btn-primary w-100 text-nowrap">
+                                                    <i class="bx bx-filter"></i> Apply Filter
+                                                </button>
+                                                <button type="button" id="resetDetailKasbonFilter" class="btn btn-light w-100 text-nowrap">Reset</button>
+                                                <button type="button" id="backKasbonFilter" class="btn btn-light w-100 text-nowrap">Kembali</button>
                                             </div>
-                                            <div class="col-md-6 mt-2 mt-md-0">
-                                                <div class="row justify-content-md-end">
-                                                    <div class="col-12 col-md-auto">
-                                                        <button type="button"
-                                                                id="btn-tambah-kasbon"
-                                                                class="btn btn-success w-100 text-nowrap"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#financeKasbonModal">
-                                                            <i class="bx bx-plus me-1"></i>Tambah
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        </form>
                                     </div>
                                     <div class="card-body">
-                                        <table class="table table-bordered dt-responsive nowrap w-100 dt-kasbonTable">
+
+                                        <table class="table table-bordered dt-responsive nowrap w-100 dt-logKasbonTable">
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
                                                     <th>Tanggal Kasbon</th>
                                                     <th>Nama Pegawai</th>
                                                     <th>Pinjaman</th>
-                                                    <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody></tbody>
                                         </table>
                                     </div>
-
-                                    <!-- Include the modal -->
-                                    <?= $this->include('modals/finance-kasbon-modal') ?>
                                 </div>
                             </div>
                         </div>
@@ -121,8 +97,9 @@
             var roleScope = '<?= isset($roleScope) ? $roleScope : '' ?>';
             var penempatan = '<?= isset($penempatan) ? $penempatan : '' ?>';
             var pegawaiId = '<?= isset($pegawaiId) ? $pegawaiId : '' ?>';
+            var detailPegawaiId = '<?= $detailPegawaiId ?>';
         </script>
         <script src="<?= base_url('assets/js/content/general.js') ?>"></script>
-        <script src="<?= base_url('assets/js/content/finance-kasbon.js') ?>"></script>
+        <script src="<?= base_url('assets/js/content/finance-detail-kasbon.js') ?>"></script>
     </body>
 </html>

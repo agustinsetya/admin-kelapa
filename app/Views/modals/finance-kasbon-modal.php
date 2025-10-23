@@ -46,11 +46,11 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="mb-3">
-                                <label for="kb_status" class="form-label">Status</label>
-                                <select name="kb_status" id="kb_status" class="form-select">
-                                    <option value="" disabled selected>Pilih Status</option>
-                                    <option value="BELUM_LUNAS">Belum Lunas</option>
-                                    <option value="SUDAH_LUNAS">Sudah Lunas</option>
+                                <label for="kb_tipe" class="form-label">Tipe</label>
+                                <select name="kb_tipe" id="kb_tipe" class="form-select">
+                                    <option value="" disabled selected>Pilih Tipe</option>
+                                    <option value="PEMINJAMAN">Peminjaman</option>
+                                    <option value="PEMBAYARAN">Pembayaran Cicilan</option>
                                 </select>
                             </div>
                         </div>

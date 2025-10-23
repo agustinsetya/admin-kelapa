@@ -366,7 +366,7 @@ class Validation extends BaseConfig
         'tg_kasbon'          => 'required',
         'kb_gudang_id'       => 'required|numeric',
         'kb_pegawai_id'      => 'required|numeric',
-        'kb_status'          => 'required',
+        'kb_tipe'            => 'required',
         'jumlah'             => 'required|numeric',
     ];
 
@@ -382,8 +382,8 @@ class Validation extends BaseConfig
             'required' => 'Pegawai wajib diisi.',
             'numeric'  => 'Pegawai harus angka.',
         ],
-        'kb_status' => [
-            'required' => 'Status wajib diisi.',
+        'kb_tipe' => [
+            'required' => 'Tipe wajib diisi.',
         ],
         'jumlah' => [
             'required' => 'Jumlah wajib diisi.',

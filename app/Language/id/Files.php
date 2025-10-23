@@ -108,4 +108,5 @@ return [
     "Nama_Pegawai" => "Nama Pegawai",
     "Input_Nama_Pegawai" => "Masukkan Nama Pegawai",
     "Kasbon" => "Pinjaman Pegawai",
+    "Detail_Kasbon" => "Detail Pinjaman Pegawai",
 ];

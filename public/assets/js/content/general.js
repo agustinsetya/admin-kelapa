@@ -1,10 +1,19 @@
 "use strict";
 
 function formatTanggal(tanggal) {
+    if (!tanggal) {
+        return '';
+    }
+
+    if (tanggal.length === 10) {
+        tanggal += ' 00:00:00';
+    }
+
     const date = new Date(tanggal);
     const day = date.getDate();
     const month = date.toLocaleString("id-ID", { month: "long" });
     const year = date.getFullYear();
+    
     return `${day} ${month} ${year}`;
 }
 
@@ -12,7 +21,7 @@ function formatAngkaDecimal(value) {
     if (value == null || value === "") return "-";
     const num = parseFloat(value);
     if (isNaN(num)) return "-";
-    return num.toLocaleString("en-US"); 
+    return num.toLocaleString("en-US");
 }
 
 function formatRupiah(angka) {

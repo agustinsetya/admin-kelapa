@@ -1,8 +1,6 @@
 "use strict";
 
 $((function () {
-    initRangePicker('tg_kasbon_filter');
-
     $("#kb_gudang_id").on("change", function () {
         let gudangId = $(this).val();
 
@@ -16,32 +14,14 @@ $((function () {
         openModalKasbon("add");
     });
 
-    $(document).on('click', '.btn-edit-kasbon', function () {
-        getDetailFinanceKasbon(this);
-    });
-
     $('#applyKasbonFilter').click(function() {
-        const { start, end } = getIsoRange('tg_kasbon_filter');
         const gudang = $('#fn_gudang_id').val() || null;
 
-        applyFilterKasbon(gudang, start, end);
+        applyFilterKasbon(gudang);
     });
     
     $('#resetKasbonFilter').click(function() {
         $('#fn_gudang_id').val('').trigger('change');
-
-        const $el = $('#tg_kasbon_filter');
-        $el.val('');
-        if (hasDRP()) {
-            const drp = $el.data('daterangepicker');
-
-            if (drp) {
-                drp.setStartDate(moment());
-                drp.setEndDate(moment());
-
-                $el.trigger('cancel.daterangepicker', drp);
-            }
-        }
 
         applyFilterKasbon();
     });
@@ -67,11 +47,11 @@ $((function () {
             $("#kb_pegawai_id").removeClass("is-invalid").addClass("is-valid");
         }
         
-        const statusValue = $("#kb_status").val();
+        const statusValue = $("#kb_tipe").val();
         if (!statusValue) {
-            $("#kb_status").addClass("is-invalid");
+            $("#kb_tipe").addClass("is-invalid");
         } else {
-            $("#kb_status").removeClass("is-invalid").addClass("is-valid");
+            $("#kb_tipe").removeClass("is-invalid").addClass("is-valid");
         }
     
         if (form.checkValidity() === false) {
@@ -83,16 +63,12 @@ $((function () {
         const $jumlah = $("#jumlah");
         $jumlah.val(unmaskRupiah($jumlah.val()));
 
-        let url = '/finance/kasbon/add';
-        if (action === 'edit') url = '/finance/kasbon/update';
-
         let payload = $(form).serialize();
-        if (action === 'edit' && id) payload += '&id=' + encodeURIComponent(id);
-
+        
         showBtnLoading("btn-save-kasbon", { text: "Menyimpan Data..." });
 
         $.ajax({
-            url: base_url + url,
+            url: base_url + '/finance/kasbon/add',
             method: 'POST',
             data: payload,
             dataType: 'json',
@@ -138,8 +114,8 @@ $((function () {
     });
 }));
 
-function applyFilterKasbon(gudang = null, start = '', end = '') {
-    getDataKasbon(gudang, start, end).done(function(response) {
+function applyFilterKasbon(gudang = null) {
+    getDataKasbon(gudang).done(function(response) {
         const rows = Array.isArray(response?.data) ? response.data : [];
         initializeFinanceKasbonTable(rows);
         reloadDropdownGudang("#kb_gudang_id", roleScope, penempatan);
@@ -148,14 +124,12 @@ function applyFilterKasbon(gudang = null, start = '', end = '') {
     });
 }
 
-function getDataKasbon(gudang = null, start = '', end = '') {
+function getDataKasbon(gudang = null) {
     return $.ajax({
         url: base_url + '/finance/kasbon/data',
         method: 'GET',
         data: {
             gudang_id: gudang,
-            start_date: start,
-            end_date: end
         },
         dataType: 'json'
     });
@@ -179,7 +153,7 @@ function initializeFinanceKasbonTable(data) {
             { data: null, defaultContent: "" },
             { data: null, defaultContent: "" },
             { data: 'nama_pegawai', defaultContent: "-" },
-            { data: 'jumlah', defaultContent: "-" },
+            { data: 'total_pinjaman', defaultContent: "-" },
             { data: null, defaultContent: "" }             
         ],
         columnDefs: [
@@ -193,11 +167,11 @@ function initializeFinanceKasbonTable(data) {
             {
                 targets: 1,
                 render: function (data, type, row) {
-                    var tgKasbon = row.tg_kasbon ? formatTanggal(row.tg_kasbon) : "-";
+                    var tgKasbon = row.updated_at ? formatTanggal(row.updated_at) : "-";
 
                     var statusMap = {
                         BELUM_LUNAS: { title: "Belum Lunas", class: "badge-soft-warning" },
-                        SUDAH_LUNAS: { title: "Sudah Lunas", class: "badge-soft-success" },
+                        LUNAS: { title: "Lunas", class: "badge-soft-success" },
                     };
 
                     var meta = statusMap[row.status] || { title: "Unknown", class: "badge-soft-secondary" };
@@ -227,7 +201,21 @@ function initializeFinanceKasbonTable(data) {
             {
                 targets: 3,
                 render: function(data, type, row, meta) {
-                    return formatRupiah(data);
+                    let totalPinjaman = formatRupiah(data);
+                    let sisaPinjaman = formatRupiah(row.sisa_pinjaman);
+
+                    let sisaPinjamanClass = row.sisa_pinjaman > 0 ? 'text-warning' : 'text-success';
+            
+                    let html = `
+                        <div>${totalPinjaman || '0'}</div>
+                        <div>
+                            <small class="fst-italic ${sisaPinjamanClass}">
+                                Sisa Pinjaman: ${sisaPinjaman || '0'}
+                            </small>
+                        </div>
+                    `;
+            
+                    return html;
                 }
             },
             {
@@ -241,13 +229,12 @@ function initializeFinanceKasbonTable(data) {
                 render: function (data, type, row, meta) {
                     var actionKasbonButton = '<div class="d-flex align-items-center gap-1">';
 
-                    actionKasbonButton += '<button type="button" class="btn btn-icon btn-edit-kasbon" ' +
+                    actionKasbonButton += '<button type="button" class="btn btn-icon btn-detail-log-kasbon" ' +
                         'data-bs-toggle="tooltip" ' +
                         'data-bs-placement="top" ' +
                         'title="Detail Kasbon" ' +
-                        'data-bs-target="#detailKasbonModal" ' +
-                        'data-id="' + row.mt_kasbon_id + '"> ' +
-                        '<i class="text-primary bx bx-pencil fs-5"></i>' +
+                        'onclick="window.location.href=\'' + base_url + '/finance/kasbon/detail/' + row.kd_pegawai + '\'"> ' +  // Arahkan ke route kasbon/detail dengan ID
+                        '<i class="text-primary bx bx-info-circle fs-5"></i>' +
                     '</button>';
 
                     actionKasbonButton += '</div>';
@@ -267,32 +254,10 @@ function initializeFinanceKasbonTable(data) {
     });
 }
 
-function getDetailFinanceKasbon(button) {
-    var id = $(button).data("id");
-
-    $.ajax({
-        url: base_url + '/finance/kasbon/detail',
-        method: "GET",
-        data: {
-            id: id,
-        },
-        success: function (response) {
-            if (response && response.data) {
-                openModalKasbon("edit", response.data[0]);
-            } else {
-                errorAlert("Data tidak ditemukan!");
-            }
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            errorAlert("Terjadi kesalahan: " + textStatus);
-        },
-    });
-}
-
 function openModalKasbon(mode, data = null) {
     $("#finance-kasbon-form")[0].reset();
     $("#finance-kasbon-form").removeClass("was-validated");
-    $("#kb_gudang_id, #kb_pegawai_id, #kb_status").val(null).trigger("change").removeClass("is-invalid is-valid");
+    $("#kb_gudang_id, #kb_pegawai_id, #kb_tipe").val(null).trigger("change").removeClass("is-invalid is-valid");
 
     $(".fake-input").remove(); 
     $("#kb_gudang_id, #kb_pegawai_id").show();
@@ -322,7 +287,7 @@ function openModalKasbon(mode, data = null) {
                 <input type="hidden" name="kb_pegawai_id" value="${data.kd_pegawai}">
             `);
         $("#jumlah").val(formatRupiah(data.jumlah)).prop("readonly", true);
-        $("#kb_status").val(data.status).trigger("change");
+        $("#kb_tipe").val(data.status).trigger("change");
 
         $("#finance-kasbon-form").data("action", "edit");
         $("#finance-kasbon-form").data("id", data.mt_kasbon_id);

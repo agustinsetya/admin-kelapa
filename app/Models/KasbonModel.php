@@ -10,9 +10,9 @@ class KasbonModel extends Model
     protected $primaryKey    = 'mt_kasbon_id';
     protected $returnType    = 'object';
     protected $allowedFields = [
-        'tg_kasbon',
-        'jumlah',
         'kd_pegawai',
+        'total_pinjaman',
+        'sisa_pinjaman',
         'status',
         'created_by',
         'updated_by',
@@ -25,13 +25,14 @@ class KasbonModel extends Model
     {
         $kasbon = $this->select('
                     mt_kasbon.mt_kasbon_id,
-                    mt_kasbon.tg_kasbon,
-                    mt_kasbon.jumlah,
                     mt_kasbon.kd_pegawai,
+                    mt_kasbon.total_pinjaman,
+                    mt_kasbon.sisa_pinjaman,
                     mt_kasbon.status,
                     mt_pegawai.penempatan_id AS gudang_id,
                     m_gudang.nama AS nama_gudang,
                     mt_pegawai.nama AS nama_pegawai,
+                    mt_kasbon.updated_at,
                 ')
                 ->join('mt_pegawai', 'mt_pegawai.kd_pegawai = mt_kasbon.kd_pegawai', 'left')
                 ->join('m_gudang', 'm_gudang.m_gudang_id = mt_pegawai.penempatan_id', 'left');
@@ -43,36 +44,79 @@ class KasbonModel extends Model
         if (isset($filters['gudang_id']) && is_numeric($filters['gudang_id'])) {
             $kasbon->where('mt_pegawai.penempatan_id', (int)$filters['gudang_id']);
         }
-
-        if (!empty($filters['tg_kasbon_start'])) {
-            $kasbon->where('mt_kasbon.tg_kasbon >=', $filters['tg_kasbon_start']);
-        }
-
-        if (!empty($filters['tg_kasbon_end'])) {
-            $kasbon->where('mt_kasbon.tg_kasbon <=', $filters['tg_kasbon_end']);
-        }
         
-		return $kasbon->orderBy('mt_kasbon.tg_kasbon', 'DESC')
+		return $kasbon->orderBy('mt_kasbon.updated_at', 'DESC')
                             ->findAll();
     }
 
-    public function saveDataKasbon(array $data, $kasbonId = null): bool
+    public function saveDataKasbon(array $data): bool
     {
-        $data['mt_kasbon_id'] = $kasbonId;
-
         $this->db->transStart();
 
-        $exists = $this->where('mt_kasbon_id', $kasbonId)->countAllResults() > 0;
+        $logKasbonModel  = new \App\Models\LogKasbonModel();
 
-        if ($exists) {
-            $ok = $this->update($kasbonId, $data);
-        } else {
-            $ok = $this->insert($data, false) !== false;
-        }
+        $insertLogKasbon = $logKasbonModel->insert($data, false);
 
-        if (!$ok) {
+        if (!$insertLogKasbon) {
             $this->db->transRollback();
             return false;
+        }
+
+        // 1. Periksa data di mt_kasbon
+        $kasbonData = $this->where('kd_pegawai', $data['kd_pegawai'])->first();
+
+        log_message('debug', 'Kasbon Data: ' . json_encode($kasbonData));
+
+        if ($data['tipe'] == 'PEMBAYARAN' && !$kasbonData) {
+            $this->db->transRollback();
+            throw new \Exception('Belum ada data kasbon, lakukan PEMINJAMAN terlebih dahulu.');
+        }
+
+        // 2. Insert atau Update Data Kasbon
+        if (!$kasbonData) {
+            $newKasbonData = [
+                'kd_pegawai'   => $data['kd_pegawai'],
+                'total_pinjaman' => $data['jumlah'],
+                'status'       => 'BELUM_LUNAS',
+                'created_by'   => $data['created_by'],
+            ];
+
+            $kasbonSaved = $this->insert($newKasbonData);
+            if ($kasbonSaved === false) {
+                $this->db->transRollback();
+                return false;
+            }
+        } else {
+            $totalPinjaman = $kasbonData->total_pinjaman;
+            $sisaPinjaman = $kasbonData->sisa_pinjaman;
+
+            if ($data['tipe'] == 'PEMINJAMAN') {
+                $totalPinjaman += $data['jumlah'];
+                $sisaPinjaman += $data['jumlah'];
+            } elseif ($data['tipe'] == 'PEMBAYARAN') {
+                $sisaPinjaman -= $data['jumlah'];
+            }
+
+            if ($sisaPinjaman < 0) {
+                $this->db->transRollback();
+                throw new \Exception('Nominal Pelunasan Tidak Boleh Lebih Dari SISA PINJAMAN');
+            }
+
+            $status = ($sisaPinjaman == 0) ? 'LUNAS' : 'BELUM_LUNAS';
+
+            $updateKasbonData = [
+                'total_pinjaman' => $totalPinjaman,
+                'sisa_pinjaman' => $sisaPinjaman,
+                'status' => $status,
+                'updated_by' => $data['created_by'],
+            ];
+
+            $kasbonUpdated = $this->update($kasbonData->mt_kasbon_id, $updateKasbonData);
+            if ($kasbonUpdated === false) {
+                log_message('error', 'Gagal mengupdate data kasbon');
+                $this->db->transRollback();
+                return false;
+            }
         }
 
         $this->db->transComplete();

@@ -108,4 +108,5 @@ return [
     "Nama_Pegawai" => "Employee Name",
     "Input_Nama_Pegawai" => "Input Employee Name",
     "Kasbon" => "Employee Loans",
+    "Detail_Kasbon" => "Employee Loans Detail",
 ];
