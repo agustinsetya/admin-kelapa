@@ -147,7 +147,7 @@ function initializeMasterUserTable(data) {
                     
                     html += `
                         <div>
-                            <small class="fst-italic text-muted">${row.nama_gudang}</small><br/>
+                        <small class="fst-italic text-muted">${row.nama_gudang ? row.nama_gudang : 'All'}</small>
                         </div>
                     `;
             
